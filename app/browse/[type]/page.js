@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { getDiscover, getGenreList } from "@/lib/tmdb";
 import { TmdbCard } from "@/components/Card";
 
-export async function generateMetadata({ params, searchParams }) {
-  const isTv = params.type === "tv";
+export async function generateMetadata({ params }) {
+  const { type } = await params;
+  const isTv = type === "tv";
   return {
     title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – ReelStream`,
     description: `Browse the best HD ${isTv ? "TV shows and web series" : "movies"} by genre, popularity and rating.`
@@ -12,11 +13,12 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 export default async function Browse({ params, searchParams }) {
-  const { type } = params;
+  const { type } = await params;
   if (!["movie", "tv"].includes(type)) notFound();
 
-  const page = Number(searchParams.page) || 1;
-  const genre = searchParams.genre || "";
+  const query = await searchParams;
+  const page = Number(query.page) || 1;
+  const genre = query.genre || "";
 
   const [genres, discoverData] = await Promise.all([
     getGenreList(type),

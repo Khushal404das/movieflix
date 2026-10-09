@@ -4,7 +4,8 @@ import { film } from "@/lib/archive";
 import WatchlistButton from "@/components/WatchlistButton";
 
 export async function generateMetadata({ params }) {
-  const f = await film(params.id);
+  const { id } = await params;
+  const f = await film(id);
   return {
     title: f ? `${f.title} – Stream Classic – ReelStream` : "Classic Movie – ReelStream",
     description: f?.description?.slice(0, 160) || "Watch free classic public domain films in full length."
@@ -12,7 +13,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function Player({ params }) {
-  const f = await film(params.id);
+  const { id } = await params;
+  const f = await film(id);
   if (!f) notFound();
 
   return (
