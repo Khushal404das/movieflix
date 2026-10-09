@@ -1,14 +1,12 @@
 import TitleDetail, { titleMeta } from "@/components/TitleDetail";
 
-export const generateMetadata = ({ params }) => titleMeta("tv", params.id);
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  return titleMeta("tv", id);
+}
 
-export default function TvPage({ params, searchParams }) {
-  return (
-    <TitleDetail
-      type="tv"
-      id={params.id}
-      season={searchParams.season}
-      episode={searchParams.episode}
-    />
-  );
+export default async function TvPage({ params, searchParams }) {
+  const { id } = await params;
+  const { season, episode } = await searchParams;
+  return <TitleDetail type="tv" id={id} season={season} episode={episode} />;
 }

@@ -8,8 +8,9 @@ export const metadata = {
 };
 
 export default async function Classics({ searchParams }) {
-  const q = (searchParams.q || "").trim();
-  const page = Number(searchParams.page) || 1;
+  const query = await searchParams;
+  const q = (query.q || "").trim();
+  const page = Number(query.page) || 1;
   const { docs, total } = await classics({ q, page });
   const href = (p) => `/classics?${new URLSearchParams({ ...(q ? { q } : {}), page: p })}`;
 

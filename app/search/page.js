@@ -3,7 +3,8 @@ import { searchTitles, getTrending } from "@/lib/tmdb";
 import { TmdbCard } from "@/components/Card";
 
 export async function generateMetadata({ searchParams }) {
-  const q = searchParams.q?.trim() || "";
+  const query = await searchParams;
+  const q = query.q?.trim() || "";
   return {
     title: q ? `Search results for "${q}" – ReelStream` : "Search Movies & Series – ReelStream",
     description: `Search across our entire library of movies, anime, and web series.`
@@ -11,7 +12,8 @@ export async function generateMetadata({ searchParams }) {
 }
 
 export default async function Search({ searchParams }) {
-  const q = (searchParams.q || "").trim();
+  const query = await searchParams;
+  const q = (query.q || "").trim();
   const [items, trending] = await Promise.all([
     q ? searchTitles(q) : Promise.resolve([]),
     getTrending("all")
