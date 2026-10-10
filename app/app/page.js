@@ -166,22 +166,10 @@ export default function AppPage() {
                         <line x1="12" y1="15" x2="12" y2="3"/>
                       </svg>
                       <div className="btn-text-col">
-                        <span>DOWNLOAD NATIVE APK (STANDALONE)</span>
+                        <span>DOWNLOAD NATIVE APK</span>
                         <small>ReelStream.apk · v1.0.0 · 5.5 MB · Native App (No URL Bar)</small>
                       </div>
                     </a>
-
-                    <div className="secondary-download-row">
-                      <a href="/downloads/ReelStream-Android-Native-Source.zip" download="ReelStream-Android-Native-Source.zip" className="btn-secondary-dl">
-                        <span>📂 Android Studio Project (ZIP)</span>
-                      </a>
-                      <a href="/downloads/ReelStream.aab" download="ReelStream.aab" className="btn-secondary-dl">
-                        <span>📦 Play Store AAB Bundle (1.5 MB)</span>
-                      </a>
-                      <Link href="/home" className="btn-secondary-dl highlight">
-                        <span>🌐 Launch Web App</span>
-                      </Link>
-                    </div>
                   </div>
 
                   <div className="step-list">
