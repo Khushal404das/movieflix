@@ -66,6 +66,7 @@ export default function RootLayout({ children }) {
                   <a href="/browse/tv">Web Series</a>
                   <a href="/classics">Free Classics</a>
                   <a href="/list">My Watchlist</a>
+                  <a href="/app">Get ReelStream App</a>
                 </div>
                 <div className="footer-col">
                   <h4>Top Genres</h4>

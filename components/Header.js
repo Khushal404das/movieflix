@@ -117,6 +117,9 @@ export default function Header() {
             <Link href="/list" className={`netflix-nav-item ${pathname === "/list" ? "active" : ""}`}>
               My List
             </Link>
+            <Link href="/app" className={`netflix-nav-item ${pathname === "/app" ? "active" : ""}`}>
+              Get App
+            </Link>
           </nav>
         </div>
 
