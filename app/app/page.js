@@ -149,20 +149,41 @@ export default function AppPage() {
               {selectedDevice === "computer" && (
                 <>
                   <h3 className="detail-instruction-title">
-                    PC users just click on Go to Home button for movies and series.
+                    ReelStream for Windows, Mac & Linux
                   </h3>
                   <p className="detail-instruction-sub">
-                    Use Google Chrome, Brave, Edge or Mozilla Firefox for highest 4K streaming performance with hardware acceleration.
+                    Choose the native Windows Desktop package or stream instantly via your favorite browser with zero installation.
                   </p>
-                  <Link href="/home" className="btn-device-action">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6 3 20 12 6 21 6 3"/>
-                    </svg>
-                    <span>GO TO HOME</span>
-                  </Link>
+                  
+                  <div className="download-action-group">
+                    <a href="/downloads/ReelStream.msixbundle" download="ReelStream.msixbundle" className="btn-device-action primary-download">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>DOWNLOAD FOR WINDOWS (MSIX)</span>
+                        <small>v1.0.0 · 1.5 MB · Windows 10/11 64-bit</small>
+                      </div>
+                    </a>
+
+                    <div className="secondary-download-row">
+                      <a href="/downloads/ReelStream-Windows.zip" download="ReelStream-Windows.zip" className="btn-secondary-dl">
+                        <span>📦 Windows Full ZIP Installer (4.5 MB)</span>
+                      </a>
+                      <a href="/downloads/ReelStream.sideload.msix" download="ReelStream.sideload.msix" className="btn-secondary-dl">
+                        <span>⚡ MSIX Sideload (1.5 MB)</span>
+                      </a>
+                      <Link href="/home" className="btn-secondary-dl highlight">
+                        <span>🚀 Launch Web (No Install)</span>
+                      </Link>
+                    </div>
+                  </div>
+
                   <div className="detail-notice-box info">
                     <span className="notice-icon">ℹ️</span>
-                    <span>No installation or software download required for Desktop & Laptop users.</span>
+                    <span>Supports 4K HDR playback with GPU hardware acceleration.</span>
                   </div>
                 </>
               )}
@@ -170,42 +191,81 @@ export default function AppPage() {
               {selectedDevice === "android" && (
                 <>
                   <h3 className="detail-instruction-title">
-                    Install ReelStream App on Android Phones & Tablets.
+                    Download ReelStream for Android Phone & Tablet
                   </h3>
                   <p className="detail-instruction-sub">
-                    Fast Progressive Web App (PWA) with offline cache and zero ads.
+                    Direct APK download for instant install or add as Progressive Web App (PWA) with zero ads and offline caching.
                   </p>
+
+                  <div className="download-action-group">
+                    <a href="/downloads/ReelStream.apk" download="ReelStream.apk" className="btn-device-action primary-download">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>DOWNLOAD DIRECT APK</span>
+                        <small>ReelStream.apk · v1.0.0 · 1.4 MB · Android 6.0+</small>
+                      </div>
+                    </a>
+
+                    <div className="secondary-download-row">
+                      <a href="/downloads/ReelStream.aab" download="ReelStream.aab" className="btn-secondary-dl">
+                        <span>📦 Google Play AAB Bundle (1.5 MB)</span>
+                      </a>
+                      <Link href="/home" className="btn-secondary-dl highlight">
+                        <span>🌐 Launch Web App</span>
+                      </Link>
+                    </div>
+                  </div>
+
                   <div className="step-list">
                     <div className="step-item">
                       <span className="step-num">1</span>
-                      <span>Open <strong>Chrome</strong> or your browser on your Android device.</span>
+                      <span>Download <strong>ReelStream.apk</strong> and tap <strong>Install</strong> on your phone.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">2</span>
-                      <span>Tap the <strong>⋮ (Menu)</strong> icon in the top right corner.</span>
+                      <span>If prompted, tap <strong>Settings &rarr; Allow from this source</strong>.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">3</span>
-                      <span>Select <strong>&ldquo;Add to Home screen&rdquo;</strong> or <strong>&ldquo;Install App&rdquo;</strong>.</span>
+                      <span>Launch ReelStream from your home screen and enjoy 4K streaming!</span>
                     </div>
                   </div>
-                  <Link href="/home" className="btn-device-action">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6 3 20 12 6 21 6 3"/>
-                    </svg>
-                    <span>LAUNCH REELSTREAM WEB</span>
-                  </Link>
                 </>
               )}
 
               {selectedDevice === "ios" && (
                 <>
                   <h3 className="detail-instruction-title">
-                    Add ReelStream to your iPhone & iPad Home Screen.
+                    ReelStream for iPhone, iPad & Apple Devices
                   </h3>
                   <p className="detail-instruction-sub">
-                    Enjoy fullscreen cinema streaming with native iOS player controls.
+                    Install instantly via Safari PWA or download the complete native Xcode project package.
                   </p>
+
+                  <div className="download-action-group">
+                    <a href="/downloads/ReelStream-iOS.zip" download="ReelStream-iOS.zip" className="btn-device-action primary-download">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>DOWNLOAD iOS XCODE PROJECT (.ZIP)</span>
+                        <small>Swift + WKWebView · 1.0 MB · Xcode / AltStore</small>
+                      </div>
+                    </a>
+
+                    <div className="secondary-download-row">
+                      <Link href="/home" className="btn-secondary-dl highlight">
+                        <span>⚡ Launch Safari Web App</span>
+                      </Link>
+                    </div>
+                  </div>
+
                   <div className="step-list">
                     <div className="step-item">
                       <span className="step-num">1</span>
@@ -213,50 +273,55 @@ export default function AppPage() {
                     </div>
                     <div className="step-item">
                       <span className="step-num">2</span>
-                      <span>Tap the <strong>Share</strong> button (box with upward arrow) at the bottom.</span>
+                      <span>Tap the <strong>Share</strong> button (box with arrow) at the bottom toolbar.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">3</span>
-                      <span>Scroll down and tap <strong>&ldquo;Add to Home Screen&rdquo;</strong>.</span>
+                      <span>Tap <strong>&ldquo;Add to Home Screen&rdquo;</strong> for a fullscreen native app experience.</span>
                     </div>
                   </div>
-                  <Link href="/home" className="btn-device-action">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6 3 20 12 6 21 6 3"/>
-                    </svg>
-                    <span>OPEN REELSTREAM NOW</span>
-                  </Link>
                 </>
               )}
 
               {selectedDevice === "tv" && (
                 <>
                   <h3 className="detail-instruction-title">
-                    Watch on Android TV, Google TV & Smart TV Screens.
+                    ReelStream for Android TV & Smart TVs
                   </h3>
                   <p className="detail-instruction-sub">
-                    Stream on the big screen in Full HD & 4K with cinema theater audio.
+                    Sideload our Android TV APK or stream directly via TV browser in 4K Ultra HD.
                   </p>
+
+                  <div className="download-action-group">
+                    <a href="/downloads/ReelStream.apk" download="ReelStream.apk" className="btn-device-action primary-download">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>DOWNLOAD ANDROID TV APK</span>
+                        <small>ReelStream.apk · 1.4 MB · Android TV / Fire TV</small>
+                      </div>
+                    </a>
+
+                    <div className="secondary-download-row">
+                      <Link href="/home" className="btn-secondary-dl highlight">
+                        <span>📺 Open Web Player</span>
+                      </Link>
+                    </div>
+                  </div>
+
                   <div className="step-list">
                     <div className="step-item">
                       <span className="step-num">1</span>
-                      <span>Open your Smart TV browser (Chrome, Silk, or TV Bro).</span>
+                      <span>Download <strong>ReelStream.apk</strong> on a USB drive or via the <strong>Downloader</strong> app.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">2</span>
-                      <span>Navigate to ReelStream and bookmark the homepage.</span>
-                    </div>
-                    <div className="step-item">
-                      <span className="step-num">3</span>
-                      <span>Alternatively, use <strong>Chromecast / AirPlay</strong> to cast directly from your phone.</span>
+                      <span>Install the APK on your TV and launch ReelStream with your remote control.</span>
                     </div>
                   </div>
-                  <Link href="/home" className="btn-device-action">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6 3 20 12 6 21 6 3"/>
-                    </svg>
-                    <span>START TV STREAMING</span>
-                  </Link>
                 </>
               )}
             </div>
@@ -286,6 +351,96 @@ export default function AppPage() {
                 <div className="tablet-mockup">
                   <div className="tablet-screen" />
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Direct Download Packages Hub */}
+        <section className="download-hub-section">
+          <div className="section-label-tag">DIRECT DOWNLOADS</div>
+          <h2 className="section-title">All Software Builds & Installers</h2>
+          <p className="section-desc">
+            Download the official standalone application packages for your operating system.
+          </p>
+
+          <div className="download-hub-grid">
+            {/* Android Card */}
+            <div className="hub-package-card">
+              <div className="hub-card-header">
+                <div className="hub-icon android">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.4572c.156-.2704.0635-.6153-.2069-.7713-.2699-.1565-.615-.0636-.7713.2069l-2.0223 3.5026c-1.4646-.6692-3.1118-1.0475-4.877-1.0475s-3.4124.3783-4.877 1.0475L5.1007 5.3004c-.1563-.2705-.5014-.3634-.7713-.2069-.2704.156-.3629.5009-.2069.7713l1.996 3.4572C2.658 11.2334.3333 14.8876.3333 19.1667h23.3334c0-4.2791-2.3247-7.9333-5.7862-9.8453"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="hub-title">Android (APK / AAB)</h3>
+                  <span className="hub-sub">Android 6.0 & newer · TV & Mobile</span>
+                </div>
+              </div>
+              <div className="hub-files-list">
+                <a href="/downloads/ReelStream.apk" download="ReelStream.apk" className="hub-file-btn primary">
+                  <span className="file-name">⚡ ReelStream.apk</span>
+                  <span className="file-meta">1.4 MB · Direct Install</span>
+                </a>
+                <a href="/downloads/ReelStream.aab" download="ReelStream.aab" className="hub-file-btn">
+                  <span className="file-name">📦 ReelStream.aab</span>
+                  <span className="file-meta">1.5 MB · Play Store Bundle</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Windows Card */}
+            <div className="hub-package-card">
+              <div className="hub-card-header">
+                <div className="hub-icon windows">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.901-1.8"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="hub-title">Windows Desktop</h3>
+                  <span className="hub-sub">Windows 10 / 11 64-bit</span>
+                </div>
+              </div>
+              <div className="hub-files-list">
+                <a href="/downloads/ReelStream.msixbundle" download="ReelStream.msixbundle" className="hub-file-btn primary">
+                  <span className="file-name">⚡ ReelStream.msixbundle</span>
+                  <span className="file-meta">1.5 MB · Native MSIX</span>
+                </a>
+                <a href="/downloads/ReelStream-Windows.zip" download="ReelStream-Windows.zip" className="hub-file-btn">
+                  <span className="file-name">📦 ReelStream-Windows.zip</span>
+                  <span className="file-meta">4.5 MB · Full Installer Pack</span>
+                </a>
+                <a href="/downloads/ReelStream.classic.appxbundle" download="ReelStream.classic.appxbundle" className="hub-file-btn">
+                  <span className="file-name">⚙️ ReelStream.classic.appxbundle</span>
+                  <span className="file-meta">1.6 MB · Classic AppX</span>
+                </a>
+              </div>
+            </div>
+
+            {/* iOS Card */}
+            <div className="hub-package-card">
+              <div className="hub-card-header">
+                <div className="hub-icon ios">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.64 1.35-.57.65-1.06 1.7-0.93 2.73.99.08 2.02-.48 2.65-1.23z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="hub-title">Apple iOS & Xcode</h3>
+                  <span className="hub-sub">iPhone, iPad & Mac</span>
+                </div>
+              </div>
+              <div className="hub-files-list">
+                <a href="/downloads/ReelStream-iOS.zip" download="ReelStream-iOS.zip" className="hub-file-btn primary">
+                  <span className="file-name">📦 ReelStream-iOS.zip</span>
+                  <span className="file-meta">1.0 MB · Xcode Project / Swift</span>
+                </a>
+                <Link href="/home" className="hub-file-btn">
+                  <span className="file-name">🌐 Progressive Web App (Safari)</span>
+                  <span className="file-meta">Instant · Add to Home Screen</span>
+                </Link>
               </div>
             </div>
           </div>

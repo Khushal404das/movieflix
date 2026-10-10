@@ -25,3 +25,9 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+
+# signing keys & local builder workspaces
+*.keystore
+ReelStream - android/
+ReelStream Windows/
+ReelStream ios/

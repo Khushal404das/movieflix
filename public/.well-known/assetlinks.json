@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.railway.up.reelstream_production.twa",
+        "sha256_cert_fingerprints": ["44:4A:49:CE:3C:53:67:55:AF:15:49:6F:07:C4:E8:5F:B9:15:EB:28:B7:A1:57:D3:0D:69:17:6B:9A:01:52:B2"]
+      }
+    }]
