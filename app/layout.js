@@ -37,7 +37,9 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://vidsrc.to" />
         <link rel="dns-prefetch" href="https://player.smashy.stream" />
         <link rel="dns-prefetch" href="https://www.2embed.cc" />
-        <link rel="dns-prefetch" href="https://image.tmdb.org" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap"
