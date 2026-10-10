@@ -100,7 +100,7 @@ export default function AppPage() {
 
           {/* Main CTA Button */}
           <div className="landing-cta-box">
-            <Link href="/" className="btn-landing-home">
+            <Link href="/home" className="btn-landing-home">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
               </svg>
@@ -154,7 +154,7 @@ export default function AppPage() {
                   <p className="detail-instruction-sub">
                     Use Google Chrome, Brave, Edge or Mozilla Firefox for highest 4K streaming performance with hardware acceleration.
                   </p>
-                  <Link href="/" className="btn-device-action">
+                  <Link href="/home" className="btn-device-action">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="6 3 20 12 6 21 6 3"/>
                     </svg>
@@ -189,7 +189,7 @@ export default function AppPage() {
                       <span>Select <strong>&ldquo;Add to Home screen&rdquo;</strong> or <strong>&ldquo;Install App&rdquo;</strong>.</span>
                     </div>
                   </div>
-                  <Link href="/" className="btn-device-action">
+                  <Link href="/home" className="btn-device-action">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="6 3 20 12 6 21 6 3"/>
                     </svg>
@@ -220,7 +220,7 @@ export default function AppPage() {
                       <span>Scroll down and tap <strong>&ldquo;Add to Home Screen&rdquo;</strong>.</span>
                     </div>
                   </div>
-                  <Link href="/" className="btn-device-action">
+                  <Link href="/home" className="btn-device-action">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="6 3 20 12 6 21 6 3"/>
                     </svg>
@@ -251,7 +251,7 @@ export default function AppPage() {
                       <span>Alternatively, use <strong>Chromecast / AirPlay</strong> to cast directly from your phone.</span>
                     </div>
                   </div>
-                  <Link href="/" className="btn-device-action">
+                  <Link href="/home" className="btn-device-action">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="6 3 20 12 6 21 6 3"/>
                     </svg>

@@ -93,13 +93,13 @@ export default function Header() {
       <div className="netflix-header-inner">
         {/* Left Side: Brand Logo + Primary Nav */}
         <div className="header-left">
-          <Link href="/" className="netflix-brand-logo">
+          <Link href="/home" className="netflix-brand-logo">
             <span className="logo-n-mark">REEL</span>
             <span className="logo-flix-mark">STREAM</span>
           </Link>
 
           <nav className="netflix-desktop-nav">
-            <Link href="/" className={`netflix-nav-item ${pathname === "/" ? "active" : ""}`}>
+            <Link href="/home" className={`netflix-nav-item ${pathname === "/home" ? "active" : ""}`}>
               Home
             </Link>
             <Link href="/browse/tv" className={`netflix-nav-item ${pathname === "/browse/tv" ? "active" : ""}`}>
@@ -117,7 +117,7 @@ export default function Header() {
             <Link href="/list" className={`netflix-nav-item ${pathname === "/list" ? "active" : ""}`}>
               My List
             </Link>
-            <Link href="/app" className={`netflix-nav-item ${pathname === "/app" ? "active" : ""}`}>
+            <Link href="/app" className={`netflix-nav-item ${pathname === "/app" || pathname === "/" ? "active" : ""}`}>
               Get App
             </Link>
           </nav>
