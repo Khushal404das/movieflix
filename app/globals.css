@@ -2639,13 +2639,13 @@ img {
 }
 
 /* =======================================
-   APP LANDING / DEVICE SETUP PAGE STYLES
+   APP LANDING / DEVICE SETUP PAGE STYLES (RED THEME)
    ======================================= */
 .app-landing-page {
   position: relative;
   min-height: 100vh;
   padding: 100px 20px 80px;
-  background: #080c0a;
+  background: #0d0a0a;
   color: #e5e5e5;
   overflow: hidden;
 }
@@ -2657,7 +2657,7 @@ img {
   transform: translateX(-50%);
   width: 900px;
   height: 600px;
-  background: radial-gradient(circle, rgba(0, 220, 130, 0.12) 0%, rgba(0, 180, 216, 0.05) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(229, 9, 20, 0.16) 0%, rgba(229, 9, 20, 0.04) 45%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -2683,9 +2683,9 @@ img {
   gap: 8px;
   padding: 6px 16px;
   border-radius: 20px;
-  background: rgba(220, 150, 0, 0.15);
-  border: 1px solid rgba(220, 150, 0, 0.4);
-  color: #ffb703;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  color: #ff4d4d;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -2708,7 +2708,7 @@ img {
 }
 
 .highlight-love {
-  background: linear-gradient(135deg, #00e676 0%, #00b4d8 100%);
+  background: linear-gradient(135deg, #e50914 0%, #ff4d4d 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -2741,9 +2741,9 @@ img {
 
 .f-pill.active,
 .f-pill:hover {
-  background: rgba(0, 230, 118, 0.12);
-  border-color: rgba(0, 230, 118, 0.4);
-  color: #00e676;
+  background: rgba(229, 9, 20, 0.15);
+  border-color: rgba(229, 9, 20, 0.5);
+  color: #ff4d4d;
 }
 
 .landing-cta-box {
@@ -2759,20 +2759,20 @@ img {
   gap: 10px;
   padding: 14px 36px;
   border-radius: 8px;
-  background: #00a86b;
+  background: #e50914;
   color: #ffffff;
   font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-decoration: none;
-  box-shadow: 0 8px 24px rgba(0, 168, 107, 0.45);
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.45);
   transition: all 0.2s ease;
 }
 
 .btn-landing-home:hover {
-  background: #00c980;
+  background: #f40612;
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 168, 107, 0.6);
+  box-shadow: 0 12px 30px rgba(229, 9, 20, 0.65);
 }
 
 .cta-sub-notice {
@@ -2802,7 +2802,7 @@ img {
 }
 
 .section-label-tag {
-  color: #00e676;
+  color: #e50914;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -2845,7 +2845,7 @@ img {
   align-items: center;
   justify-content: space-between;
   padding: 24px 16px 18px;
-  background: rgba(25, 30, 28, 0.7);
+  background: rgba(30, 22, 24, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   cursor: pointer;
@@ -2855,23 +2855,23 @@ img {
 }
 
 .device-card:hover {
-  background: rgba(30, 40, 35, 0.85);
-  border-color: rgba(0, 230, 118, 0.3);
+  background: rgba(38, 20, 22, 0.85);
+  border-color: rgba(229, 9, 20, 0.4);
   transform: translateY(-2px);
 }
 
 .device-card.active {
-  background: rgba(16, 45, 32, 0.8);
-  border: 2px solid #00e676;
-  box-shadow: 0 0 25px rgba(0, 230, 118, 0.25), inset 0 0 15px rgba(0, 230, 118, 0.1);
+  background: rgba(36, 12, 14, 0.85);
+  border: 2px solid #e50914;
+  box-shadow: 0 0 25px rgba(229, 9, 20, 0.3), inset 0 0 15px rgba(229, 9, 20, 0.12);
 }
 
 .card-top-tag {
   position: absolute;
   top: -10px;
   right: 14px;
-  background: #00e676;
-  color: #000000;
+  background: #e50914;
+  color: #ffffff;
   font-size: 9px;
   font-weight: 900;
   padding: 2px 8px;
@@ -2891,7 +2891,7 @@ img {
 }
 
 .device-icon-box {
-  color: #00e676;
+  color: #e50914;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2928,9 +2928,9 @@ img {
 }
 
 .device-card.active .device-badge-btn {
-  background: rgba(0, 230, 118, 0.15);
-  border-color: #00e676;
-  color: #00e676;
+  background: rgba(229, 9, 20, 0.18);
+  border-color: #e50914;
+  color: #ff4d4d;
 }
 
 /* Device Setup Detail Box */
@@ -2938,7 +2938,7 @@ img {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 32px;
-  background: rgba(20, 26, 23, 0.9);
+  background: rgba(24, 18, 18, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 40px;
@@ -2968,7 +2968,7 @@ img {
   gap: 8px;
   padding: 12px 28px;
   border-radius: 6px;
-  background: #00a86b;
+  background: #e50914;
   color: #ffffff;
   font-size: 14px;
   font-weight: 800;
@@ -2979,7 +2979,7 @@ img {
 }
 
 .btn-device-action:hover {
-  background: #00c980;
+  background: #f40612;
   transform: translateY(-2px);
 }
 
@@ -3014,7 +3014,7 @@ img {
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #00a86b;
+  background: #e50914;
   color: #ffffff;
   font-size: 12px;
   font-weight: 800;
@@ -3029,7 +3029,7 @@ img {
   position: relative;
   width: 100%;
   height: 220px;
-  background: radial-gradient(circle, rgba(0, 230, 118, 0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(229, 9, 20, 0.18) 0%, transparent 70%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3050,7 +3050,7 @@ img {
 .laptop-screen {
   width: 90%;
   height: 85%;
-  background: #05140e;
+  background: #140507;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -3071,12 +3071,12 @@ img {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #00e676;
-  color: #000;
+  background: #e50914;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 18px rgba(0, 230, 118, 0.7);
+  box-shadow: 0 0 18px rgba(229, 9, 20, 0.7);
 }
 
 .phone-mockup {
@@ -3094,7 +3094,7 @@ img {
 .phone-screen {
   width: 100%;
   height: 100%;
-  background: #05140e;
+  background: #140507;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -3105,8 +3105,8 @@ img {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #00e676;
-  color: #000;
+  background: #e50914;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3119,7 +3119,7 @@ img {
 }
 
 .genre-cloud-card {
-  background: rgba(20, 26, 23, 0.6);
+  background: rgba(24, 18, 18, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 32px 24px;
@@ -3130,7 +3130,7 @@ img {
 }
 
 .genre-card-tag {
-  color: #00e676;
+  color: #e50914;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -3163,11 +3163,11 @@ img {
 }
 
 .genre-cloud-item.accent-green {
-  color: #00e676;
+  color: #e50914;
 }
 
 .genre-cloud-item.accent-red {
-  color: #ffb703;
+  color: #ff4d4d;
 }
 
 .genre-bullet {
@@ -3198,6 +3198,7 @@ img {
 @media (max-width: 500px) {
   .app-landing-page {
     padding: 70px 14px 70px;
+
   }
   .devices-grid {
     grid-template-columns: 1fr 1fr;
@@ -3234,18 +3235,18 @@ img {
   align-items: center;
   gap: 14px;
   padding: 14px 24px;
-  background: linear-gradient(135deg, #00a86b 0%, #008f58 100%);
+  background: linear-gradient(135deg, #e50914 0%, #b8000b 100%);
   border-radius: 10px;
   color: #ffffff;
   text-decoration: none;
-  box-shadow: 0 8px 24px rgba(0, 168, 107, 0.4);
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
   transition: all 0.2s ease;
 }
 
 .btn-device-action.primary-download:hover {
-  background: linear-gradient(135deg, #00c980 0%, #00a86b 100%);
+  background: linear-gradient(135deg, #ff1a24 0%, #e50914 100%);
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 168, 107, 0.55);
+  box-shadow: 0 12px 28px rgba(229, 9, 20, 0.55);
 }
 
 .btn-text-col {
