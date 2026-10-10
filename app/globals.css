@@ -2106,37 +2106,491 @@ img {
   color: var(--text-dim);
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 900px) {
+/* =======================================
+   MOBILE BOTTOM APP BAR NAVIGATION
+   ======================================= */
+.netflix-mobile-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(15, 15, 15, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 9999;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 4px max(6px, env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.7);
+}
+
+.mobile-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #8c8c8c;
+  text-decoration: none;
+  flex: 1;
+  height: 100%;
+  transition: color 0.18s ease, transform 0.18s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-tab-btn:active {
+  transform: scale(0.92);
+}
+
+.mobile-tab-btn.active {
+  color: var(--netflix-red);
+}
+
+.mobile-tab-btn.active .tab-label {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.tab-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.18s ease;
+}
+
+.tab-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+/* =======================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ======================================= */
+
+/* Tablet & Smaller Laptops (<= 1024px) */
+@media (max-width: 1024px) {
+  .netflix-desktop-nav {
+    gap: 16px;
+  }
+  .netflix-nav-item {
+    font-size: 13px;
+  }
+  .billboard-title {
+    font-size: clamp(32px, 5vw, 48px);
+  }
+  .billboard-overview {
+    max-width: 520px;
+  }
+  .top10-item-wrap {
+    width: clamp(190px, 22vw, 240px);
+  }
+  .rank-digit {
+    font-size: clamp(100px, 12vw, 140px);
+  }
+}
+
+/* Mobile Devices & Tablets (<= 768px) */
+@media (max-width: 768px) {
+  /* Show Mobile Bottom Nav */
+  .netflix-mobile-bottom-bar {
+    display: flex;
+  }
+
+  /* Add clearance for mobile bottom nav */
+  .content-container {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  .site-footer {
+    padding: 36px 16px calc(80px + env(safe-area-inset-bottom));
+  }
+
+  /* Header adjustments */
+  .netflix-header {
+    height: 56px;
+    padding: 0 14px;
+  }
+
   .netflix-desktop-nav {
     display: none;
   }
+
   .mobile-hamburger {
-    display: block;
+    display: none; /* Replaced by bottom nav bar */
   }
-  .netflix-mobile-nav {
-    display: flex;
-    flex-direction: column;
+
+  .netflix-brand-logo {
+    font-size: 20px;
+    letter-spacing: -0.5px;
+  }
+
+  .header-right {
     gap: 12px;
-    background: #141414;
-    padding: 20px 24px;
-    border-bottom: 1px solid #333;
   }
-  .mobile-link {
-    font-size: 16px;
-    font-weight: 600;
-    color: #e5e5e5;
+
+  .netflix-icon-btn {
+    display: none;
   }
+
+  .profile-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .avatar-arrow {
+    display: none;
+  }
+
+  /* Expanding Search on Mobile */
+  .netflix-search-box {
+    position: static;
+  }
+
+  .netflix-search-box.open {
+    position: absolute;
+    top: 6px;
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    z-index: 500;
+    background: #181818;
+    border-radius: 6px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+  }
+
+  .netflix-search-box.open .search-form-slide {
+    width: 100%;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .netflix-search-box.open .netflix-search-input {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+    padding-right: 36px;
+  }
+
+  .netflix-search-results-popup {
+    position: fixed;
+    top: 56px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-height: calc(80vh - 56px);
+    border-radius: 8px;
+  }
+
+  /* Hero Billboard on Mobile */
+  .netflix-billboard-hero {
+    height: 65vh;
+    min-height: 420px;
+    max-height: 540px;
+  }
+
+  .billboard-content {
+    left: 14px;
+    right: 14px;
+    bottom: 12%;
+    max-width: 100%;
+  }
+
+  .billboard-badge-row {
+    margin-bottom: 6px;
+    gap: 8px;
+  }
+
+  .n-series-badge,
+  .top10-ribbon {
+    font-size: 10px;
+  }
+
   .billboard-title {
-    font-size: 36px;
+    font-size: clamp(24px, 7vw, 34px);
+    margin-bottom: 6px;
   }
+
+  .billboard-meta-row {
+    gap: 6px;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .billboard-overview {
+    font-size: 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  .billboard-actions {
+    gap: 8px;
+  }
+
+  .btn-netflix-play,
+  .btn-netflix-info {
+    padding: 8px 16px;
+    font-size: 13px;
+    border-radius: 4px;
+    height: 38px;
+  }
+
+  .btn-netflix-list {
+    width: 38px;
+    height: 38px;
+    border-radius: 4px;
+  }
+
   .billboard-side-badge {
     display: none;
   }
-  .top10-item-wrap {
-    width: 180px;
+
+  /* Rows & Carousels on Mobile */
+  .netflix-rows-stack {
+    margin-top: -30px;
+    padding-bottom: 30px;
   }
+
+  .netflix-row-container {
+    margin-bottom: 22px;
+  }
+
+  .row-header {
+    padding: 0 14px;
+    margin-bottom: 8px;
+  }
+
+  .row-title {
+    font-size: 16px;
+  }
+
+  .row-items-scroll {
+    padding: 8px 14px 14px;
+    margin-top: 0;
+    margin-bottom: 0;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  .row-item-wrapper {
+    width: clamp(120px, 32vw, 150px);
+    scroll-snap-align: start;
+  }
+
+  .top10-item-wrap {
+    width: clamp(170px, 46vw, 210px);
+    scroll-snap-align: start;
+  }
+
+  .top10-card-box {
+    width: 55%;
+    margin-left: -14px;
+  }
+
   .rank-digit {
-    font-size: 100px;
+    font-size: clamp(80px, 20vw, 110px);
+    -webkit-text-stroke: 3px #555;
+  }
+
+  .row-nav-arrow {
+    display: none; /* Native swipe gesture is better on mobile */
+  }
+
+  /* Detail Page & Video Player on Mobile */
+  .detail-container {
+    padding: 60px 14px 30px;
+  }
+
+  .server-selector-bar {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    gap: 6px;
+  }
+
+  .server-selector-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .server-chip {
+    flex-shrink: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .tv-quick-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .tv-quick-nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .btn-tv-nav {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .season-select-custom {
+    width: 100%;
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .episodes-drawer-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-height: 360px;
+  }
+
+  .episode-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .episode-thumb-box {
+    width: 100px;
+    height: 60px;
+  }
+
+  .detail-meta-hero {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .detail-poster-column {
+    display: none; /* Ambient backdrop and player already show art */
+  }
+
+  .detail-main-title {
+    font-size: 22px;
+  }
+
+  .detail-meta-chips {
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .detail-actions-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Browse, Search, Classics & Watchlist Pages on Mobile */
+  .container-page {
+    padding: 68px 14px 40px;
+  }
+
+  .page-main-heading {
+    font-size: 20px;
+  }
+
+  .media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  .genre-chips-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    gap: 6px;
+  }
+
+  .genre-chips-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .genre-chip {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+
+  .watchlist-tabs-bar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .lib-tab {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  /* Footer on Mobile */
+  .footer-content {
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .footer-links-group {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Touch Devices (Hover Disabled) */
+@media (hover: none) {
+  .netflix-card-item:hover .netflix-card-hover-overlay {
+    display: none !important;
+  }
+  .netflix-card-item:active {
+    transform: scale(0.96);
+  }
+  .row-nav-arrow {
+    display: none !important;
+  }
+}
+
+/* Ultra Compact Phones (<= 380px) */
+@media (max-width: 380px) {
+  .netflix-brand-logo {
+    font-size: 18px;
+  }
+  .billboard-title {
+    font-size: 22px;
+  }
+  .row-item-wrapper {
+    width: 110px;
+  }
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .tab-label {
+    font-size: 9px;
   }
 }

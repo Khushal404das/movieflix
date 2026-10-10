@@ -1,5 +1,6 @@
 import "./globals.css";
 import Header from "@/components/Header";
+import MobileNav from "@/components/MobileNav";
 
 export const viewport = {
   width: "device-width",
@@ -80,6 +81,7 @@ export default function RootLayout({ children }) {
               <span className="copy-text">&copy; {new Date().getFullYear()} ReelStream. All rights reserved.</span>
             </div>
           </footer>
+          <MobileNav />
         </div>
       </body>
     </html>
