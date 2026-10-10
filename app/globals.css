@@ -2816,12 +2816,18 @@ img {
   margin-bottom: 32px;
 }
 
-/* 4 Devices Grid */
+/* Platform Selection Grid */
 .devices-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 24px;
+}
+
+.devices-grid.two-cards {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 720px;
+  margin: 0 auto 28px;
 }
 
 .device-card {
@@ -3305,6 +3311,12 @@ img {
   margin-top: 28px;
 }
 
+.download-hub-grid.two-cards {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  margin: 28px auto 0;
+}
+
 .hub-package-card {
   background: rgba(20, 26, 23, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -3345,6 +3357,7 @@ img {
   color: #00e676;
 }
 
+.hub-icon.web,
 .hub-icon.windows {
   background: rgba(0, 180, 216, 0.15);
   color: #00b4d8;
