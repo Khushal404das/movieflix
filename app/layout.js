@@ -102,6 +102,19 @@ export default function RootLayout({ children }) {
             </div>
           </footer>
           <MobileNav />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                      console.log('ServiceWorker registration error:', err);
+                    });
+                  });
+                }
+              `
+            }}
+          />
         </div>
       </body>
     </html>

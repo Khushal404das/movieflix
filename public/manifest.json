@@ -1,12 +1,33 @@
 {
+  "id": "/home",
   "name": "ReelStream - Movies & TV Series",
   "short_name": "ReelStream",
-  "description": "Watch HD movies, web series, and public domain classics with fast multi-server streaming.",
+  "description": "Watch blockbuster movies, trending web series, and public domain classics with ultra-fast streaming servers in Full HD & 4K.",
   "start_url": "/home",
+  "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "any",
   "background_color": "#07080c",
   "theme_color": "#e50914",
-  "orientation": "any",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": [
+    "entertainment",
+    "movies",
+    "video",
+    "multimedia"
+  ],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "iarc_rating_id": "e84b072d-71b3-4d3e-86ae-31a8ce4e53b7",
   "icons": [
     {
       "src": "/icon-192.png",
@@ -19,6 +40,72 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ReelStream Desktop Cinema Hub"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ReelStream Mobile Streaming App"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Streaming Home",
+      "short_name": "Home",
+      "url": "/home",
+      "description": "Open ReelStream Streaming Hub",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Trending Movies",
+      "short_name": "Movies",
+      "url": "/browse/movie",
+      "description": "Browse blockbuster movies",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "TV & Web Series",
+      "short_name": "Series",
+      "url": "/browse/tv",
+      "description": "Watch popular TV shows and series",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Watchlist",
+      "short_name": "Watchlist",
+      "url": "/list",
+      "description": "Access your saved watchlist",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "share_target": {
+    "action": "/search",
+    "method": "GET",
+    "params": {
+      "title": "q",
+      "text": "q"
+    }
+  }
 }
