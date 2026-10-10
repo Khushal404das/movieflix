@@ -684,6 +684,10 @@ img {
   display: flex;
   gap: 10px;
   overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  touch-action: pan-x pan-y;
   padding: 40px clamp(20px, 4vw, 56px) 60px;
   margin-top: -24px;
   margin-bottom: -36px;
@@ -2366,6 +2370,12 @@ img {
 
   .netflix-row-container {
     margin-bottom: 22px;
+    overflow: visible;
+  }
+
+  .row-slider-wrapper {
+    position: relative;
+    overflow: visible;
   }
 
   .row-header {
@@ -2378,22 +2388,42 @@ img {
   }
 
   .row-items-scroll {
-    padding: 8px 14px 14px;
-    margin-top: 0;
-    margin-bottom: 0;
+    display: flex;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important;
+    touch-action: pan-x pan-y !important;
+    padding: 2px 14px 8px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
     gap: 8px;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: none;
+    align-items: stretch;
   }
 
   .row-item-wrapper {
     width: clamp(120px, 32vw, 150px);
-    scroll-snap-align: start;
+    flex: 0 0 auto;
+    scroll-snap-align: none;
+    transform: none !important;
   }
 
   .top10-item-wrap {
     width: clamp(170px, 46vw, 210px);
-    scroll-snap-align: start;
+    flex: 0 0 auto;
+    scroll-snap-align: none;
+    transform: none !important;
+  }
+
+  .netflix-card-item {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .netflix-card-hover-overlay {
+    display: none !important;
   }
 
   .top10-card-box {
@@ -2564,6 +2594,11 @@ img {
 
 /* Touch Devices (Hover Disabled) */
 @media (hover: none) {
+  .row-items-scroll {
+    overflow-y: hidden !important;
+    touch-action: pan-x pan-y !important;
+    overscroll-behavior-y: auto !important;
+  }
   .netflix-card-item:hover .netflix-card-hover-overlay {
     display: none !important;
   }
