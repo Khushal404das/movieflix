@@ -32,3 +32,9 @@ ReelStream - android/
 ReelStream Windows/
 ReelStream ios/
 android-native/
+
+# Cloudflare / OpenNext
+.open-next
+.wrangler
+.dev.vars
+
