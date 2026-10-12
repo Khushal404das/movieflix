@@ -31,6 +31,9 @@ yarn-error.log*
 ReelStream - android/
 ReelStream Windows/
 ReelStream ios/
+MovieFlix - android/
+MovieFlix Windows/
+MovieFlix ios/
 android-native/
 
 # Cloudflare / OpenNext
