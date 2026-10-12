@@ -4,22 +4,20 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * Cloudflare Turnstile Verification Widget
- * Loads official Cloudflare Turnstile script and renders real challenge.
+ * Loads official Cloudflare Turnstile script and renders challenge.
+ * Uses official Cloudflare testing key if custom sitekey is not yet set.
  */
 export default function TurnstileWidget({ onVerify, onError, onExpire, resetTrigger = 0 }) {
   const containerRef = useRef(null);
   const widgetIdRef = useRef(null);
   const [loadError, setLoadError] = useState("");
 
-  const siteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
+  const siteKey =
+    process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY ||
+    "1x00000000000000000000AA";
 
   useEffect(() => {
     let isMounted = true;
-
-    if (!siteKey) {
-      setLoadError("NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY is missing in environment.");
-      return;
-    }
 
     const renderWidget = () => {
       if (!window.turnstile || !containerRef.current || !isMounted) return;
