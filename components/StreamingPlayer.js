@@ -81,6 +81,33 @@ export default function StreamingPlayer({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
 
+  // Cinema Lights Off handler: hides navbar, enables Esc key, smooth-scrolls
+  useEffect(() => {
+    if (isLightsOff) {
+      document.body.classList.add("lights-off-active");
+      if (playerRef.current) {
+        playerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") setIsLightsOff(false);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.classList.remove("lights-off-active");
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.classList.remove("lights-off-active");
+    }
+  }, [isLightsOff]);
+
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove("lights-off-active");
+    };
+  }, []);
+
+
   // Sync state if URL changes
   useEffect(() => {
     const sParam = searchParams.get("season");
@@ -204,8 +231,33 @@ export default function StreamingPlayer({
   };
 
   return (
-    <div className={`player-wrapper ${isTheater ? "theater-mode" : ""} ${isLightsOff ? "lights-off" : ""}`} ref={playerRef}>
-      {isLightsOff && <div className="lights-backdrop" onClick={() => setIsLightsOff(false)} title="Click anywhere to turn lights back on" />}
+    <>
+      {isLightsOff && (
+        <>
+          <div
+            className="lights-backdrop"
+            onClick={() => setIsLightsOff(false)}
+            title="Click anywhere to turn lights on (Esc)"
+          />
+          <button
+            type="button"
+            className="floating-lights-on-btn"
+            onClick={() => setIsLightsOff(false)}
+            title="Exit Cinema Mode (Esc)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+            <span>Lights On</span>
+            <kbd>Esc</kbd>
+          </button>
+        </>
+      )}
+
+      <div
+        className={`player-wrapper ${isTheater ? "theater-mode" : ""} ${isLightsOff ? "lights-off" : ""}`}
+        ref={playerRef}
+      >
       
       {/* Top Player Header Controls */}
       <div className="player-topbar">
@@ -382,5 +434,6 @@ export default function StreamingPlayer({
         </div>
       )}
     </div>
+    </>
   );
 }
