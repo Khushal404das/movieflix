@@ -205,7 +205,7 @@ export default function StreamingPlayer({
 
   return (
     <div className={`player-wrapper ${isTheater ? "theater-mode" : ""} ${isLightsOff ? "lights-off" : ""}`} ref={playerRef}>
-      {isLightsOff && <div className="lights-backdrop" onClick={() => setIsLightsOff(false)} />}
+      {isLightsOff && <div className="lights-backdrop" onClick={() => setIsLightsOff(false)} title="Click anywhere to turn lights back on" />}
       
       {/* Top Player Header Controls */}
       <div className="player-topbar">
