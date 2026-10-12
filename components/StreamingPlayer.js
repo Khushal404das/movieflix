@@ -81,20 +81,33 @@ export default function StreamingPlayer({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
 
-  // Cinema Lights Off handler: hides navbar, enables Esc key, smooth-scrolls
+  // Cinema Lights Off handler: hides whole page, enables Esc key & click-outside, smooth-scrolls
   useEffect(() => {
     if (isLightsOff) {
       document.body.classList.add("lights-off-active");
       if (playerRef.current) {
-        playerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        playerRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
       }
+
       const handleKeyDown = (e) => {
         if (e.key === "Escape") setIsLightsOff(false);
       };
+
+      const handleDocumentClick = (e) => {
+        if (playerRef.current && !playerRef.current.contains(e.target)) {
+          if (!e.target.closest || !e.target.closest(".floating-lights-on-btn")) {
+            setIsLightsOff(false);
+          }
+        }
+      };
+
       window.addEventListener("keydown", handleKeyDown);
+      document.addEventListener("mousedown", handleDocumentClick);
+
       return () => {
         document.body.classList.remove("lights-off-active");
         window.removeEventListener("keydown", handleKeyDown);
+        document.removeEventListener("mousedown", handleDocumentClick);
       };
     } else {
       document.body.classList.remove("lights-off-active");
