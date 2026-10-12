@@ -132,7 +132,7 @@ export default function AuthModal() {
       const res = await signInWithEmail(email, password);
       setLoading(false);
       if (!res.success) {
-        setError(res.error || "Invalid email or password.");
+        setError(res.error || "Incorrect email or password.");
         setTurnstileReset((prev) => prev + 1);
         setTurnstileToken(null);
       }
