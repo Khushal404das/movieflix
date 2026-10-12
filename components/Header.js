@@ -3,10 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user, logOut, openAuthModal } = useAuth();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -14,9 +16,11 @@ export default function Header() {
   const [suggestions, setSuggestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
+  const profileDropdownRef = useRef(null);
 
   // Background opacity change on window scroll like Netflix
   useEffect(() => {
@@ -52,7 +56,7 @@ export default function Header() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Click outside listener for search container
+  // Click outside listener for search container and profile dropdown
   useEffect(() => {
     function handleClickOutside(e) {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
@@ -60,15 +64,19 @@ export default function Header() {
           setSearchOpen(false);
         }
       }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
+        setProfileDropdownOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [query]);
 
-  // Close mobile drawer on route change
+  // Close mobile drawer and menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setSearchOpen(false);
+    setProfileDropdownOpen(false);
     setQuery("");
   }, [pathname]);
 
@@ -165,7 +173,7 @@ export default function Header() {
                 {isLoading ? (
                   <div className="search-popup-loading">
                     <div className="spinner" />
-                    <span>Searching Netflix catalog...</span>
+                    <span>Searching MovieFlix catalog...</span>
                   </div>
                 ) : suggestions.length > 0 ? (
                   <div className="search-popup-grid">
@@ -208,13 +216,96 @@ export default function Header() {
             <span className="notif-badge">1</span>
           </button>
 
-          {/* User Profile Avatar */}
-          <Link href="/list" className="netflix-profile-box" title="My Profile & List">
-            <div className="profile-avatar">
-              <span className="avatar-smile">ツ</span>
+          {/* User Profile Avatar / Sign In */}
+          {user ? (
+            <div className="profile-dropdown-wrapper" ref={profileDropdownRef}>
+              <button
+                type="button"
+                className="netflix-profile-box"
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                aria-label="User profile menu"
+              >
+                <div className="profile-avatar">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.displayName} />
+                  ) : (
+                    <span className="avatar-smile">ツ</span>
+                  )}
+                </div>
+                <span className={`avatar-arrow ${profileDropdownOpen ? "open" : ""}`}>▼</span>
+              </button>
+
+              {/* Dropdown Menu */}
+              {profileDropdownOpen && (
+                <div className="profile-dropdown-menu">
+                  <div className="profile-menu-header">
+                    <div className="menu-avatar">
+                      {user.photoURL ? (
+                        <img src={user.photoURL} alt={user.displayName} />
+                      ) : (
+                        <span>ツ</span>
+                      )}
+                    </div>
+                    <div className="menu-user-info">
+                      <span className="menu-name">{user.displayName || "Member"}</span>
+                      <span className="menu-email">{user.email}</span>
+                    </div>
+                  </div>
+
+                  <div className="profile-menu-divider" />
+
+                  <Link
+                    href="/profile"
+                    className="profile-menu-item"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                      <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Account & Profile</span>
+                  </Link>
+
+                  <Link
+                    href="/list"
+                    className="profile-menu-item"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>My Watchlist</span>
+                  </Link>
+
+                  <div className="profile-menu-divider" />
+
+                  <button
+                    type="button"
+                    className="profile-menu-item signout-btn"
+                    onClick={() => {
+                      setProfileDropdownOpen(false);
+                      logOut();
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                      <polyline points="16 17 21 12 16 7"/>
+                      <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              )}
             </div>
-            <span className="avatar-arrow">▼</span>
-          </Link>
+          ) : (
+            <button
+              type="button"
+              className="netflix-signin-nav-btn"
+              onClick={() => openAuthModal("signin")}
+            >
+              Sign In
+            </button>
+          )}
 
           {/* Mobile Hamburger Menu */}
           <button
@@ -235,13 +326,55 @@ export default function Header() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="netflix-mobile-nav">
-          <Link href="/" className="mobile-link">Home</Link>
-          <Link href="/browse/tv" className="mobile-link">TV Shows</Link>
-          <Link href="/browse/movie" className="mobile-link">Movies</Link>
-          <Link href="/browse/movie?genre=28" className="mobile-link">Action & Adventure</Link>
-          <Link href="/browse/movie?genre=878" className="mobile-link">Sci-Fi & Fantasy</Link>
-          <Link href="/classics" className="mobile-link">Free Classics</Link>
-          <Link href="/list" className="mobile-link">My List</Link>
+          {user ? (
+            <div className="mobile-user-card">
+              <div className="mobile-user-avatar">
+                {user.photoURL ? <img src={user.photoURL} alt={user.displayName} /> : <span>ツ</span>}
+              </div>
+              <div className="mobile-user-details">
+                <span className="mobile-user-name">{user.displayName}</span>
+                <span className="mobile-user-email">{user.email}</span>
+              </div>
+            </div>
+          ) : (
+            <div className="mobile-auth-prompt">
+              <button
+                type="button"
+                className="mobile-signin-btn"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openAuthModal("signin");
+                }}
+              >
+                Sign In / Join Free
+              </button>
+            </div>
+          )}
+
+          <div className="mobile-nav-links">
+            <Link href="/" className="mobile-link">Home</Link>
+            <Link href="/browse/tv" className="mobile-link">TV Shows</Link>
+            <Link href="/browse/movie" className="mobile-link">Movies</Link>
+            <Link href="/browse/movie?genre=28" className="mobile-link">Action & Adventure</Link>
+            <Link href="/browse/movie?genre=878" className="mobile-link">Sci-Fi & Fantasy</Link>
+            <Link href="/classics" className="mobile-link">Free Classics</Link>
+            <Link href="/list" className="mobile-link">My List</Link>
+            {user && (
+              <>
+                <Link href="/profile" className="mobile-link">My Profile & Settings</Link>
+                <button
+                  type="button"
+                  className="mobile-link signout-link"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    logOut();
+                  }}
+                >
+                  Sign Out
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
     </header>
