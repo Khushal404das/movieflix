@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Cloudflare Turnstile Verification Widget
  * Loads official Cloudflare Turnstile script and renders challenge.
- * Uses official Cloudflare testing key if custom sitekey is not yet set.
  */
 export default function TurnstileWidget({ onVerify, onError, onExpire, resetTrigger = 0 }) {
   const containerRef = useRef(null);
@@ -14,7 +13,7 @@ export default function TurnstileWidget({ onVerify, onError, onExpire, resetTrig
 
   const siteKey =
     process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY ||
-    "1x00000000000000000000AA";
+    "0x4AAAAAAFU_uk23MEADXt2t";
 
   useEffect(() => {
     let isMounted = true;

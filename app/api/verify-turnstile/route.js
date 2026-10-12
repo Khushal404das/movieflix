@@ -13,7 +13,7 @@ export async function POST(req) {
 
     const secretKey =
       process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY ||
-      "1x0000000000000000000000000000000AA";
+      "0x4AAAAAAFU_utk-JZ82h8z7v6l3h0vBz2E";
 
     // Call Cloudflare's official siteverify endpoint
     const formData = new URLSearchParams();
