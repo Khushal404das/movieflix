@@ -3,7 +3,7 @@ import { classics, poster } from "@/lib/archive";
 import Card from "@/components/Card";
 
 export const metadata = {
-  title: "Free Public Domain Classics – ReelStream",
+  title: "Free Public Domain Classics – MovieFlix",
   description: "Stream legendary classic films from the public domain archives in full."
 };
 

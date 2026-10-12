@@ -152,10 +152,10 @@ export default async function TitleDetail({ type = "movie", id, season = 1, epis
 
 export async function titleMeta(type, id) {
   const d = await getTitle(type, id);
-  if (!d) return { title: "Stream Online – ReelStream" };
+  if (!d) return { title: "Stream Online – MovieFlix" };
   const t = norm(d, type);
   return {
-    title: `Watch ${t.title} (${t.year}) Full HD – ReelStream`,
+    title: `Watch ${t.title} (${t.year}) Full HD – MovieFlix`,
     description: t.overview?.slice(0, 160) || `Stream ${t.title} online for free in HD quality.`,
     openGraph: {
       images: t.backdrop ? [t.backdrop] : (t.poster ? [t.poster] : [])

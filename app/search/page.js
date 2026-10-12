@@ -5,7 +5,7 @@ import { TmdbCard } from "@/components/Card";
 export async function generateMetadata({ searchParams }) {
   const q = searchParams.q?.trim() || "";
   return {
-    title: q ? `Search results for "${q}" – ReelStream` : "Search Movies & Series – ReelStream",
+    title: q ? `Search results for "${q}" – MovieFlix` : "Search Movies & Series – MovieFlix",
     description: `Search across our entire library of movies, anime, and web series.`
   };
 }

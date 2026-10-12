@@ -127,7 +127,7 @@ export default function AppPage() {
                     Instant Web Streaming (No Installation Required)
                   </h3>
                   <p className="detail-instruction-sub">
-                    Open ReelStream instantly on any desktop, laptop, tablet, or phone browser with 4K HDR playback and zero ads.
+                    Open MovieFlix instantly on any desktop, laptop, tablet, or phone browser with 4K HDR playback and zero ads.
                   </p>
                   
                   <div className="download-action-group">
@@ -136,7 +136,7 @@ export default function AppPage() {
                         <polygon points="6 3 20 12 6 21 6 3"/>
                       </svg>
                       <div className="btn-text-col">
-                        <span>OPEN REELSTREAM WEB</span>
+                        <span>OPEN MOVIEFLIX WEB</span>
                         <small>Direct Instant Access · All Browsers Supported</small>
                       </div>
                     </Link>
@@ -152,14 +152,14 @@ export default function AppPage() {
               {selectedDevice === "android" && (
                 <>
                   <h3 className="detail-instruction-title">
-                    Download ReelStream Native Android App (.APK)
+                    Download MovieFlix Native Android App (.APK)
                   </h3>
                   <p className="detail-instruction-sub">
                     100% Standalone Native Android APK with auto landscape cinema mode, hardware acceleration, zero URL bars, and offline caching.
                   </p>
 
                   <div className="download-action-group">
-                    <a href="/downloads/ReelStream.apk" download="ReelStream.apk" className="btn-device-action primary-download">
+                    <a href="/downloads/MovieFlix.apk" download="MovieFlix.apk" className="btn-device-action primary-download">
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>
@@ -167,7 +167,7 @@ export default function AppPage() {
                       </svg>
                       <div className="btn-text-col">
                         <span>DOWNLOAD NATIVE APK</span>
-                        <small>ReelStream.apk · v1.0.0 · 5.5 MB · Native App (No URL Bar)</small>
+                        <small>MovieFlix.apk · v1.0.0 · 5.5 MB · Native App (No URL Bar)</small>
                       </div>
                     </a>
                   </div>
@@ -175,7 +175,7 @@ export default function AppPage() {
                   <div className="step-list">
                     <div className="step-item">
                       <span className="step-num">1</span>
-                      <span>Download <strong>ReelStream.apk</strong> and tap <strong>Install</strong> on your Android phone or TV.</span>
+                      <span>Download <strong>MovieFlix.apk</strong> and tap <strong>Install</strong> on your Android phone or TV.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">2</span>
@@ -183,7 +183,7 @@ export default function AppPage() {
                     </div>
                     <div className="step-item">
                       <span className="step-num">3</span>
-                      <span>Launch ReelStream from your home screen and enjoy 4K streaming!</span>
+                      <span>Launch MovieFlix from your home screen and enjoy 4K streaming!</span>
                     </div>
                   </div>
                 </>

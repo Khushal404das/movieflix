@@ -1,7 +1,7 @@
 {
   "id": "/home",
-  "name": "ReelStream - Movies & TV Series",
-  "short_name": "ReelStream",
+  "name": "MovieFlix - Movies & TV Series",
+  "short_name": "MovieFlix",
   "description": "Watch blockbuster movies, trending web series, and public domain classics with ultra-fast streaming servers in Full HD & 4K.",
   "start_url": "/home",
   "scope": "/",
@@ -60,14 +60,14 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "ReelStream Desktop Cinema Hub"
+      "label": "MovieFlix Desktop Cinema Hub"
     },
     {
       "src": "/screenshots/screenshot-mobile.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "ReelStream Mobile Streaming App"
+      "label": "MovieFlix Mobile Streaming App"
     }
   ],
   "shortcuts": [
@@ -75,7 +75,7 @@
       "name": "Streaming Home",
       "short_name": "Home",
       "url": "/home",
-      "description": "Open ReelStream Streaming Hub",
+      "description": "Open MovieFlix Streaming Hub",
       "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {

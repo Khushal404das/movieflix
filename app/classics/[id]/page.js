@@ -6,7 +6,7 @@ import WatchlistButton from "@/components/WatchlistButton";
 export async function generateMetadata({ params }) {
   const f = await film(params.id);
   return {
-    title: f ? `${f.title} – Stream Classic – ReelStream` : "Classic Movie – ReelStream",
+    title: f ? `${f.title} – Stream Classic – MovieFlix` : "Classic Movie – MovieFlix",
     description: f?.description?.slice(0, 160) || "Watch free classic public domain films in full length."
   };
 }

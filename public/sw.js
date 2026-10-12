@@ -1,5 +1,5 @@
-// ReelStream PWA Service Worker
-const CACHE_NAME = "reelstream-v1";
+// MovieFlix PWA Service Worker
+const CACHE_NAME = "movieflix-v1";
 const STATIC_ASSETS = [
   "/",
   "/home",

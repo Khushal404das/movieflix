@@ -10,10 +10,10 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "ReelStream – Free HD Movies & Web Series Streaming",
+  title: "MovieFlix – Free HD Movies & Web Series Streaming",
   description: "Watch latest HD movies, TV shows, trending web series, and public domain classics online with multiple fast streaming servers.",
   keywords: "watch movies online, stream web series, free movies hd, tv shows online, stream series",
-  authors: [{ name: "ReelStream" }],
+  authors: [{ name: "MovieFlix" }],
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -71,7 +71,7 @@ export default function RootLayout({ children }) {
             <div className="footer-content">
               <div className="footer-brand">
                 <div className="footer-logo">
-                  REEL<span className="accent">STREAM</span>
+                  MOVIE<span className="accent">FLIX</span>
                 </div>
                 <p className="footer-desc">
                   Your premium cinema & web series streaming hub. Watch the latest blockbuster movies, top-rated TV shows, and legendary classics in high definition.
@@ -85,7 +85,7 @@ export default function RootLayout({ children }) {
                   <a href="/browse/tv">Web Series</a>
                   <a href="/classics">Free Classics</a>
                   <a href="/list">My Watchlist</a>
-                  <a href="/app">Get ReelStream App</a>
+                  <a href="/app">Get MovieFlix App</a>
                 </div>
                 <div className="footer-col">
                   <h4>Top Genres</h4>
@@ -98,7 +98,7 @@ export default function RootLayout({ children }) {
             </div>
 
             <div className="footer-bottom">
-              <span className="copy-text">&copy; {new Date().getFullYear()} ReelStream. All rights reserved.</span>
+              <span className="copy-text">&copy; {new Date().getFullYear()} MovieFlix. All rights reserved.</span>
             </div>
           </footer>
           <MobileNav />

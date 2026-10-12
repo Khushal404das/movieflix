@@ -1,4 +1,4 @@
-# Reelhouse
+# MovieFlix
 
 Movie and series discovery built with Next.js 14 (App Router).
 

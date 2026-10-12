@@ -94,8 +94,8 @@ export default function Header() {
         {/* Left Side: Brand Logo + Primary Nav */}
         <div className="header-left">
           <Link href="/home" className="netflix-brand-logo">
-            <span className="logo-n-mark">REEL</span>
-            <span className="logo-flix-mark">STREAM</span>
+            <span className="logo-n-mark">MOVIE</span>
+            <span className="logo-flix-mark">FLIX</span>
           </Link>
 
           <nav className="netflix-desktop-nav">

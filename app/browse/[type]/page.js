@@ -6,7 +6,7 @@ import { TmdbCard } from "@/components/Card";
 export async function generateMetadata({ params, searchParams }) {
   const isTv = params.type === "tv";
   return {
-    title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – ReelStream`,
+    title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
     description: `Browse the best HD ${isTv ? "TV shows and web series" : "movies"} by genre, popularity and rating.`
   };
 }
