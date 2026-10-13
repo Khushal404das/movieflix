@@ -5,52 +5,52 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 export const SERVERS = [
   {
-    id: "apiplayer",
-    name: "Server 1 (ApiPlayer HD)",
-    speed: "Ultra Fast",
-    badge: "Primary",
-    getMovieUrl: (id) => `https://apiplayer.ru/embed/movie/${id}?lang=en`,
-    getTvUrl: (id, s, e) => `https://apiplayer.ru/embed/tv/${id}/${s}/${e}?lang=en`
+    id: "vidlink",
+    name: "Server 1 (VidLink Multi-Audio)",
+    speed: "Ultra HD",
+    badge: "Multi-Audio 🎧",
+    getMovieUrl: (id) => `https://vidlink.pro/movie/${id}?primaryColor=e50914`,
+    getTvUrl: (id, s, e) => `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914`
+  },
+  {
+    id: "multiembed",
+    name: "Server 2 (MultiEmbed Dual-Audio)",
+    speed: "Fast CDN",
+    badge: "Dubbed 🌐",
+    getMovieUrl: (id) => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+    getTvUrl: (id, s, e) => `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
   },
   {
     id: "autoembed",
-    name: "Server 2 (AutoEmbed Turbo)",
+    name: "Server 3 (AutoEmbed Turbo)",
     speed: "Global CDN",
     badge: "Turbo",
     getMovieUrl: (id) => `https://player.autoembed.cc/embed/movie/${id}`,
     getTvUrl: (id, s, e) => `https://player.autoembed.cc/embed/tv/${id}/${s}/${e}`
   },
   {
-    id: "vidsrc_me",
-    name: "Server 3 (VidSrc Pro)",
+    id: "vidsrc_cc",
+    name: "Server 4 (VidSrc CC)",
     speed: "Multi-Mirror",
     badge: "Pro",
+    getMovieUrl: (id) => `https://vidsrc.cc/v2/embed/movie/${id}`,
+    getTvUrl: (id, s, e) => `https://vidsrc.cc/v2/embed/tv/${id}/${s}/${e}`
+  },
+  {
+    id: "vidsrc_me",
+    name: "Server 5 (VidSrc VIP)",
+    speed: "Fast 1080p",
+    badge: "HD",
     getMovieUrl: (id) => `https://vidsrc.me/embed/movie?tmdb=${id}`,
     getTvUrl: (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`
   },
   {
-    id: "vidsrc_to",
-    name: "Server 4 (VidSrc.to)",
-    speed: "Fast 1080p",
-    badge: "HD",
-    getMovieUrl: (id) => `https://vidsrc.to/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
-  },
-  {
     id: "smashy",
-    name: "Server 5 (SmashyStream)",
+    name: "Server 6 (SmashyStream)",
     speed: "Ad-Light",
     badge: "Stream",
     getMovieUrl: (id) => `https://player.smashy.stream/movie/${id}`,
     getTvUrl: (id, s, e) => `https://player.smashy.stream/tv/${id}?s=${s}&e=${e}`
-  },
-  {
-    id: "2embed",
-    name: "Server 6 (2Embed VIP)",
-    speed: "Fast Backup",
-    badge: "Backup",
-    getMovieUrl: (id) => `https://www.2embed.cc/embed/${id}`,
-    getTvUrl: (id, s, e) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}`
   }
 ];
 
@@ -279,6 +279,7 @@ export default function StreamingPlayer({
           <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct HD Stream"}</b>
           <span className="res-badge">1080p Ultra</span>
           <span className="server-speed-tag">⚡ {selectedServer.speed}</span>
+          <span className="audio-badge" title="Change language or dubbed audio via the gear ⚙️ icon inside the player">🎧 Multi-Audio & Dubs</span>
         </div>
 
         <div className="player-actions">
