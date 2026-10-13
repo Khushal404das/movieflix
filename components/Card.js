@@ -12,6 +12,7 @@ export default function Card({
   rating,
   quality = "HD",
   type,
+  audioBadge,
   isWide = false
 }) {
   const [imgError, setImgError] = useState(false);
@@ -57,8 +58,13 @@ export default function Card({
             </div>
           )}
 
-          {/* Top Tag */}
+          {/* Top Badges (Audio/Dub + Top Rated) */}
           <div className="netflix-card-badge-top">
+            {audioBadge && (
+              <span className="audio-badge-pill" title={audioBadge}>
+                {audioBadge}
+              </span>
+            )}
             {rating && Number(rating) >= 7.5 && (
               <span className="top-rated-tag">TOP RATED</span>
             )}
@@ -84,6 +90,9 @@ export default function Card({
               </div>
             )}
             <div className="hover-media-overlay-gradient"></div>
+            {audioBadge && (
+              <span className="hover-audio-badge">{audioBadge}</span>
+            )}
             {rating && Number(rating) >= 7.5 && (
               <span className="hover-badge-top">TOP 10</span>
             )}
@@ -137,8 +146,9 @@ export function TmdbCard({ item, isWide = false }) {
       rating={item.rating}
       quality={item.quality}
       type={item.type}
+      audioBadge={item.audioBadge}
       isWide={isWide}
-      sub={[item.year, item.runtime ? `${item.runtime}m` : (item.number_of_seasons ? `${item.number_of_seasons} Season${item.number_of_seasons > 1 ? 's' : ''}` : null)].filter(Boolean).join(" • ")}
+      sub={[item.year, item.runtime ? `${item.runtime}m` : (item.number_of_seasons ? `${item.number_of_seasons} Season${item.number_of_seasons > 1 ? "s" : ""}` : null)].filter(Boolean).join(" • ")}
     />
   );
 }

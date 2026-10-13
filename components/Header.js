@@ -116,6 +116,9 @@ export default function Header() {
             <Link href="/browse/movie" className={`netflix-nav-item ${pathname === "/browse/movie" ? "active" : ""}`}>
               Movies
             </Link>
+            <Link href="/browse/movie?lang=dual" className={`netflix-nav-item ${pathname.includes("lang=") ? "active" : ""}`}>
+              🎧 Dubbed & Audio
+            </Link>
             <Link href="/browse/movie?genre=28" className={`netflix-nav-item ${pathname.includes("genre") ? "active" : ""}`}>
               Action & Sci-Fi
             </Link>
@@ -355,6 +358,9 @@ export default function Header() {
             <Link href="/" className="mobile-link">Home</Link>
             <Link href="/browse/tv" className="mobile-link">TV Shows</Link>
             <Link href="/browse/movie" className="mobile-link">Movies</Link>
+            <Link href="/browse/movie?lang=dual" className="mobile-link">🎧 Dubbed & Dual Audio</Link>
+            <Link href="/browse/tv?lang=ja" className="mobile-link">⚡ Anime Dub + Sub</Link>
+            <Link href="/browse/tv?lang=ko" className="mobile-link">🌟 K-Drama Multi-Audio</Link>
             <Link href="/browse/movie?genre=28" className="mobile-link">Action & Adventure</Link>
             <Link href="/browse/movie?genre=878" className="mobile-link">Sci-Fi & Fantasy</Link>
             <Link href="/classics" className="mobile-link">Free Classics</Link>

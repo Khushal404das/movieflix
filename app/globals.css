@@ -4610,3 +4610,294 @@ body.lights-off-active .player-section-wrapper {
   color: #ffffff;
 }
 
+
+/* ============================================================
+   NETMIRROR MULTI-LANGUAGE DUBBED & OTT CINEMA ENHANCEMENTS
+   ============================================================ */
+
+/* Home NetMirror Discovery Dock */
+.home-filter-wrapper {
+  max-width: 1440px;
+  margin: -1.5rem auto 1.5rem;
+  padding: 0 4%;
+  position: relative;
+  z-index: 10;
+}
+
+.netmirror-filter-dock {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.dock-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dock-label-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #a0aec0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.dock-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.lang-pill, .ott-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.lang-pill:hover, .ott-pill:hover {
+  background: rgba(229, 9, 20, 0.15);
+  border-color: rgba(229, 9, 20, 0.5);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.lang-pill.active, .ott-pill.active {
+  background: linear-gradient(135deg, #e50914, #b20710);
+  border-color: #ff334b;
+  color: #fff;
+  box-shadow: 0 0 16px rgba(229, 9, 20, 0.4);
+}
+
+/* Card Audio & Dub Badges */
+.audio-badge-pill {
+  display: inline-block;
+  background: rgba(14, 159, 78, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.hover-audio-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 5;
+  background: rgba(14, 159, 78, 0.9);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.hover-audio-tag {
+  color: #00E676;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.audio-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  background: rgba(14, 159, 78, 0.15);
+  border: 1px solid #00E676;
+  border-radius: 9999px;
+  color: #00E676;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Streaming Player Audio Selector Strip */
+.player-audio-selector-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  background: rgba(10, 14, 22, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.audio-strip-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.audio-preset-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.audio-preset-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.audio-preset-chip:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.audio-preset-chip.active {
+  background: #00E676;
+  border-color: #00E676;
+  color: #05160e;
+  font-weight: 800;
+  box-shadow: 0 0 12px rgba(0, 230, 118, 0.35);
+}
+
+/* Player Audio Tip Banner */
+.player-audio-tip-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  background: rgba(14, 159, 78, 0.08);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  font-size: 0.82rem;
+  color: #a7f3d0;
+  line-height: 1.45;
+}
+
+.player-audio-tip-banner .tip-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Download Action Buttons */
+.tool-btn.download-highlight {
+  background: rgba(0, 230, 118, 0.15) !important;
+  border-color: rgba(0, 230, 118, 0.4) !important;
+  color: #00E676 !important;
+}
+
+.tool-btn.download-highlight:hover {
+  background: #00E676 !important;
+  color: #05160e !important;
+  box-shadow: 0 0 14px rgba(0, 230, 118, 0.45);
+}
+
+.player-download-notice {
+  background: rgba(0, 230, 118, 0.15);
+  border: 1px solid #00E676;
+  color: #00E676;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 0.4rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.btn-download-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 230, 118, 0.12);
+  border: 1px solid rgba(0, 230, 118, 0.4);
+  color: #00E676;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-download-detail:hover {
+  background: #00E676;
+  color: #05160e;
+  box-shadow: 0 0 16px rgba(0, 230, 118, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Browse Filters Section */
+.browse-filters-section {
+  margin-bottom: 1rem;
+}
+
+.filter-row-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.filter-chips-wrapper.lang-chips .filter-chip {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.filter-chips-wrapper.ott-chips .filter-chip.ott-chip {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.filter-chip.ott-chip.active {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}

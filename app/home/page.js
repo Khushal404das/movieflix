@@ -2,12 +2,17 @@ import {
   getTrending,
   getPopular,
   getByGenre,
-  getTopRated
+  getTopRated,
+  getDubbedHollywood,
+  getSouthIndianDubbed,
+  getAnimeDubbed,
+  getKDramas
 } from "@/lib/tmdb";
 import { classics, poster } from "@/lib/archive";
 import NetflixBillboard from "@/components/NetflixBillboard";
 import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
+import LanguageFilterBar from "@/components/LanguageFilterBar";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
@@ -21,9 +26,10 @@ export default async function StreamingHome() {
     topRatedMovies,
     actionMovies,
     sciFiMovies,
-    animationTitles,
-    horrorTitles,
-    comedyTitles,
+    dubbedHollywood,
+    southIndianDubbed,
+    animeTitles,
+    kDramaTitles,
     classicItems
   ] = await Promise.all([
     getTrending("all", "day"),
@@ -33,9 +39,10 @@ export default async function StreamingHome() {
     getTopRated("movie"),
     getByGenre("movie", 28),
     getByGenre("movie", 878),
-    getByGenre("movie", 16),
-    getByGenre("movie", 27),
-    getByGenre("movie", 35),
+    getDubbedHollywood("movie", 1),
+    getSouthIndianDubbed(1),
+    getAnimeDubbed(1),
+    getKDramas(1),
     classics()
   ]);
 
@@ -51,7 +58,12 @@ export default async function StreamingHome() {
       {/* 1. Giant Netflix / Prime Hero Billboard */}
       {billboardItem && <NetflixBillboard item={billboardItem} />}
 
-      {/* 2. Netflix Main Slider Rows */}
+      {/* 2. NetMirror Multi-Language & OTT Platform Discovery Bar */}
+      <div className="home-filter-wrapper">
+        <LanguageFilterBar type="movie" />
+      </div>
+
+      {/* 3. Main Streaming Slider Rows */}
       <div className="netflix-rows-stack">
         {/* Continue Watching (Local storage client state) */}
         <ContinueWatching />
@@ -64,6 +76,15 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
+        {/* Dual Audio & Hindi Dubbed Blockbusters (NetMirror Signature) */}
+        {dubbedHollywood?.length > 0 && (
+          <NetflixRow
+            title="🔥 Dual Audio & Hindi Dubbed Blockbusters"
+            items={dubbedHollywood.slice(0, 15)}
+            seeAllHref="/browse/movie?lang=dual"
+          />
+        )}
+
         {/* Trending Now */}
         <NetflixRow
           title="Trending Now"
@@ -71,12 +92,39 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
+        {/* South Indian Hindi Dubbed Hits */}
+        {southIndianDubbed?.length > 0 && (
+          <NetflixRow
+            title="🎬 South Indian Hindi Dubbed Hits"
+            items={southIndianDubbed.slice(0, 15)}
+            seeAllHref="/browse/movie?lang=te"
+          />
+        )}
+
         {/* Binge-worthy TV & Web Series */}
         <NetflixRow
           title="Binge-worthy TV & Web Series"
           items={trendingSeries.slice(0, 15)}
           seeAllHref="/browse/tv"
         />
+
+        {/* Anime in Dual Audio & Dubbed */}
+        {animeTitles?.length > 0 && (
+          <NetflixRow
+            title="⚡ Anime in Dual Audio & Dubbed"
+            items={animeTitles.slice(0, 15)}
+            seeAllHref="/browse/tv?lang=ja"
+          />
+        )}
+
+        {/* K-Drama & Asian Series */}
+        {kDramaTitles?.length > 0 && (
+          <NetflixRow
+            title="🌟 K-Drama & Asian Series (Multi-Audio)"
+            items={kDramaTitles.slice(0, 15)}
+            seeAllHref="/browse/tv?lang=ko"
+          />
+        )}
 
         {/* Popular on Prime & Netflix */}
         <NetflixRow
@@ -99,32 +147,11 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie?genre=878"
         />
 
-        {/* Animation & Anime */}
-        <NetflixRow
-          title="Animation & Anime Favorites"
-          items={animationTitles.slice(0, 15)}
-          seeAllHref="/browse/movie?genre=16"
-        />
-
         {/* Top Rated Masterpieces */}
         <NetflixRow
           title="Critically Acclaimed & Top Rated"
           items={topRatedMovies.slice(0, 15)}
           seeAllHref="/browse/movie"
-        />
-
-        {/* Comedy */}
-        <NetflixRow
-          title="Laugh-Out-Loud Comedies"
-          items={comedyTitles.slice(0, 15)}
-          seeAllHref="/browse/movie?genre=35"
-        />
-
-        {/* Horror & Suspense */}
-        <NetflixRow
-          title="Horror & Chilling Suspense"
-          items={horrorTitles.slice(0, 15)}
-          seeAllHref="/browse/movie?genre=27"
         />
 
         {/* Free Public Domain Classics */}

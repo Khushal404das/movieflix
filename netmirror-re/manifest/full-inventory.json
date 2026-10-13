@@ -1,0 +1,3332 @@
+[
+  {
+    "path": "META-INF/com/android/build/gradle/app-metadata.properties",
+    "compressed_size": 52,
+    "uncompressed_size": 56,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/version-control-info.textproto",
+    "compressed_size": 48,
+    "uncompressed_size": 46,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/dexopt/baseline.prof",
+    "compressed_size": 2103,
+    "uncompressed_size": 2103,
+    "compress_type": 0
+  },
+  {
+    "path": "assets/dexopt/baseline.profm",
+    "compressed_size": 241,
+    "uncompressed_size": 241,
+    "compress_type": 0
+  },
+  {
+    "path": "classes.dex",
+    "compressed_size": 1500947,
+    "uncompressed_size": 3553420,
+    "compress_type": 8
+  },
+  {
+    "path": "lib/arm64-v8a/libappmodules.so",
+    "compressed_size": 586072,
+    "uncompressed_size": 586072,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libc++_shared.so",
+    "compressed_size": 1292904,
+    "uncompressed_size": 1292904,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libfbjni.so",
+    "compressed_size": 177000,
+    "uncompressed_size": 177000,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libgesturehandler.so",
+    "compressed_size": 35200,
+    "uncompressed_size": 35200,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libhermes.so",
+    "compressed_size": 2259008,
+    "uncompressed_size": 2259008,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libhermestooling.so",
+    "compressed_size": 156144,
+    "uncompressed_size": 156144,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libimagepipeline.so",
+    "compressed_size": 8760,
+    "uncompressed_size": 8760,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libjsi.so",
+    "compressed_size": 417384,
+    "uncompressed_size": 417384,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libnative-filters.so",
+    "compressed_size": 23712,
+    "uncompressed_size": 23712,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libnative-imagetranscoder.so",
+    "compressed_size": 585376,
+    "uncompressed_size": 585376,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/arm64-v8a/libreactnative.so",
+    "compressed_size": 6556320,
+    "uncompressed_size": 6556320,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libappmodules.so",
+    "compressed_size": 412252,
+    "uncompressed_size": 412252,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libc++_shared.so",
+    "compressed_size": 872872,
+    "uncompressed_size": 872872,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libfbjni.so",
+    "compressed_size": 119456,
+    "uncompressed_size": 119456,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libgesturehandler.so",
+    "compressed_size": 6180,
+    "uncompressed_size": 6180,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libhermes.so",
+    "compressed_size": 1507148,
+    "uncompressed_size": 1507148,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libhermestooling.so",
+    "compressed_size": 90784,
+    "uncompressed_size": 90784,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libimagepipeline.so",
+    "compressed_size": 5876,
+    "uncompressed_size": 5876,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libjsi.so",
+    "compressed_size": 296904,
+    "uncompressed_size": 296904,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libnative-filters.so",
+    "compressed_size": 12588,
+    "uncompressed_size": 12588,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libnative-imagetranscoder.so",
+    "compressed_size": 341072,
+    "uncompressed_size": 341072,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/armeabi-v7a/libreactnative.so",
+    "compressed_size": 4772816,
+    "uncompressed_size": 4772816,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libappmodules.so",
+    "compressed_size": 591744,
+    "uncompressed_size": 591744,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libc++_shared.so",
+    "compressed_size": 1254988,
+    "uncompressed_size": 1254988,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libfbjni.so",
+    "compressed_size": 166480,
+    "uncompressed_size": 166480,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libgesturehandler.so",
+    "compressed_size": 31768,
+    "uncompressed_size": 31768,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libhermes.so",
+    "compressed_size": 2784236,
+    "uncompressed_size": 2784236,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libhermestooling.so",
+    "compressed_size": 150148,
+    "uncompressed_size": 150148,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libimagepipeline.so",
+    "compressed_size": 7040,
+    "uncompressed_size": 7040,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libjsi.so",
+    "compressed_size": 431896,
+    "uncompressed_size": 431896,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libnative-filters.so",
+    "compressed_size": 22040,
+    "uncompressed_size": 22040,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libnative-imagetranscoder.so",
+    "compressed_size": 664736,
+    "uncompressed_size": 664736,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86/libreactnative.so",
+    "compressed_size": 6861636,
+    "uncompressed_size": 6861636,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libappmodules.so",
+    "compressed_size": 590496,
+    "uncompressed_size": 590496,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libc++_shared.so",
+    "compressed_size": 1252080,
+    "uncompressed_size": 1252080,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libfbjni.so",
+    "compressed_size": 172952,
+    "uncompressed_size": 172952,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libgesturehandler.so",
+    "compressed_size": 32432,
+    "uncompressed_size": 32432,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libhermes.so",
+    "compressed_size": 2283176,
+    "uncompressed_size": 2283176,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libhermestooling.so",
+    "compressed_size": 152704,
+    "uncompressed_size": 152704,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libimagepipeline.so",
+    "compressed_size": 8464,
+    "uncompressed_size": 8464,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libjsi.so",
+    "compressed_size": 421384,
+    "uncompressed_size": 421384,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libnative-filters.so",
+    "compressed_size": 30528,
+    "uncompressed_size": 30528,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libnative-imagetranscoder.so",
+    "compressed_size": 720432,
+    "uncompressed_size": 720432,
+    "compress_type": 0
+  },
+  {
+    "path": "lib/x86_64/libreactnative.so",
+    "compressed_size": 6710424,
+    "uncompressed_size": 6710424,
+    "compress_type": 0
+  },
+  {
+    "path": "assets/fonts/AntDesign.ttf",
+    "compressed_size": 37759,
+    "uncompressed_size": 70344,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Entypo.ttf",
+    "compressed_size": 40681,
+    "uncompressed_size": 66200,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/EvilIcons.ttf",
+    "compressed_size": 7982,
+    "uncompressed_size": 13456,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Feather.ttf",
+    "compressed_size": 24118,
+    "uncompressed_size": 56228,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome.ttf",
+    "compressed_size": 98167,
+    "uncompressed_size": 165548,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome5_Brands.ttf",
+    "compressed_size": 90583,
+    "uncompressed_size": 134040,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome5_Regular.ttf",
+    "compressed_size": 16251,
+    "uncompressed_size": 33736,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome5_Solid.ttf",
+    "compressed_size": 102584,
+    "uncompressed_size": 202744,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome6_Brands.ttf",
+    "compressed_size": 122242,
+    "uncompressed_size": 209376,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome6_Regular.ttf",
+    "compressed_size": 26721,
+    "uncompressed_size": 67976,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/FontAwesome6_Solid.ttf",
+    "compressed_size": 172411,
+    "uncompressed_size": 423676,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Fontisto.ttf",
+    "compressed_size": 169152,
+    "uncompressed_size": 313528,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Foundation.ttf",
+    "compressed_size": 33660,
+    "uncompressed_size": 56976,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Ionicons.ttf",
+    "compressed_size": 256499,
+    "uncompressed_size": 442604,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/MaterialCommunityIcons.ttf",
+    "compressed_size": 523319,
+    "uncompressed_size": 1147844,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/MaterialIcons.ttf",
+    "compressed_size": 173019,
+    "uncompressed_size": 356840,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Octicons.ttf",
+    "compressed_size": 24945,
+    "uncompressed_size": 49404,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/SimpleLineIcons.ttf",
+    "compressed_size": 36033,
+    "uncompressed_size": 54056,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/fonts/Zocial.ttf",
+    "compressed_size": 17750,
+    "uncompressed_size": 25788,
+    "compress_type": 8
+  },
+  {
+    "path": "assets/index.android.bundle",
+    "compressed_size": 1215172,
+    "uncompressed_size": 1215172,
+    "compress_type": 0
+  },
+  {
+    "path": "DebugProbesKt.bin",
+    "compressed_size": 782,
+    "uncompressed_size": 1738,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.activity_activity.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.annotation_annotation-experimental.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.appcompat_appcompat-resources.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.appcompat_appcompat.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.arch.core_core-runtime.version",
+    "compressed_size": 61,
+    "uncompressed_size": 67,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.autofill_autofill.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.core_core-ktx.version",
+    "compressed_size": 9,
+    "uncompressed_size": 7,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.core_core.version",
+    "compressed_size": 9,
+    "uncompressed_size": 7,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.cursoradapter_cursoradapter.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.customview_customview.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.drawerlayout_drawerlayout.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.emoji2_emoji2-views-helper.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.emoji2_emoji2.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.fragment_fragment.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.interpolator_interpolator.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-livedata-core.version",
+    "compressed_size": 67,
+    "uncompressed_size": 78,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-livedata.version",
+    "compressed_size": 62,
+    "uncompressed_size": 73,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-process.version",
+    "compressed_size": 60,
+    "uncompressed_size": 72,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-runtime.version",
+    "compressed_size": 61,
+    "uncompressed_size": 72,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-viewmodel-savedstate.version",
+    "compressed_size": 74,
+    "uncompressed_size": 85,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.lifecycle_lifecycle-viewmodel.version",
+    "compressed_size": 63,
+    "uncompressed_size": 74,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.loader_loader.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.profileinstaller_profileinstaller.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.savedstate_savedstate.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.startup_startup-runtime.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.swiperefreshlayout_swiperefreshlayout.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.tracing_tracing.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.vectordrawable_vectordrawable-animated.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.vectordrawable_vectordrawable.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.versionedparcelable_versionedparcelable.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.viewpager_viewpager.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/androidx.webkit_webkit.version",
+    "compressed_size": 8,
+    "uncompressed_size": 6,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/kotlinx_coroutines_android.version",
+    "compressed_size": 7,
+    "uncompressed_size": 5,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/kotlinx_coroutines_core.version",
+    "compressed_size": 7,
+    "uncompressed_size": 5,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin-tooling-metadata.json",
+    "compressed_size": 284,
+    "uncompressed_size": 625,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/annotation/annotation.kotlin_builtins",
+    "compressed_size": 561,
+    "uncompressed_size": 928,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/collections/collections.kotlin_builtins",
+    "compressed_size": 1521,
+    "uncompressed_size": 3685,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/coroutines/coroutines.kotlin_builtins",
+    "compressed_size": 157,
+    "uncompressed_size": 200,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/internal/internal.kotlin_builtins",
+    "compressed_size": 394,
+    "uncompressed_size": 646,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/kotlin.kotlin_builtins",
+    "compressed_size": 5257,
+    "uncompressed_size": 18661,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/ranges/ranges.kotlin_builtins",
+    "compressed_size": 1292,
+    "uncompressed_size": 3399,
+    "compress_type": 8
+  },
+  {
+    "path": "kotlin/reflect/reflect.kotlin_builtins",
+    "compressed_size": 1286,
+    "uncompressed_size": 2426,
+    "compress_type": 8
+  },
+  {
+    "path": "okhttp3/internal/publicsuffix/NOTICE",
+    "compressed_size": 149,
+    "uncompressed_size": 218,
+    "compress_type": 8
+  },
+  {
+    "path": "okhttp3/internal/publicsuffix/publicsuffixes.gz",
+    "compressed_size": 37745,
+    "uncompressed_size": 37730,
+    "compress_type": 8
+  },
+  {
+    "path": "AndroidManifest.xml",
+    "compressed_size": 2077,
+    "uncompressed_size": 7324,
+    "compress_type": 8
+  },
+  {
+    "path": "res/-8.xml",
+    "compressed_size": 377,
+    "uncompressed_size": 724,
+    "compress_type": 8
+  },
+  {
+    "path": "res/-9.xml",
+    "compressed_size": 627,
+    "uncompressed_size": 1592,
+    "compress_type": 8
+  },
+  {
+    "path": "res/-B.png",
+    "compressed_size": 281,
+    "uncompressed_size": 281,
+    "compress_type": 0
+  },
+  {
+    "path": "res/-N.png",
+    "compressed_size": 318,
+    "uncompressed_size": 318,
+    "compress_type": 0
+  },
+  {
+    "path": "res/-h.xml",
+    "compressed_size": 261,
+    "uncompressed_size": 532,
+    "compress_type": 8
+  },
+  {
+    "path": "res/-k.xml",
+    "compressed_size": 217,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/-u.png",
+    "compressed_size": 9640,
+    "uncompressed_size": 9640,
+    "compress_type": 0
+  },
+  {
+    "path": "res/0K.xml",
+    "compressed_size": 222,
+    "uncompressed_size": 448,
+    "compress_type": 8
+  },
+  {
+    "path": "res/0M.xml",
+    "compressed_size": 337,
+    "uncompressed_size": 1064,
+    "compress_type": 8
+  },
+  {
+    "path": "res/0Z.png",
+    "compressed_size": 1171,
+    "uncompressed_size": 1171,
+    "compress_type": 0
+  },
+  {
+    "path": "res/0c.9.png",
+    "compressed_size": 267,
+    "uncompressed_size": 267,
+    "compress_type": 0
+  },
+  {
+    "path": "res/0x.9.png",
+    "compressed_size": 209,
+    "uncompressed_size": 209,
+    "compress_type": 0
+  },
+  {
+    "path": "res/1I.9.png",
+    "compressed_size": 2305,
+    "uncompressed_size": 2305,
+    "compress_type": 0
+  },
+  {
+    "path": "res/1J.9.png",
+    "compressed_size": 1731,
+    "uncompressed_size": 1731,
+    "compress_type": 0
+  },
+  {
+    "path": "res/1e.9.png",
+    "compressed_size": 171,
+    "uncompressed_size": 171,
+    "compress_type": 0
+  },
+  {
+    "path": "res/27.xml",
+    "compressed_size": 174,
+    "uncompressed_size": 336,
+    "compress_type": 8
+  },
+  {
+    "path": "res/2K.9.png",
+    "compressed_size": 225,
+    "uncompressed_size": 225,
+    "compress_type": 0
+  },
+  {
+    "path": "res/2M.xml",
+    "compressed_size": 310,
+    "uncompressed_size": 596,
+    "compress_type": 8
+  },
+  {
+    "path": "res/2P.png",
+    "compressed_size": 262,
+    "uncompressed_size": 262,
+    "compress_type": 0
+  },
+  {
+    "path": "res/2d.png",
+    "compressed_size": 145,
+    "uncompressed_size": 145,
+    "compress_type": 0
+  },
+  {
+    "path": "res/2f.xml",
+    "compressed_size": 642,
+    "uncompressed_size": 1456,
+    "compress_type": 8
+  },
+  {
+    "path": "res/2f1.xml",
+    "compressed_size": 669,
+    "uncompressed_size": 1916,
+    "compress_type": 8
+  },
+  {
+    "path": "res/2j.xml",
+    "compressed_size": 805,
+    "uncompressed_size": 2072,
+    "compress_type": 8
+  },
+  {
+    "path": "res/33.9.png",
+    "compressed_size": 541,
+    "uncompressed_size": 541,
+    "compress_type": 0
+  },
+  {
+    "path": "res/3A.xml",
+    "compressed_size": 499,
+    "uncompressed_size": 1056,
+    "compress_type": 8
+  },
+  {
+    "path": "res/3J.xml",
+    "compressed_size": 363,
+    "uncompressed_size": 956,
+    "compress_type": 8
+  },
+  {
+    "path": "res/3u.9.png",
+    "compressed_size": 258,
+    "uncompressed_size": 258,
+    "compress_type": 0
+  },
+  {
+    "path": "res/42.9.png",
+    "compressed_size": 214,
+    "uncompressed_size": 214,
+    "compress_type": 0
+  },
+  {
+    "path": "res/46.xml",
+    "compressed_size": 381,
+    "uncompressed_size": 780,
+    "compress_type": 8
+  },
+  {
+    "path": "res/49.png",
+    "compressed_size": 595,
+    "uncompressed_size": 595,
+    "compress_type": 0
+  },
+  {
+    "path": "res/4B.xml",
+    "compressed_size": 265,
+    "uncompressed_size": 452,
+    "compress_type": 8
+  },
+  {
+    "path": "res/4_.xml",
+    "compressed_size": 381,
+    "uncompressed_size": 692,
+    "compress_type": 8
+  },
+  {
+    "path": "res/4k.png",
+    "compressed_size": 201,
+    "uncompressed_size": 201,
+    "compress_type": 0
+  },
+  {
+    "path": "res/4u.xml",
+    "compressed_size": 292,
+    "uncompressed_size": 756,
+    "compress_type": 8
+  },
+  {
+    "path": "res/4z.xml",
+    "compressed_size": 416,
+    "uncompressed_size": 876,
+    "compress_type": 8
+  },
+  {
+    "path": "res/5D.9.png",
+    "compressed_size": 272,
+    "uncompressed_size": 272,
+    "compress_type": 0
+  },
+  {
+    "path": "res/5P.png",
+    "compressed_size": 628,
+    "uncompressed_size": 628,
+    "compress_type": 0
+  },
+  {
+    "path": "res/5T.xml",
+    "compressed_size": 377,
+    "uncompressed_size": 852,
+    "compress_type": 8
+  },
+  {
+    "path": "res/5U.png",
+    "compressed_size": 396,
+    "uncompressed_size": 396,
+    "compress_type": 0
+  },
+  {
+    "path": "res/5c.png",
+    "compressed_size": 138,
+    "uncompressed_size": 138,
+    "compress_type": 0
+  },
+  {
+    "path": "res/5v.png",
+    "compressed_size": 201,
+    "uncompressed_size": 201,
+    "compress_type": 0
+  },
+  {
+    "path": "res/5z.xml",
+    "compressed_size": 395,
+    "uncompressed_size": 1128,
+    "compress_type": 8
+  },
+  {
+    "path": "res/62.9.png",
+    "compressed_size": 210,
+    "uncompressed_size": 210,
+    "compress_type": 0
+  },
+  {
+    "path": "res/65.9.png",
+    "compressed_size": 235,
+    "uncompressed_size": 235,
+    "compress_type": 0
+  },
+  {
+    "path": "res/6P.png",
+    "compressed_size": 199,
+    "uncompressed_size": 199,
+    "compress_type": 0
+  },
+  {
+    "path": "res/6Q.xml",
+    "compressed_size": 300,
+    "uncompressed_size": 688,
+    "compress_type": 8
+  },
+  {
+    "path": "res/6d.png",
+    "compressed_size": 452,
+    "uncompressed_size": 452,
+    "compress_type": 0
+  },
+  {
+    "path": "res/6t.png",
+    "compressed_size": 227,
+    "uncompressed_size": 227,
+    "compress_type": 0
+  },
+  {
+    "path": "res/71.png",
+    "compressed_size": 290,
+    "uncompressed_size": 290,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7C.9.png",
+    "compressed_size": 430,
+    "uncompressed_size": 430,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7G.xml",
+    "compressed_size": 523,
+    "uncompressed_size": 1116,
+    "compress_type": 8
+  },
+  {
+    "path": "res/7H.xml",
+    "compressed_size": 229,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/7I.9.png",
+    "compressed_size": 345,
+    "uncompressed_size": 345,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7N.xml",
+    "compressed_size": 185,
+    "uncompressed_size": 372,
+    "compress_type": 8
+  },
+  {
+    "path": "res/7V.png",
+    "compressed_size": 254,
+    "uncompressed_size": 254,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7Y.xml",
+    "compressed_size": 143,
+    "uncompressed_size": 280,
+    "compress_type": 8
+  },
+  {
+    "path": "res/7_.9.png",
+    "compressed_size": 813,
+    "uncompressed_size": 813,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7f.xml",
+    "compressed_size": 327,
+    "uncompressed_size": 740,
+    "compress_type": 8
+  },
+  {
+    "path": "res/7i.png",
+    "compressed_size": 464,
+    "uncompressed_size": 464,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7m.png",
+    "compressed_size": 884,
+    "uncompressed_size": 884,
+    "compress_type": 0
+  },
+  {
+    "path": "res/7o.9.png",
+    "compressed_size": 525,
+    "uncompressed_size": 525,
+    "compress_type": 0
+  },
+  {
+    "path": "res/80.xml",
+    "compressed_size": 841,
+    "uncompressed_size": 2688,
+    "compress_type": 8
+  },
+  {
+    "path": "res/801.xml",
+    "compressed_size": 392,
+    "uncompressed_size": 940,
+    "compress_type": 8
+  },
+  {
+    "path": "res/802.xml",
+    "compressed_size": 393,
+    "uncompressed_size": 940,
+    "compress_type": 8
+  },
+  {
+    "path": "res/8c.png",
+    "compressed_size": 11180,
+    "uncompressed_size": 11180,
+    "compress_type": 0
+  },
+  {
+    "path": "res/8h.9.png",
+    "compressed_size": 207,
+    "uncompressed_size": 207,
+    "compress_type": 0
+  },
+  {
+    "path": "res/8h.png",
+    "compressed_size": 946,
+    "uncompressed_size": 946,
+    "compress_type": 0
+  },
+  {
+    "path": "res/8t.xml",
+    "compressed_size": 663,
+    "uncompressed_size": 1356,
+    "compress_type": 8
+  },
+  {
+    "path": "res/95.xml",
+    "compressed_size": 443,
+    "uncompressed_size": 1260,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9N.9.png",
+    "compressed_size": 187,
+    "uncompressed_size": 187,
+    "compress_type": 0
+  },
+  {
+    "path": "res/9P.xml",
+    "compressed_size": 331,
+    "uncompressed_size": 600,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9T.xml",
+    "compressed_size": 394,
+    "uncompressed_size": 932,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9T1.xml",
+    "compressed_size": 428,
+    "uncompressed_size": 1656,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9T2.xml",
+    "compressed_size": 373,
+    "uncompressed_size": 1028,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9V.xml",
+    "compressed_size": 643,
+    "uncompressed_size": 1560,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9X.9.png",
+    "compressed_size": 192,
+    "uncompressed_size": 192,
+    "compress_type": 0
+  },
+  {
+    "path": "res/9a.xml",
+    "compressed_size": 271,
+    "uncompressed_size": 592,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9m.xml",
+    "compressed_size": 172,
+    "uncompressed_size": 304,
+    "compress_type": 8
+  },
+  {
+    "path": "res/9n.9.png",
+    "compressed_size": 178,
+    "uncompressed_size": 178,
+    "compress_type": 0
+  },
+  {
+    "path": "res/9w.png",
+    "compressed_size": 1974,
+    "uncompressed_size": 1974,
+    "compress_type": 0
+  },
+  {
+    "path": "res/9z.png",
+    "compressed_size": 593,
+    "uncompressed_size": 593,
+    "compress_type": 0
+  },
+  {
+    "path": "res/9z.xml",
+    "compressed_size": 230,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/A1.xml",
+    "compressed_size": 389,
+    "uncompressed_size": 872,
+    "compress_type": 8
+  },
+  {
+    "path": "res/A4.xml",
+    "compressed_size": 302,
+    "uncompressed_size": 680,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Ac.xml",
+    "compressed_size": 421,
+    "uncompressed_size": 772,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Ag.png",
+    "compressed_size": 465,
+    "uncompressed_size": 465,
+    "compress_type": 0
+  },
+  {
+    "path": "res/BG.9.png",
+    "compressed_size": 190,
+    "uncompressed_size": 190,
+    "compress_type": 0
+  },
+  {
+    "path": "res/BJ.xml",
+    "compressed_size": 339,
+    "uncompressed_size": 640,
+    "compress_type": 8
+  },
+  {
+    "path": "res/BJ1.xml",
+    "compressed_size": 392,
+    "uncompressed_size": 1128,
+    "compress_type": 8
+  },
+  {
+    "path": "res/BL.9.png",
+    "compressed_size": 229,
+    "uncompressed_size": 229,
+    "compress_type": 0
+  },
+  {
+    "path": "res/BM.png",
+    "compressed_size": 159,
+    "uncompressed_size": 159,
+    "compress_type": 0
+  },
+  {
+    "path": "res/BT.png",
+    "compressed_size": 264,
+    "uncompressed_size": 264,
+    "compress_type": 0
+  },
+  {
+    "path": "res/BW.xml",
+    "compressed_size": 222,
+    "uncompressed_size": 448,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Bd.xml",
+    "compressed_size": 218,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Be.xml",
+    "compressed_size": 836,
+    "uncompressed_size": 2648,
+    "compress_type": 8
+  },
+  {
+    "path": "res/CK.9.png",
+    "compressed_size": 244,
+    "uncompressed_size": 244,
+    "compress_type": 0
+  },
+  {
+    "path": "res/C_.9.png",
+    "compressed_size": 215,
+    "uncompressed_size": 215,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Cg.xml",
+    "compressed_size": 199,
+    "uncompressed_size": 424,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Ck.png",
+    "compressed_size": 823,
+    "uncompressed_size": 823,
+    "compress_type": 0
+  },
+  {
+    "path": "res/D-.xml",
+    "compressed_size": 734,
+    "uncompressed_size": 1528,
+    "compress_type": 8
+  },
+  {
+    "path": "res/D5.xml",
+    "compressed_size": 451,
+    "uncompressed_size": 812,
+    "compress_type": 8
+  },
+  {
+    "path": "res/DL.9.png",
+    "compressed_size": 178,
+    "uncompressed_size": 178,
+    "compress_type": 0
+  },
+  {
+    "path": "res/DM.xml",
+    "compressed_size": 443,
+    "uncompressed_size": 868,
+    "compress_type": 8
+  },
+  {
+    "path": "res/DV.xml",
+    "compressed_size": 213,
+    "uncompressed_size": 460,
+    "compress_type": 8
+  },
+  {
+    "path": "res/DV1.xml",
+    "compressed_size": 388,
+    "uncompressed_size": 792,
+    "compress_type": 8
+  },
+  {
+    "path": "res/DZ.xml",
+    "compressed_size": 190,
+    "uncompressed_size": 320,
+    "compress_type": 8
+  },
+  {
+    "path": "res/D_.9.png",
+    "compressed_size": 178,
+    "uncompressed_size": 178,
+    "compress_type": 0
+  },
+  {
+    "path": "res/EA.9.png",
+    "compressed_size": 200,
+    "uncompressed_size": 200,
+    "compress_type": 0
+  },
+  {
+    "path": "res/EP.png",
+    "compressed_size": 310,
+    "uncompressed_size": 310,
+    "compress_type": 0
+  },
+  {
+    "path": "res/EZ.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 396,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Ec.png",
+    "compressed_size": 206,
+    "uncompressed_size": 206,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Eg.xml",
+    "compressed_size": 551,
+    "uncompressed_size": 1716,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Em.png",
+    "compressed_size": 13157,
+    "uncompressed_size": 13157,
+    "compress_type": 0
+  },
+  {
+    "path": "res/F8.xml",
+    "compressed_size": 595,
+    "uncompressed_size": 1684,
+    "compress_type": 8
+  },
+  {
+    "path": "res/FS.png",
+    "compressed_size": 4238,
+    "uncompressed_size": 4238,
+    "compress_type": 0
+  },
+  {
+    "path": "res/FT.xml",
+    "compressed_size": 567,
+    "uncompressed_size": 1304,
+    "compress_type": 8
+  },
+  {
+    "path": "res/FW.png",
+    "compressed_size": 307,
+    "uncompressed_size": 307,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Ff.png",
+    "compressed_size": 317,
+    "uncompressed_size": 317,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Fu.xml",
+    "compressed_size": 550,
+    "uncompressed_size": 1352,
+    "compress_type": 8
+  },
+  {
+    "path": "res/G2.9.png",
+    "compressed_size": 1243,
+    "uncompressed_size": 1243,
+    "compress_type": 0
+  },
+  {
+    "path": "res/G2.xml",
+    "compressed_size": 401,
+    "uncompressed_size": 736,
+    "compress_type": 8
+  },
+  {
+    "path": "res/G8.xml",
+    "compressed_size": 331,
+    "uncompressed_size": 700,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GC.xml",
+    "compressed_size": 455,
+    "uncompressed_size": 828,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GD.xml",
+    "compressed_size": 554,
+    "uncompressed_size": 1096,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GF.xml",
+    "compressed_size": 250,
+    "uncompressed_size": 440,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GK.xml",
+    "compressed_size": 461,
+    "uncompressed_size": 1172,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GR.xml",
+    "compressed_size": 469,
+    "uncompressed_size": 1208,
+    "compress_type": 8
+  },
+  {
+    "path": "res/GY.png",
+    "compressed_size": 290,
+    "uncompressed_size": 290,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Gc.png",
+    "compressed_size": 11180,
+    "uncompressed_size": 11180,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Gf.png",
+    "compressed_size": 984,
+    "uncompressed_size": 984,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Gt.9.png",
+    "compressed_size": 202,
+    "uncompressed_size": 202,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Gt.xml",
+    "compressed_size": 319,
+    "uncompressed_size": 1012,
+    "compress_type": 8
+  },
+  {
+    "path": "res/H-.png",
+    "compressed_size": 203,
+    "uncompressed_size": 203,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Hd.xml",
+    "compressed_size": 268,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/IX.9.png",
+    "compressed_size": 1544,
+    "uncompressed_size": 1544,
+    "compress_type": 0
+  },
+  {
+    "path": "res/In.xml",
+    "compressed_size": 233,
+    "uncompressed_size": 468,
+    "compress_type": 8
+  },
+  {
+    "path": "res/JJ.9.png",
+    "compressed_size": 280,
+    "uncompressed_size": 280,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Jl.xml",
+    "compressed_size": 230,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/K5.xml",
+    "compressed_size": 433,
+    "uncompressed_size": 1656,
+    "compress_type": 8
+  },
+  {
+    "path": "res/KH.9.png",
+    "compressed_size": 618,
+    "uncompressed_size": 618,
+    "compress_type": 0
+  },
+  {
+    "path": "res/KM.png",
+    "compressed_size": 415,
+    "uncompressed_size": 415,
+    "compress_type": 0
+  },
+  {
+    "path": "res/K_.9.png",
+    "compressed_size": 216,
+    "uncompressed_size": 216,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Ke.xml",
+    "compressed_size": 660,
+    "uncompressed_size": 2360,
+    "compress_type": 8
+  },
+  {
+    "path": "res/LO.png",
+    "compressed_size": 264,
+    "uncompressed_size": 264,
+    "compress_type": 0
+  },
+  {
+    "path": "res/L_.xml",
+    "compressed_size": 337,
+    "uncompressed_size": 1064,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Lf.png",
+    "compressed_size": 13157,
+    "uncompressed_size": 13157,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Lf.xml",
+    "compressed_size": 421,
+    "uncompressed_size": 1656,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Li.9.png",
+    "compressed_size": 1779,
+    "uncompressed_size": 1779,
+    "compress_type": 0
+  },
+  {
+    "path": "res/M7.xml",
+    "compressed_size": 397,
+    "uncompressed_size": 1196,
+    "compress_type": 8
+  },
+  {
+    "path": "res/MD.png",
+    "compressed_size": 1171,
+    "uncompressed_size": 1171,
+    "compress_type": 0
+  },
+  {
+    "path": "res/MF.9.png",
+    "compressed_size": 2816,
+    "uncompressed_size": 2816,
+    "compress_type": 0
+  },
+  {
+    "path": "res/MO.xml",
+    "compressed_size": 199,
+    "uncompressed_size": 424,
+    "compress_type": 8
+  },
+  {
+    "path": "res/MQ.png",
+    "compressed_size": 513,
+    "uncompressed_size": 513,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Ma.9.png",
+    "compressed_size": 247,
+    "uncompressed_size": 247,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Mp.xml",
+    "compressed_size": 376,
+    "uncompressed_size": 792,
+    "compress_type": 8
+  },
+  {
+    "path": "res/NA.9.png",
+    "compressed_size": 2505,
+    "uncompressed_size": 2505,
+    "compress_type": 0
+  },
+  {
+    "path": "res/NF.xml",
+    "compressed_size": 190,
+    "uncompressed_size": 328,
+    "compress_type": 8
+  },
+  {
+    "path": "res/NG.png",
+    "compressed_size": 322,
+    "uncompressed_size": 322,
+    "compress_type": 0
+  },
+  {
+    "path": "res/NM.xml",
+    "compressed_size": 223,
+    "uncompressed_size": 484,
+    "compress_type": 8
+  },
+  {
+    "path": "res/NZ.9.png",
+    "compressed_size": 182,
+    "uncompressed_size": 182,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Nk.9.png",
+    "compressed_size": 776,
+    "uncompressed_size": 776,
+    "compress_type": 0
+  },
+  {
+    "path": "res/No.9.png",
+    "compressed_size": 199,
+    "uncompressed_size": 199,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Nu.xml",
+    "compressed_size": 703,
+    "uncompressed_size": 1728,
+    "compress_type": 8
+  },
+  {
+    "path": "res/OI.xml",
+    "compressed_size": 367,
+    "uncompressed_size": 708,
+    "compress_type": 8
+  },
+  {
+    "path": "res/OM.png",
+    "compressed_size": 384,
+    "uncompressed_size": 384,
+    "compress_type": 0
+  },
+  {
+    "path": "res/OX.png",
+    "compressed_size": 375,
+    "uncompressed_size": 375,
+    "compress_type": 0
+  },
+  {
+    "path": "res/OX1.png",
+    "compressed_size": 465,
+    "uncompressed_size": 465,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Ol.xml",
+    "compressed_size": 678,
+    "uncompressed_size": 1656,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Pa.9.png",
+    "compressed_size": 738,
+    "uncompressed_size": 738,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Pb.png",
+    "compressed_size": 631,
+    "uncompressed_size": 631,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Pg.9.png",
+    "compressed_size": 207,
+    "uncompressed_size": 207,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Q-.png",
+    "compressed_size": 270,
+    "uncompressed_size": 270,
+    "compress_type": 0
+  },
+  {
+    "path": "res/QJ.9.png",
+    "compressed_size": 189,
+    "uncompressed_size": 189,
+    "compress_type": 0
+  },
+  {
+    "path": "res/QZ.png",
+    "compressed_size": 13157,
+    "uncompressed_size": 13157,
+    "compress_type": 0
+  },
+  {
+    "path": "res/QZ.xml",
+    "compressed_size": 68,
+    "uncompressed_size": 124,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Qd.xml",
+    "compressed_size": 435,
+    "uncompressed_size": 796,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Qt.xml",
+    "compressed_size": 514,
+    "uncompressed_size": 980,
+    "compress_type": 8
+  },
+  {
+    "path": "res/RD.xml",
+    "compressed_size": 227,
+    "uncompressed_size": 396,
+    "compress_type": 8
+  },
+  {
+    "path": "res/RH.xml",
+    "compressed_size": 395,
+    "uncompressed_size": 832,
+    "compress_type": 8
+  },
+  {
+    "path": "res/RJ.png",
+    "compressed_size": 7090,
+    "uncompressed_size": 7090,
+    "compress_type": 0
+  },
+  {
+    "path": "res/RV.png",
+    "compressed_size": 563,
+    "uncompressed_size": 563,
+    "compress_type": 0
+  },
+  {
+    "path": "res/S8.xml",
+    "compressed_size": 487,
+    "uncompressed_size": 1052,
+    "compress_type": 8
+  },
+  {
+    "path": "res/SV.9.png",
+    "compressed_size": 211,
+    "uncompressed_size": 211,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Sa.xml",
+    "compressed_size": 939,
+    "uncompressed_size": 2084,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Sc.xml",
+    "compressed_size": 389,
+    "uncompressed_size": 1128,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Su.9.png",
+    "compressed_size": 178,
+    "uncompressed_size": 178,
+    "compress_type": 0
+  },
+  {
+    "path": "res/TM.xml",
+    "compressed_size": 187,
+    "uncompressed_size": 312,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Th.png",
+    "compressed_size": 785,
+    "uncompressed_size": 785,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Tj.9.png",
+    "compressed_size": 327,
+    "uncompressed_size": 327,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Tl.xml",
+    "compressed_size": 644,
+    "uncompressed_size": 1320,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Tn.xml",
+    "compressed_size": 394,
+    "uncompressed_size": 768,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Tr.png",
+    "compressed_size": 254,
+    "uncompressed_size": 254,
+    "compress_type": 0
+  },
+  {
+    "path": "res/U-.9.png",
+    "compressed_size": 223,
+    "uncompressed_size": 223,
+    "compress_type": 0
+  },
+  {
+    "path": "res/U8.xml",
+    "compressed_size": 831,
+    "uncompressed_size": 2660,
+    "compress_type": 8
+  },
+  {
+    "path": "res/UE.9.png",
+    "compressed_size": 222,
+    "uncompressed_size": 222,
+    "compress_type": 0
+  },
+  {
+    "path": "res/UR.png",
+    "compressed_size": 422,
+    "uncompressed_size": 422,
+    "compress_type": 0
+  },
+  {
+    "path": "res/UX.xml",
+    "compressed_size": 259,
+    "uncompressed_size": 508,
+    "compress_type": 8
+  },
+  {
+    "path": "res/V1.xml",
+    "compressed_size": 443,
+    "uncompressed_size": 864,
+    "compress_type": 8
+  },
+  {
+    "path": "res/V7.xml",
+    "compressed_size": 175,
+    "uncompressed_size": 304,
+    "compress_type": 8
+  },
+  {
+    "path": "res/VF.xml",
+    "compressed_size": 289,
+    "uncompressed_size": 564,
+    "compress_type": 8
+  },
+  {
+    "path": "res/VM.xml",
+    "compressed_size": 190,
+    "uncompressed_size": 328,
+    "compress_type": 8
+  },
+  {
+    "path": "res/VN.xml",
+    "compressed_size": 359,
+    "uncompressed_size": 684,
+    "compress_type": 8
+  },
+  {
+    "path": "res/VT.xml",
+    "compressed_size": 351,
+    "uncompressed_size": 640,
+    "compress_type": 8
+  },
+  {
+    "path": "res/VW.png",
+    "compressed_size": 452,
+    "uncompressed_size": 452,
+    "compress_type": 0
+  },
+  {
+    "path": "res/W4.9.png",
+    "compressed_size": 217,
+    "uncompressed_size": 217,
+    "compress_type": 0
+  },
+  {
+    "path": "res/W5.png",
+    "compressed_size": 472,
+    "uncompressed_size": 472,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Wg.xml",
+    "compressed_size": 271,
+    "uncompressed_size": 592,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Wh.png",
+    "compressed_size": 171,
+    "uncompressed_size": 171,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Wr.png",
+    "compressed_size": 335,
+    "uncompressed_size": 335,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Ws.xml",
+    "compressed_size": 470,
+    "uncompressed_size": 1180,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Wz.png",
+    "compressed_size": 196,
+    "uncompressed_size": 196,
+    "compress_type": 0
+  },
+  {
+    "path": "res/X3.9.png",
+    "compressed_size": 221,
+    "uncompressed_size": 221,
+    "compress_type": 0
+  },
+  {
+    "path": "res/X4.9.png",
+    "compressed_size": 187,
+    "uncompressed_size": 187,
+    "compress_type": 0
+  },
+  {
+    "path": "res/XK.xml",
+    "compressed_size": 241,
+    "uncompressed_size": 516,
+    "compress_type": 8
+  },
+  {
+    "path": "res/XW.xml",
+    "compressed_size": 68,
+    "uncompressed_size": 124,
+    "compress_type": 8
+  },
+  {
+    "path": "res/XY.xml",
+    "compressed_size": 152,
+    "uncompressed_size": 264,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Xx.xml",
+    "compressed_size": 245,
+    "uncompressed_size": 516,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Y3.png",
+    "compressed_size": 384,
+    "uncompressed_size": 384,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Y7.9.png",
+    "compressed_size": 212,
+    "uncompressed_size": 212,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Y9.png",
+    "compressed_size": 623,
+    "uncompressed_size": 623,
+    "compress_type": 0
+  },
+  {
+    "path": "res/YD.png",
+    "compressed_size": 201,
+    "uncompressed_size": 201,
+    "compress_type": 0
+  },
+  {
+    "path": "res/YG.9.png",
+    "compressed_size": 203,
+    "uncompressed_size": 203,
+    "compress_type": 0
+  },
+  {
+    "path": "res/YH.xml",
+    "compressed_size": 186,
+    "uncompressed_size": 312,
+    "compress_type": 8
+  },
+  {
+    "path": "res/YW.xml",
+    "compressed_size": 185,
+    "uncompressed_size": 372,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Y_.xml",
+    "compressed_size": 629,
+    "uncompressed_size": 1640,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Yt.9.png",
+    "compressed_size": 209,
+    "uncompressed_size": 209,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Yw.9.png",
+    "compressed_size": 186,
+    "uncompressed_size": 186,
+    "compress_type": 0
+  },
+  {
+    "path": "res/Z-.xml",
+    "compressed_size": 440,
+    "uncompressed_size": 1000,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Z8.png",
+    "compressed_size": 420,
+    "uncompressed_size": 420,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ZL.xml",
+    "compressed_size": 405,
+    "uncompressed_size": 756,
+    "compress_type": 8
+  },
+  {
+    "path": "res/ZN.9.png",
+    "compressed_size": 229,
+    "uncompressed_size": 229,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ZN.xml",
+    "compressed_size": 491,
+    "uncompressed_size": 1000,
+    "compress_type": 8
+  },
+  {
+    "path": "res/Zg.xml",
+    "compressed_size": 380,
+    "uncompressed_size": 1028,
+    "compress_type": 8
+  },
+  {
+    "path": "res/_G.xml",
+    "compressed_size": 223,
+    "uncompressed_size": 484,
+    "compress_type": 8
+  },
+  {
+    "path": "res/_H.xml",
+    "compressed_size": 712,
+    "uncompressed_size": 1492,
+    "compress_type": 8
+  },
+  {
+    "path": "res/_Y.xml",
+    "compressed_size": 825,
+    "uncompressed_size": 2304,
+    "compress_type": 8
+  },
+  {
+    "path": "res/_o.xml",
+    "compressed_size": 187,
+    "uncompressed_size": 316,
+    "compress_type": 8
+  },
+  {
+    "path": "res/_q.png",
+    "compressed_size": 173,
+    "uncompressed_size": 173,
+    "compress_type": 0
+  },
+  {
+    "path": "res/_y.xml",
+    "compressed_size": 309,
+    "uncompressed_size": 612,
+    "compress_type": 8
+  },
+  {
+    "path": "res/a0.xml",
+    "compressed_size": 538,
+    "uncompressed_size": 1228,
+    "compress_type": 8
+  },
+  {
+    "path": "res/aG.xml",
+    "compressed_size": 289,
+    "uncompressed_size": 532,
+    "compress_type": 8
+  },
+  {
+    "path": "res/aM.xml",
+    "compressed_size": 376,
+    "uncompressed_size": 852,
+    "compress_type": 8
+  },
+  {
+    "path": "res/aR.png",
+    "compressed_size": 623,
+    "uncompressed_size": 623,
+    "compress_type": 0
+  },
+  {
+    "path": "res/aU.9.png",
+    "compressed_size": 448,
+    "uncompressed_size": 448,
+    "compress_type": 0
+  },
+  {
+    "path": "res/aU.png",
+    "compressed_size": 628,
+    "uncompressed_size": 628,
+    "compress_type": 0
+  },
+  {
+    "path": "res/aW.xml",
+    "compressed_size": 68,
+    "uncompressed_size": 124,
+    "compress_type": 8
+  },
+  {
+    "path": "res/ar.png",
+    "compressed_size": 391,
+    "uncompressed_size": 391,
+    "compress_type": 0
+  },
+  {
+    "path": "res/as.png",
+    "compressed_size": 13157,
+    "uncompressed_size": 13157,
+    "compress_type": 0
+  },
+  {
+    "path": "res/b2.png",
+    "compressed_size": 422,
+    "uncompressed_size": 422,
+    "compress_type": 0
+  },
+  {
+    "path": "res/bL.xml",
+    "compressed_size": 423,
+    "uncompressed_size": 1408,
+    "compress_type": 8
+  },
+  {
+    "path": "res/bX.9.png",
+    "compressed_size": 244,
+    "uncompressed_size": 244,
+    "compress_type": 0
+  },
+  {
+    "path": "res/bb.xml",
+    "compressed_size": 246,
+    "uncompressed_size": 516,
+    "compress_type": 8
+  },
+  {
+    "path": "res/bi.png",
+    "compressed_size": 317,
+    "uncompressed_size": 317,
+    "compress_type": 0
+  },
+  {
+    "path": "res/bt.xml",
+    "compressed_size": 429,
+    "uncompressed_size": 840,
+    "compress_type": 8
+  },
+  {
+    "path": "res/c5.xml",
+    "compressed_size": 187,
+    "uncompressed_size": 316,
+    "compress_type": 8
+  },
+  {
+    "path": "res/c6.xml",
+    "compressed_size": 184,
+    "uncompressed_size": 372,
+    "compress_type": 8
+  },
+  {
+    "path": "res/cL.xml",
+    "compressed_size": 361,
+    "uncompressed_size": 640,
+    "compress_type": 8
+  },
+  {
+    "path": "res/cV.xml",
+    "compressed_size": 262,
+    "uncompressed_size": 440,
+    "compress_type": 8
+  },
+  {
+    "path": "res/cm.xml",
+    "compressed_size": 471,
+    "uncompressed_size": 920,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_btn_colored_borderless_text_material.xml",
+    "compressed_size": 242,
+    "uncompressed_size": 500,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_btn_colored_text_material.xml",
+    "compressed_size": 242,
+    "uncompressed_size": 500,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_color_highlight_material.xml",
+    "compressed_size": 258,
+    "uncompressed_size": 544,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_btn_checkable.xml",
+    "compressed_size": 272,
+    "uncompressed_size": 624,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_default.xml",
+    "compressed_size": 369,
+    "uncompressed_size": 1120,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_edittext.xml",
+    "compressed_size": 281,
+    "uncompressed_size": 668,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_seek_thumb.xml",
+    "compressed_size": 240,
+    "uncompressed_size": 500,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_spinner.xml",
+    "compressed_size": 281,
+    "uncompressed_size": 668,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color-v23/abc_tint_switch_track.xml",
+    "compressed_size": 281,
+    "uncompressed_size": 664,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_background_cache_hint_selector_material_dark.xml",
+    "compressed_size": 231,
+    "uncompressed_size": 468,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_background_cache_hint_selector_material_light.xml",
+    "compressed_size": 231,
+    "uncompressed_size": 468,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_hint_foreground_material_dark.xml",
+    "compressed_size": 260,
+    "uncompressed_size": 564,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_hint_foreground_material_light.xml",
+    "compressed_size": 259,
+    "uncompressed_size": 564,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_primary_text_disable_only_material_dark.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_primary_text_disable_only_material_light.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_primary_text_material_dark.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_primary_text_material_light.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_search_url_text.xml",
+    "compressed_size": 250,
+    "uncompressed_size": 588,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_secondary_text_material_dark.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/abc_secondary_text_material_light.xml",
+    "compressed_size": 227,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/switch_thumb_material_dark.xml",
+    "compressed_size": 227,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/color/switch_thumb_material_light.xml",
+    "compressed_size": 227,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/cr.xml",
+    "compressed_size": 201,
+    "uncompressed_size": 364,
+    "compress_type": 8
+  },
+  {
+    "path": "res/d3.png",
+    "compressed_size": 432,
+    "uncompressed_size": 432,
+    "compress_type": 0
+  },
+  {
+    "path": "res/d5.9.png",
+    "compressed_size": 851,
+    "uncompressed_size": 851,
+    "compress_type": 0
+  },
+  {
+    "path": "res/dO.xml",
+    "compressed_size": 1103,
+    "uncompressed_size": 3472,
+    "compress_type": 8
+  },
+  {
+    "path": "res/dW.png",
+    "compressed_size": 267,
+    "uncompressed_size": 267,
+    "compress_type": 0
+  },
+  {
+    "path": "res/dY.png",
+    "compressed_size": 404,
+    "uncompressed_size": 404,
+    "compress_type": 0
+  },
+  {
+    "path": "res/df.xml",
+    "compressed_size": 252,
+    "uncompressed_size": 532,
+    "compress_type": 8
+  },
+  {
+    "path": "res/e2.png",
+    "compressed_size": 566,
+    "uncompressed_size": 566,
+    "compress_type": 0
+  },
+  {
+    "path": "res/eA.xml",
+    "compressed_size": 711,
+    "uncompressed_size": 1868,
+    "compress_type": 8
+  },
+  {
+    "path": "res/eR.png",
+    "compressed_size": 356,
+    "uncompressed_size": 356,
+    "compress_type": 0
+  },
+  {
+    "path": "res/eT.9.png",
+    "compressed_size": 318,
+    "uncompressed_size": 318,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ej.9.png",
+    "compressed_size": 167,
+    "uncompressed_size": 167,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ev.9.png",
+    "compressed_size": 228,
+    "uncompressed_size": 228,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ew.png",
+    "compressed_size": 584,
+    "uncompressed_size": 584,
+    "compress_type": 0
+  },
+  {
+    "path": "res/fM.9.png",
+    "compressed_size": 825,
+    "uncompressed_size": 825,
+    "compress_type": 0
+  },
+  {
+    "path": "res/fO.png",
+    "compressed_size": 11180,
+    "uncompressed_size": 11180,
+    "compress_type": 0
+  },
+  {
+    "path": "res/g-.png",
+    "compressed_size": 585,
+    "uncompressed_size": 585,
+    "compress_type": 0
+  },
+  {
+    "path": "res/gK.9.png",
+    "compressed_size": 215,
+    "uncompressed_size": 215,
+    "compress_type": 0
+  },
+  {
+    "path": "res/gR.xml",
+    "compressed_size": 217,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/gZ.9.png",
+    "compressed_size": 524,
+    "uncompressed_size": 524,
+    "compress_type": 0
+  },
+  {
+    "path": "res/gj.9.png",
+    "compressed_size": 237,
+    "uncompressed_size": 237,
+    "compress_type": 0
+  },
+  {
+    "path": "res/gr.png",
+    "compressed_size": 472,
+    "uncompressed_size": 472,
+    "compress_type": 0
+  },
+  {
+    "path": "res/gt.9.png",
+    "compressed_size": 205,
+    "uncompressed_size": 205,
+    "compress_type": 0
+  },
+  {
+    "path": "res/h4.xml",
+    "compressed_size": 640,
+    "uncompressed_size": 2124,
+    "compress_type": 8
+  },
+  {
+    "path": "res/h7.9.png",
+    "compressed_size": 1096,
+    "uncompressed_size": 1096,
+    "compress_type": 0
+  },
+  {
+    "path": "res/hP.xml",
+    "compressed_size": 443,
+    "uncompressed_size": 864,
+    "compress_type": 8
+  },
+  {
+    "path": "res/hP1.xml",
+    "compressed_size": 611,
+    "uncompressed_size": 1584,
+    "compress_type": 8
+  },
+  {
+    "path": "res/hZ.9.png",
+    "compressed_size": 167,
+    "uncompressed_size": 167,
+    "compress_type": 0
+  },
+  {
+    "path": "res/hh.9.png",
+    "compressed_size": 212,
+    "uncompressed_size": 212,
+    "compress_type": 0
+  },
+  {
+    "path": "res/hn.png",
+    "compressed_size": 251,
+    "uncompressed_size": 251,
+    "compress_type": 0
+  },
+  {
+    "path": "res/hq.xml",
+    "compressed_size": 333,
+    "uncompressed_size": 612,
+    "compress_type": 8
+  },
+  {
+    "path": "res/hs.xml",
+    "compressed_size": 218,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/i6.9.png",
+    "compressed_size": 186,
+    "uncompressed_size": 186,
+    "compress_type": 0
+  },
+  {
+    "path": "res/iO.png",
+    "compressed_size": 228,
+    "uncompressed_size": 228,
+    "compress_type": 0
+  },
+  {
+    "path": "res/iQ.xml",
+    "compressed_size": 419,
+    "uncompressed_size": 988,
+    "compress_type": 8
+  },
+  {
+    "path": "res/iR.9.png",
+    "compressed_size": 484,
+    "uncompressed_size": 484,
+    "compress_type": 0
+  },
+  {
+    "path": "res/io.9.png",
+    "compressed_size": 1526,
+    "uncompressed_size": 1526,
+    "compress_type": 0
+  },
+  {
+    "path": "res/j3.xml",
+    "compressed_size": 353,
+    "uncompressed_size": 1100,
+    "compress_type": 8
+  },
+  {
+    "path": "res/j4.png",
+    "compressed_size": 785,
+    "uncompressed_size": 785,
+    "compress_type": 0
+  },
+  {
+    "path": "res/jA.png",
+    "compressed_size": 9640,
+    "uncompressed_size": 9640,
+    "compress_type": 0
+  },
+  {
+    "path": "res/jS.9.png",
+    "compressed_size": 236,
+    "uncompressed_size": 236,
+    "compress_type": 0
+  },
+  {
+    "path": "res/jS1.9.png",
+    "compressed_size": 167,
+    "uncompressed_size": 167,
+    "compress_type": 0
+  },
+  {
+    "path": "res/jW.png",
+    "compressed_size": 753,
+    "uncompressed_size": 753,
+    "compress_type": 0
+  },
+  {
+    "path": "res/je.9.png",
+    "compressed_size": 212,
+    "uncompressed_size": 212,
+    "compress_type": 0
+  },
+  {
+    "path": "res/k1.xml",
+    "compressed_size": 198,
+    "uncompressed_size": 352,
+    "compress_type": 8
+  },
+  {
+    "path": "res/k8.xml",
+    "compressed_size": 649,
+    "uncompressed_size": 1560,
+    "compress_type": 8
+  },
+  {
+    "path": "res/kJ.9.png",
+    "compressed_size": 208,
+    "uncompressed_size": 208,
+    "compress_type": 0
+  },
+  {
+    "path": "res/kS.png",
+    "compressed_size": 375,
+    "uncompressed_size": 375,
+    "compress_type": 0
+  },
+  {
+    "path": "res/k_.xml",
+    "compressed_size": 258,
+    "uncompressed_size": 508,
+    "compress_type": 8
+  },
+  {
+    "path": "res/kj.xml",
+    "compressed_size": 731,
+    "uncompressed_size": 2520,
+    "compress_type": 8
+  },
+  {
+    "path": "res/kn.xml",
+    "compressed_size": 342,
+    "uncompressed_size": 816,
+    "compress_type": 8
+  },
+  {
+    "path": "res/kp.png",
+    "compressed_size": 224,
+    "uncompressed_size": 224,
+    "compress_type": 0
+  },
+  {
+    "path": "res/lN.xml",
+    "compressed_size": 190,
+    "uncompressed_size": 320,
+    "compress_type": 8
+  },
+  {
+    "path": "res/lP.9.png",
+    "compressed_size": 194,
+    "uncompressed_size": 194,
+    "compress_type": 0
+  },
+  {
+    "path": "res/lR.xml",
+    "compressed_size": 260,
+    "uncompressed_size": 440,
+    "compress_type": 8
+  },
+  {
+    "path": "res/ly.png",
+    "compressed_size": 272,
+    "uncompressed_size": 272,
+    "compress_type": 0
+  },
+  {
+    "path": "res/m0.png",
+    "compressed_size": 267,
+    "uncompressed_size": 267,
+    "compress_type": 0
+  },
+  {
+    "path": "res/mm.9.png",
+    "compressed_size": 345,
+    "uncompressed_size": 345,
+    "compress_type": 0
+  },
+  {
+    "path": "res/nI.9.png",
+    "compressed_size": 207,
+    "uncompressed_size": 207,
+    "compress_type": 0
+  },
+  {
+    "path": "res/nP.xml",
+    "compressed_size": 621,
+    "uncompressed_size": 1504,
+    "compress_type": 8
+  },
+  {
+    "path": "res/nT.xml",
+    "compressed_size": 409,
+    "uncompressed_size": 1160,
+    "compress_type": 8
+  },
+  {
+    "path": "res/nf.png",
+    "compressed_size": 1208,
+    "uncompressed_size": 1208,
+    "compress_type": 0
+  },
+  {
+    "path": "res/nz.xml",
+    "compressed_size": 252,
+    "uncompressed_size": 532,
+    "compress_type": 8
+  },
+  {
+    "path": "res/o-.png",
+    "compressed_size": 7616,
+    "uncompressed_size": 7616,
+    "compress_type": 0
+  },
+  {
+    "path": "res/o9.9.png",
+    "compressed_size": 260,
+    "uncompressed_size": 260,
+    "compress_type": 0
+  },
+  {
+    "path": "res/oP.xml",
+    "compressed_size": 343,
+    "uncompressed_size": 816,
+    "compress_type": 8
+  },
+  {
+    "path": "res/oR.xml",
+    "compressed_size": 377,
+    "uncompressed_size": 912,
+    "compress_type": 8
+  },
+  {
+    "path": "res/o_.9.png",
+    "compressed_size": 252,
+    "uncompressed_size": 252,
+    "compress_type": 0
+  },
+  {
+    "path": "res/o_.png",
+    "compressed_size": 651,
+    "uncompressed_size": 651,
+    "compress_type": 0
+  },
+  {
+    "path": "res/op.9.png",
+    "compressed_size": 286,
+    "uncompressed_size": 286,
+    "compress_type": 0
+  },
+  {
+    "path": "res/p8.png",
+    "compressed_size": 823,
+    "uncompressed_size": 823,
+    "compress_type": 0
+  },
+  {
+    "path": "res/pU.xml",
+    "compressed_size": 218,
+    "uncompressed_size": 364,
+    "compress_type": 8
+  },
+  {
+    "path": "res/pY.png",
+    "compressed_size": 107,
+    "uncompressed_size": 107,
+    "compress_type": 0
+  },
+  {
+    "path": "res/pk.png",
+    "compressed_size": 275,
+    "uncompressed_size": 275,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ps.9.png",
+    "compressed_size": 178,
+    "uncompressed_size": 178,
+    "compress_type": 0
+  },
+  {
+    "path": "res/pu.png",
+    "compressed_size": 909,
+    "uncompressed_size": 909,
+    "compress_type": 0
+  },
+  {
+    "path": "res/py.9.png",
+    "compressed_size": 217,
+    "uncompressed_size": 217,
+    "compress_type": 0
+  },
+  {
+    "path": "res/q6.xml",
+    "compressed_size": 396,
+    "uncompressed_size": 1128,
+    "compress_type": 8
+  },
+  {
+    "path": "res/qA.xml",
+    "compressed_size": 265,
+    "uncompressed_size": 452,
+    "compress_type": 8
+  },
+  {
+    "path": "res/qD.9.png",
+    "compressed_size": 2834,
+    "uncompressed_size": 2834,
+    "compress_type": 0
+  },
+  {
+    "path": "res/qp.png",
+    "compressed_size": 197,
+    "uncompressed_size": 197,
+    "compress_type": 0
+  },
+  {
+    "path": "res/qx.xml",
+    "compressed_size": 742,
+    "uncompressed_size": 2780,
+    "compress_type": 8
+  },
+  {
+    "path": "res/qz.xml",
+    "compressed_size": 431,
+    "uncompressed_size": 1656,
+    "compress_type": 8
+  },
+  {
+    "path": "res/rW.xml",
+    "compressed_size": 306,
+    "uncompressed_size": 688,
+    "compress_type": 8
+  },
+  {
+    "path": "res/rY.xml",
+    "compressed_size": 297,
+    "uncompressed_size": 548,
+    "compress_type": 8
+  },
+  {
+    "path": "res/rb.xml",
+    "compressed_size": 197,
+    "uncompressed_size": 352,
+    "compress_type": 8
+  },
+  {
+    "path": "res/rj.9.png",
+    "compressed_size": 1098,
+    "uncompressed_size": 1098,
+    "compress_type": 0
+  },
+  {
+    "path": "res/rx.xml",
+    "compressed_size": 301,
+    "uncompressed_size": 680,
+    "compress_type": 8
+  },
+  {
+    "path": "res/rz.xml",
+    "compressed_size": 229,
+    "uncompressed_size": 396,
+    "compress_type": 8
+  },
+  {
+    "path": "res/s0.png",
+    "compressed_size": 403,
+    "uncompressed_size": 403,
+    "compress_type": 0
+  },
+  {
+    "path": "res/s3.9.png",
+    "compressed_size": 245,
+    "uncompressed_size": 245,
+    "compress_type": 0
+  },
+  {
+    "path": "res/s4.png",
+    "compressed_size": 98,
+    "uncompressed_size": 98,
+    "compress_type": 0
+  },
+  {
+    "path": "res/sA.9.png",
+    "compressed_size": 212,
+    "uncompressed_size": 212,
+    "compress_type": 0
+  },
+  {
+    "path": "res/sA.xml",
+    "compressed_size": 230,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/sg.9.png",
+    "compressed_size": 226,
+    "uncompressed_size": 226,
+    "compress_type": 0
+  },
+  {
+    "path": "res/sn.xml",
+    "compressed_size": 214,
+    "uncompressed_size": 400,
+    "compress_type": 8
+  },
+  {
+    "path": "res/t3.xml",
+    "compressed_size": 320,
+    "uncompressed_size": 588,
+    "compress_type": 8
+  },
+  {
+    "path": "res/t8.xml",
+    "compressed_size": 319,
+    "uncompressed_size": 1012,
+    "compress_type": 8
+  },
+  {
+    "path": "res/tG.png",
+    "compressed_size": 476,
+    "uncompressed_size": 476,
+    "compress_type": 0
+  },
+  {
+    "path": "res/tL.xml",
+    "compressed_size": 324,
+    "uncompressed_size": 716,
+    "compress_type": 8
+  },
+  {
+    "path": "res/tS.png",
+    "compressed_size": 321,
+    "uncompressed_size": 321,
+    "compress_type": 0
+  },
+  {
+    "path": "res/tU.9.png",
+    "compressed_size": 208,
+    "uncompressed_size": 208,
+    "compress_type": 0
+  },
+  {
+    "path": "res/tZ.9.png",
+    "compressed_size": 198,
+    "uncompressed_size": 198,
+    "compress_type": 0
+  },
+  {
+    "path": "res/td.png",
+    "compressed_size": 199,
+    "uncompressed_size": 199,
+    "compress_type": 0
+  },
+  {
+    "path": "res/te.png",
+    "compressed_size": 278,
+    "uncompressed_size": 278,
+    "compress_type": 0
+  },
+  {
+    "path": "res/tq.xml",
+    "compressed_size": 184,
+    "uncompressed_size": 312,
+    "compress_type": 8
+  },
+  {
+    "path": "res/u0.xml",
+    "compressed_size": 397,
+    "uncompressed_size": 1196,
+    "compress_type": 8
+  },
+  {
+    "path": "res/u3.png",
+    "compressed_size": 513,
+    "uncompressed_size": 513,
+    "compress_type": 0
+  },
+  {
+    "path": "res/uD.xml",
+    "compressed_size": 357,
+    "uncompressed_size": 680,
+    "compress_type": 8
+  },
+  {
+    "path": "res/uJ.xml",
+    "compressed_size": 434,
+    "uncompressed_size": 848,
+    "compress_type": 8
+  },
+  {
+    "path": "res/uL.9.png",
+    "compressed_size": 966,
+    "uncompressed_size": 966,
+    "compress_type": 0
+  },
+  {
+    "path": "res/uX.xml",
+    "compressed_size": 415,
+    "uncompressed_size": 844,
+    "compress_type": 8
+  },
+  {
+    "path": "res/uj.9.png",
+    "compressed_size": 196,
+    "uncompressed_size": 196,
+    "compress_type": 0
+  },
+  {
+    "path": "res/ut.9.png",
+    "compressed_size": 754,
+    "uncompressed_size": 754,
+    "compress_type": 0
+  },
+  {
+    "path": "res/uu.9.png",
+    "compressed_size": 204,
+    "uncompressed_size": 204,
+    "compress_type": 0
+  },
+  {
+    "path": "res/v4.9.png",
+    "compressed_size": 208,
+    "uncompressed_size": 208,
+    "compress_type": 0
+  },
+  {
+    "path": "res/vG.xml",
+    "compressed_size": 598,
+    "uncompressed_size": 1396,
+    "compress_type": 8
+  },
+  {
+    "path": "res/vJ.xml",
+    "compressed_size": 284,
+    "uncompressed_size": 528,
+    "compress_type": 8
+  },
+  {
+    "path": "res/vL.9.png",
+    "compressed_size": 223,
+    "uncompressed_size": 223,
+    "compress_type": 0
+  },
+  {
+    "path": "res/vV.xml",
+    "compressed_size": 176,
+    "uncompressed_size": 336,
+    "compress_type": 8
+  },
+  {
+    "path": "res/vZ.xml",
+    "compressed_size": 217,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/vq.xml",
+    "compressed_size": 536,
+    "uncompressed_size": 1020,
+    "compress_type": 8
+  },
+  {
+    "path": "res/vz.9.png",
+    "compressed_size": 181,
+    "uncompressed_size": 181,
+    "compress_type": 0
+  },
+  {
+    "path": "res/w7.png",
+    "compressed_size": 270,
+    "uncompressed_size": 270,
+    "compress_type": 0
+  },
+  {
+    "path": "res/wL.9.png",
+    "compressed_size": 437,
+    "uncompressed_size": 437,
+    "compress_type": 0
+  },
+  {
+    "path": "res/wN.9.png",
+    "compressed_size": 225,
+    "uncompressed_size": 225,
+    "compress_type": 0
+  },
+  {
+    "path": "res/w_.png",
+    "compressed_size": 214,
+    "uncompressed_size": 214,
+    "compress_type": 0
+  },
+  {
+    "path": "res/wa.xml",
+    "compressed_size": 372,
+    "uncompressed_size": 920,
+    "compress_type": 8
+  },
+  {
+    "path": "res/wb.png",
+    "compressed_size": 11180,
+    "uncompressed_size": 11180,
+    "compress_type": 0
+  },
+  {
+    "path": "res/x3.9.png",
+    "compressed_size": 212,
+    "uncompressed_size": 212,
+    "compress_type": 0
+  },
+  {
+    "path": "res/xH.png",
+    "compressed_size": 186,
+    "uncompressed_size": 186,
+    "compress_type": 0
+  },
+  {
+    "path": "res/xL.xml",
+    "compressed_size": 352,
+    "uncompressed_size": 784,
+    "compress_type": 8
+  },
+  {
+    "path": "res/xN.xml",
+    "compressed_size": 790,
+    "uncompressed_size": 2456,
+    "compress_type": 8
+  },
+  {
+    "path": "res/xR.9.png",
+    "compressed_size": 194,
+    "uncompressed_size": 194,
+    "compress_type": 0
+  },
+  {
+    "path": "res/xR.png",
+    "compressed_size": 337,
+    "uncompressed_size": 337,
+    "compress_type": 0
+  },
+  {
+    "path": "res/xa.9.png",
+    "compressed_size": 221,
+    "uncompressed_size": 221,
+    "compress_type": 0
+  },
+  {
+    "path": "res/xj.xml",
+    "compressed_size": 252,
+    "uncompressed_size": 588,
+    "compress_type": 8
+  },
+  {
+    "path": "res/y-.xml",
+    "compressed_size": 228,
+    "uncompressed_size": 396,
+    "compress_type": 8
+  },
+  {
+    "path": "res/y4.xml",
+    "compressed_size": 216,
+    "uncompressed_size": 388,
+    "compress_type": 8
+  },
+  {
+    "path": "res/yH.9.png",
+    "compressed_size": 184,
+    "uncompressed_size": 184,
+    "compress_type": 0
+  },
+  {
+    "path": "res/yQ.xml",
+    "compressed_size": 184,
+    "uncompressed_size": 312,
+    "compress_type": 8
+  },
+  {
+    "path": "res/yV.xml",
+    "compressed_size": 294,
+    "uncompressed_size": 576,
+    "compress_type": 8
+  },
+  {
+    "path": "res/yY.9.png",
+    "compressed_size": 186,
+    "uncompressed_size": 186,
+    "compress_type": 0
+  },
+  {
+    "path": "res/yg.9.png",
+    "compressed_size": 395,
+    "uncompressed_size": 395,
+    "compress_type": 0
+  },
+  {
+    "path": "res/yn.png",
+    "compressed_size": 3073,
+    "uncompressed_size": 3073,
+    "compress_type": 0
+  },
+  {
+    "path": "res/z-.9.png",
+    "compressed_size": 221,
+    "uncompressed_size": 221,
+    "compress_type": 0
+  },
+  {
+    "path": "res/z9.9.png",
+    "compressed_size": 417,
+    "uncompressed_size": 417,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zE.png",
+    "compressed_size": 324,
+    "uncompressed_size": 324,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zL.png",
+    "compressed_size": 206,
+    "uncompressed_size": 206,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zR.png",
+    "compressed_size": 11180,
+    "uncompressed_size": 11180,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zV.9.png",
+    "compressed_size": 2463,
+    "uncompressed_size": 2463,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zp.xml",
+    "compressed_size": 217,
+    "uncompressed_size": 448,
+    "compress_type": 8
+  },
+  {
+    "path": "res/zq.xml",
+    "compressed_size": 268,
+    "uncompressed_size": 464,
+    "compress_type": 8
+  },
+  {
+    "path": "res/zr.png",
+    "compressed_size": 13157,
+    "uncompressed_size": 13157,
+    "compress_type": 0
+  },
+  {
+    "path": "res/zz.png",
+    "compressed_size": 884,
+    "uncompressed_size": 884,
+    "compress_type": 0
+  },
+  {
+    "path": "resources.arsc",
+    "compressed_size": 346188,
+    "uncompressed_size": 346188,
+    "compress_type": 0
+  },
+  {
+    "path": "META-INF/CERT.SF",
+    "compressed_size": 15341,
+    "uncompressed_size": 38939,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/CERT.RSA",
+    "compressed_size": 1152,
+    "uncompressed_size": 1714,
+    "compress_type": 8
+  },
+  {
+    "path": "META-INF/MANIFEST.MF",
+    "compressed_size": 14120,
+    "uncompressed_size": 38834,
+    "compress_type": 8
+  }
+]

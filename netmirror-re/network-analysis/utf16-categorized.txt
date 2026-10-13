@@ -1,0 +1,13 @@
+=== URLs (UTF-16) ===
+
+=== Domains (UTF-16) ===
+
+=== API Paths (UTF-16) ===
+
+=== Screen/Component Names (UTF-16) ===
+ WebView Finished Loading
+ Download button clicked in WebView!
+
+=== Media/Playback Events (UTF-16) ===
+ WebView Finished Loading
+ Download button clicked in WebView!

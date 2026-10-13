@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDiscover, getGenreList } from "@/lib/tmdb";
+import { getDiscover, getGenreList, SUPPORTED_LANGUAGES, OTT_PLATFORMS } from "@/lib/tmdb";
 import { TmdbCard } from "@/components/Card";
 
 export async function generateMetadata({ params, searchParams }) {
   const isTv = params.type === "tv";
+  const lang = searchParams?.lang;
+  const langObj = SUPPORTED_LANGUAGES.find((l) => l.code === lang);
+  const langPrefix = langObj ? `${langObj.label} ` : "";
   return {
-    title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
-    description: `Browse the best HD ${isTv ? "TV shows and web series" : "movies"} by genre, popularity and rating.`
+    title: `${langPrefix}Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
+    description: `Browse ${langPrefix}HD ${isTv ? "TV shows and web series" : "movies"} by audio language, dubbed tracks, OTT platform, and genre.`
   };
 }
 
@@ -17,56 +20,123 @@ export default async function Browse({ params, searchParams }) {
 
   const page = Number(searchParams.page) || 1;
   const genre = searchParams.genre || "";
+  const lang = searchParams.lang || "";
+  const ott = searchParams.ott || "";
 
   const [genres, discoverData] = await Promise.all([
     getGenreList(type),
-    getDiscover(type, genre, page)
+    getDiscover(type, genre, page, "popularity.desc", lang, ott)
   ]);
 
   const items = discoverData.results || [];
   const totalPages = Math.min(discoverData.total_pages || 1, 500);
 
-  const buildUrl = (targetPage, targetGenre = genre) => {
+  const buildUrl = (targetPage = 1, targetGenre = genre, targetLang = lang, targetOtt = ott) => {
     const sp = new URLSearchParams();
-    if (targetGenre) sp.set("genre", targetGenre);
+    if (targetGenre && targetGenre !== "all") sp.set("genre", targetGenre);
+    if (targetLang && targetLang !== "all") sp.set("lang", targetLang);
+    if (targetOtt && targetOtt !== "all") sp.set("ott", targetOtt);
     if (targetPage > 1) sp.set("page", targetPage);
     const qs = sp.toString();
     return `/browse/${type}${qs ? `?${qs}` : ""}`;
   };
 
   const activeGenreName = genres.find((g) => String(g.id) === String(genre) || g.name === genre)?.name;
+  const activeLangObj = SUPPORTED_LANGUAGES.find((l) => l.code === lang);
+  const activeOttObj = OTT_PLATFORMS.find((o) => o.id === ott);
+
+  let pageTitle = type === "movie" ? "Browse Movies" : "Browse TV & Web Series";
+  if (activeLangObj && activeLangObj.code !== "all") {
+    pageTitle = `${activeLangObj.flag} ${activeLangObj.label} ${type === "tv" ? "Series" : "Movies"}`;
+  } else if (activeOttObj && activeOttObj.id !== "all") {
+    pageTitle = `${activeOttObj.icon} ${activeOttObj.name} Originals & Catalog`;
+  } else if (activeGenreName) {
+    pageTitle = `${activeGenreName} ${type === "tv" ? "Series" : "Movies"}`;
+  }
 
   return (
     <main className="container-page">
       <div className="page-header-block">
         <div className="page-header-text">
-          <span className="page-category-tag">{type === "tv" ? "Series Catalog" : "Cinema Catalog"}</span>
-          <h1 className="page-title">
-            {activeGenreName ? `${activeGenreName} ${type === "tv" ? "Series" : "Movies"}` : (type === "movie" ? "Browse Movies" : "Browse TV & Web Series")}
-          </h1>
+          <span className="page-category-tag">
+            {type === "tv" ? "Web Series & Shows" : "HD Movies & Cinema"}
+          </span>
+          <h1 className="page-title">{pageTitle}</h1>
           <p className="page-subtitle">
-            Explore unlimited full HD streaming for the best {type === "tv" ? "web series and television shows" : "blockbuster and indie films"}.
+            Multi-Language audio, dual-audio tracks, Hindi dubbed hits, and official streaming catalogs from 50+ OTT platforms.
           </p>
         </div>
       </div>
 
-      {/* Genre Filter Chips */}
-      <div className="filter-chips-wrapper">
-        <Link
-          className={`filter-chip ${!genre ? "active" : ""}`}
-          href={`/browse/${type}`}
-        >
-          All Genres
-        </Link>
-        {genres.map((g) => (
+      {/* 1. Language & Dubbed Audio Filter Tabs */}
+      <div className="browse-filters-section">
+        <div className="filter-row-header">
+          <span className="filter-icon">🎧</span>
+          <span className="filter-title">Audio Language & Dubs:</span>
+        </div>
+        <div className="filter-chips-wrapper lang-chips">
+          {SUPPORTED_LANGUAGES.map((l) => {
+            const isSelected = (lang === "" && l.code === "all") || lang === l.code;
+            return (
+              <Link
+                key={l.code}
+                className={`filter-chip ${isSelected ? "active" : ""}`}
+                href={buildUrl(1, genre, l.code, ott)}
+              >
+                <span>{l.flag}</span>
+                <span>{l.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 2. OTT Network Platforms (NetMirror Aggregator) */}
+      <div className="browse-filters-section">
+        <div className="filter-row-header">
+          <span className="filter-icon">📺</span>
+          <span className="filter-title">OTT Platforms:</span>
+        </div>
+        <div className="filter-chips-wrapper ott-chips">
+          {OTT_PLATFORMS.map((o) => {
+            const isSelected = (ott === "" && o.id === "all") || ott === o.id;
+            return (
+              <Link
+                key={o.id}
+                className={`filter-chip ott-chip ${isSelected ? "active" : ""}`}
+                href={buildUrl(1, genre, lang, o.id)}
+              >
+                <span>{o.icon}</span>
+                <span>{o.name}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Genre Filter Chips */}
+      <div className="browse-filters-section">
+        <div className="filter-row-header">
+          <span className="filter-icon">🏷️</span>
+          <span className="filter-title">Genres:</span>
+        </div>
+        <div className="filter-chips-wrapper">
           <Link
-            key={g.id}
-            className={`filter-chip ${String(genre) === String(g.id) ? "active" : ""}`}
-            href={buildUrl(1, g.id)}
+            className={`filter-chip ${!genre ? "active" : ""}`}
+            href={buildUrl(1, "", lang, ott)}
           >
-            {g.name}
+            All Genres
           </Link>
-        ))}
+          {genres.map((g) => (
+            <Link
+              key={g.id}
+              className={`filter-chip ${String(genre) === String(g.id) ? "active" : ""}`}
+              href={buildUrl(1, g.id, lang, ott)}
+            >
+              {g.name}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Media Grid */}
@@ -78,8 +148,8 @@ export default async function Browse({ params, searchParams }) {
         </div>
       ) : (
         <div className="empty-state-box">
-          <p>No titles found in this category.</p>
-          <Link href={`/browse/${type}`} className="btn-primary">Clear Filters</Link>
+          <p>No titles found with the selected language and filters.</p>
+          <Link href={`/browse/${type}`} className="btn-primary">Reset All Filters</Link>
         </div>
       )}
 
@@ -87,7 +157,7 @@ export default async function Browse({ params, searchParams }) {
       {totalPages > 1 && (
         <div className="pagination-bar">
           {page > 1 && (
-            <Link className="page-btn ghost" href={buildUrl(page - 1)}>
+            <Link className="page-btn ghost" href={buildUrl(page - 1, genre, lang, ott)}>
               &larr; Previous Page
             </Link>
           )}
@@ -95,7 +165,7 @@ export default async function Browse({ params, searchParams }) {
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
-            <Link className="page-btn primary" href={buildUrl(page + 1)}>
+            <Link className="page-btn primary" href={buildUrl(page + 1, genre, lang, ott)}>
               Next Page &rarr;
             </Link>
           )}

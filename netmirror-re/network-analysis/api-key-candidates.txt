@@ -1,0 +1,2 @@
+# Hex strings that may be API keys/tokens (32-64 chars)
+

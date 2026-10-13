@@ -1,0 +1,5 @@
+# Base64-encoded URLs found and decoded
+
+Encoded: aHR0cHM6Ly9tb2JpZGV0ZWN0cy5zdG9yZQ==
+Decoded: https://mobidetects.store
+

@@ -1,0 +1,7 @@
+File: assets/index.android.bundle
+Size: 1215172 bytes (1186.7 KB)
+SHA-256: f3045d1397843d6301b1a731ed221657f3c29d7e1559ad6951f438fbc9f92fdd
+Magic: 0x1f1903c103bc1fc6 (Hermes Bytecode)
+HBC Version: 96
+Functions: 7168
+Strings: 9809
