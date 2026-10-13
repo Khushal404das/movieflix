@@ -365,13 +365,6 @@ export default function StreamingPlayer({
         </div>
       </div>
 
-      {/* Download Alert Notice */}
-      {downloadNotice && (
-        <div className="player-download-notice">
-          <span>{downloadNotice}</span>
-        </div>
-      )}
-
       {/* Provider Error Banner */}
       {providerError && (
         <div className="provider-error-banner">
