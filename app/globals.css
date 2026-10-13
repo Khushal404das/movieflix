@@ -1348,17 +1348,36 @@ body.lights-off-active .player-section-wrapper {
   transition: box-shadow 0.3s ease;
 }
 
-.player-wrapper.lights-off .player-topbar {
-  background: #111111;
-  border-bottom: 1px solid #222222;
-}
-
-.player-wrapper.lights-off .player-topbar,
-.player-wrapper.lights-off .player-screen-container,
+/* Hide server selection and episodes drawer in lights-off cinema mode */
 .player-wrapper.lights-off .player-control-dock,
 .player-wrapper.lights-off .episodes-drawer {
+  display: none !important;
+}
+
+.player-wrapper.lights-off .player-screen-container {
   position: relative;
   z-index: 2;
+}
+
+/* Make topbar overlay only on hover in lights-off mode so only the movie screen is visible */
+.player-wrapper.lights-off .player-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.player-wrapper.lights-off:hover .player-topbar {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .player-topbar {
