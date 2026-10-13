@@ -10,7 +10,6 @@ import { classics, poster } from "@/lib/archive";
 import NetflixBillboard from "@/components/NetflixBillboard";
 import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
-import LanguageFilterBar from "@/components/LanguageFilterBar";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
@@ -52,12 +51,7 @@ export default async function StreamingHome() {
       {/* 1. Giant Netflix / Prime Hero Billboard */}
       {billboardItem && <NetflixBillboard item={billboardItem} />}
 
-      {/* 2. NetMirror Multi-Language & OTT Platform Discovery Bar */}
-      <div className="home-filter-wrapper">
-        <LanguageFilterBar type="movie" />
-      </div>
-
-      {/* 3. Main Streaming Slider Rows */}
+      {/* 2. Main Streaming Slider Rows */}
       <div className="netflix-rows-stack">
         {/* Continue Watching (Local storage client state) */}
         <ContinueWatching />
