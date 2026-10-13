@@ -91,7 +91,6 @@ export default function StreamingPlayer({
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
-  const [downloadNotice, setDownloadNotice] = useState("");
 
   // Provider state: index into PROVIDERS array
   const [providerIndex, setProviderIndex] = useState(0);
@@ -263,29 +262,6 @@ export default function StreamingPlayer({
     }
   };
 
-  // Download Action (Android Native + Web)
-  const handleDownloadClick = () => {
-    const mediaName = type === "tv" 
-      ? `${title}_S${currentSeason}E${currentEpisode}.mp4`
-      : `${title}.mp4`;
-    
-    // Check if running inside Android Native App Bridge
-    if (typeof window !== "undefined" && (window.Android || window.MovieFlixBridge)) {
-      const bridge = window.Android || window.MovieFlixBridge;
-      if (typeof bridge.downloadFile === "function") {
-        bridge.downloadFile(embedUrl, mediaName, "video/mp4");
-        setDownloadNotice("📥 Native download initiated to your Android Downloads folder!");
-        setTimeout(() => setDownloadNotice(""), 5000);
-        return;
-      }
-    }
-
-    // Web Fallback: Direct Download Mirror
-    window.open(`https://dl.vidsrc.vip/${type}/${id}${type === "tv" ? `/${currentSeason}/${currentEpisode}` : ""}`, "_blank");
-    setDownloadNotice("📥 Opening high-speed download in new tab...");
-    setTimeout(() => setDownloadNotice(""), 5000);
-  };
-
   // Handle iframe load error detection via timeout
   useEffect(() => {
     const errorTimer = setTimeout(() => {
@@ -334,19 +310,6 @@ export default function StreamingPlayer({
         </div>
 
         <div className="player-actions">
-          <button
-            type="button"
-            className="tool-btn download-highlight"
-            onClick={handleDownloadClick}
-            title="Download Stream in HD"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
-            </svg>
-            <span>Download</span>
-          </button>
 
           <button
             type="button"
