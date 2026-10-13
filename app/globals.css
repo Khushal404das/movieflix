@@ -4947,3 +4947,129 @@ body.lights-off-active .player-section-wrapper {
 .hint-text strong {
   color: #fff;
 }
+
+
+/* ==========================================================================
+   Cinema Stream Provider Selector & Multi-Audio Switcher UI
+   ========================================================================== */
+
+.provider-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(18, 18, 22, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.provider-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.provider-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.provider-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.provider-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.provider-pill.active {
+  background: rgba(229, 9, 20, 0.22);
+  border-color: var(--netflix-red, #e50914);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 0 14px rgba(229, 9, 20, 0.4);
+}
+
+.provider-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.provider-name {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.provider-multi-tag {
+  font-size: 10px;
+  background: rgba(168, 85, 247, 0.25);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #c084fc;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.provider-pill.active .provider-multi-tag {
+  background: rgba(168, 85, 247, 0.4);
+  border-color: #d8b4fe;
+  color: #f3e8ff;
+}
+
+/* Provider Error / Slow Loading Fallback Banner */
+.provider-error-banner {
+  background: rgba(234, 88, 12, 0.15);
+  border-bottom: 1px solid rgba(234, 88, 12, 0.4);
+  color: #fdba74;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+.try-next-btn {
+  background: #ea580c;
+  color: #ffffff;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.try-next-btn:hover {
+  background: #f97316;
+  transform: translateY(-1px);
+}

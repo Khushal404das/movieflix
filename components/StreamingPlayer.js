@@ -6,6 +6,69 @@ import { useRouter, useSearchParams } from "next/navigation";
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
 
+/**
+ * Ordered list of embed providers.
+ * Each has: label, icon, a getUrl(type, id, season, episode) builder,
+ * and a `multiAudio` flag indicating built-in language switcher.
+ */
+const PROVIDERS = [
+  {
+    key: "vidlink",
+    label: "VidLink Cinema",
+    icon: "🎬",
+    multiAudio: true,
+    badge: "Multi-Audio & Dubs",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
+        : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`,
+  },
+  {
+    key: "videasy",
+    label: "Videasy Dubs",
+    icon: "🌍",
+    multiAudio: true,
+    badge: "Multi-Language",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://player.videasy.to/tv/${id}/${s}/${e}`
+        : `https://player.videasy.to/movie/${id}`,
+  },
+  {
+    key: "multiembed",
+    label: "MultiEmbed",
+    icon: "🎧",
+    multiAudio: true,
+    badge: "Dual-Audio",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
+        : `https://multiembed.mov/?video_id=${id}&tmdb=1`,
+  },
+  {
+    key: "anyembed",
+    label: "AnyEmbed Fast",
+    icon: "⚡",
+    multiAudio: false,
+    badge: "1080p Ultra HD",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://anyembed.xyz/embed/tmdb-tv-${id}-${s}-${e}`
+        : `https://anyembed.xyz/embed/tmdb-movie-${id}`,
+  },
+  {
+    key: "vidsrc",
+    label: "VidSrc Cloud",
+    icon: "📡",
+    multiAudio: false,
+    badge: "Backup Cloud",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+        : `https://vidsrc.to/embed/movie/${id}`,
+  },
+];
+
 export default function StreamingPlayer({
   type = "movie",
   id,
@@ -29,7 +92,12 @@ export default function StreamingPlayer({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
   const [downloadNotice, setDownloadNotice] = useState("");
-  const [useBackupStream, setUseBackupStream] = useState(false);
+
+  // Provider state: index into PROVIDERS array
+  const [providerIndex, setProviderIndex] = useState(0);
+  const [providerError, setProviderError] = useState(false);
+
+  const activeProvider = PROVIDERS[providerIndex];
 
   // Cinema Lights Off handler
   useEffect(() => {
@@ -117,12 +185,13 @@ export default function StreamingPlayer({
     return () => { isMounted = false; };
   }, [type, id, currentSeason, initialSeason, episodesData]);
 
-  // Buffer state resets when title switches
+  // Buffer state resets when title or provider switches
   useEffect(() => {
     setIsPlayerBuffering(true);
-    const timer = setTimeout(() => setIsPlayerBuffering(false), 2000);
+    setProviderError(false);
+    const timer = setTimeout(() => setIsPlayerBuffering(false), 2500);
     return () => clearTimeout(timer);
-  }, [currentSeason, currentEpisode, id, useBackupStream]);
+  }, [currentSeason, currentEpisode, id, providerIndex]);
 
   // Record into Continue Watching (localStorage)
   useEffect(() => {
@@ -148,15 +217,18 @@ export default function StreamingPlayer({
     }
   }, [id, type, title, poster, currentSeason, currentEpisode]);
 
-  // Primary Player: Multi-Audio & Dubbed Track Switcher Enabled (VidLink with Netflix Red accent #e50914)
-  // Fallback Player: MultiEmbed Dual-Audio & Dubs
-  const embedUrl = useBackupStream
-    ? (type === "tv"
-        ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`
-        : `https://multiembed.mov/?video_id=${id}&tmdb=1`)
-    : (type === "tv"
-        ? `https://vidlink.pro/tv/${id}/${currentSeason}/${currentEpisode}?primaryColor=e50914`
-        : `https://vidlink.pro/movie/${id}?primaryColor=e50914`);
+  // Build embed URL from active provider
+  const embedUrl = activeProvider.getUrl(type, id, currentSeason, currentEpisode);
+
+  // Provider switching
+  const handleProviderSwitch = (index) => {
+    if (index === providerIndex) return;
+    setProviderIndex(index);
+  };
+
+  const handleNextProvider = () => {
+    setProviderIndex((prev) => (prev + 1) % PROVIDERS.length);
+  };
 
   const handleEpisodeSelect = (epNum) => {
     setCurrentEpisode(epNum);
@@ -214,6 +286,16 @@ export default function StreamingPlayer({
     setTimeout(() => setDownloadNotice(""), 5000);
   };
 
+  // Handle iframe load error detection via timeout
+  useEffect(() => {
+    const errorTimer = setTimeout(() => {
+      if (isPlayerBuffering) {
+        setProviderError(true);
+      }
+    }, 12000);
+    return () => clearTimeout(errorTimer);
+  }, [providerIndex, isPlayerBuffering]);
+
   return (
     <>
       {isLightsOff && (
@@ -243,15 +325,17 @@ export default function StreamingPlayer({
         ref={playerRef}
       >
       
-      {/* Top Player Header Controls - Clean Cinema Header (No server buttons) */}
+      {/* Top Player Header Controls */}
       <div className="player-topbar">
         <div className="player-badge">
           <span className="live-dot" />
           <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct Cinema Stream"}</b>
           <span className="res-badge">1080p Ultra HD</span>
-          <span className="audio-badge" title="Switch between available audio dubs (Hindi, English, etc.) inside the player settings">
-            🎧 Multi-Audio & Dubs
-          </span>
+          {activeProvider.multiAudio && (
+            <span className="audio-badge" title="Switch between available audio dubs (Hindi, English, etc.) inside the player settings">
+              🎧 Multi-Audio & Dubs
+            </span>
+          )}
         </div>
 
         <div className="player-actions">
@@ -272,13 +356,13 @@ export default function StreamingPlayer({
           <button
             type="button"
             className="tool-btn"
-            onClick={() => setUseBackupStream(!useBackupStream)}
-            title="Reload or switch backup stream if needed"
+            onClick={handleNextProvider}
+            title="Try next streaming provider if this one isn't working"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/>
             </svg>
-            <span>{useBackupStream ? "Primary Player" : "Reload Player"}</span>
+            <span>Switch Provider</span>
           </button>
 
           <button
@@ -303,10 +387,40 @@ export default function StreamingPlayer({
         </div>
       </div>
 
+      {/* Provider Selector Pill Bar */}
+      <div className="provider-selector">
+        <span className="provider-label">Stream Source:</span>
+        <div className="provider-pills">
+          {PROVIDERS.map((p, idx) => (
+            <button
+              key={p.key}
+              type="button"
+              className={`provider-pill ${idx === providerIndex ? "active" : ""}`}
+              onClick={() => handleProviderSwitch(idx)}
+              title={`Switch to ${p.label}${p.multiAudio ? " (Multi-Audio)" : ""}`}
+            >
+              <span className="provider-icon">{p.icon}</span>
+              <span className="provider-name">{p.label}</span>
+              {p.multiAudio && <span className="provider-multi-tag">🌍 Dubs</span>}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Download Alert Notice */}
       {downloadNotice && (
         <div className="player-download-notice">
           <span>{downloadNotice}</span>
+        </div>
+      )}
+
+      {/* Provider Error Banner */}
+      {providerError && (
+        <div className="provider-error-banner">
+          <span>⚠️ This provider may be slow or unavailable.</span>
+          <button type="button" onClick={handleNextProvider} className="try-next-btn">
+            Try Next Provider →
+          </button>
         </div>
       )}
 
@@ -316,18 +430,25 @@ export default function StreamingPlayer({
           <div className="player-buffering-overlay">
             <div className="stream-spinner" />
             <span className="buffering-text">Loading Cinema Stream...</span>
-            <span className="buffering-subtext">Multi-Audio & Dubbed tracks available. Tap ⚙️ in video for language options.</span>
+            <span className="buffering-subtext">
+              {activeProvider.multiAudio
+                ? "Multi-Audio & Dubbed tracks available. Tap ⚙️ in video for language options."
+                : `Streaming via ${activeProvider.label}. Tap ⚙️ for quality settings.`}
+            </span>
           </div>
         )}
         <iframe
-          key={`${useBackupStream}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+          key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
           src={embedUrl}
           className="streaming-iframe"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
           allowFullScreen
           loading="eager"
           title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
-          onLoad={() => setIsPlayerBuffering(false)}
+          onLoad={() => {
+            setIsPlayerBuffering(false);
+            setProviderError(false);
+          }}
         />
       </div>
 
@@ -336,7 +457,10 @@ export default function StreamingPlayer({
         <div className="audio-tracks-hint">
           <span className="hint-badge">🎧 Audio Tracks</span>
           <span className="hint-text">
-            To switch audio language or dubbed tracks, tap the <strong>Settings (⚙️)</strong> icon inside the player controls and select <strong>Audio Tracks</strong>.
+            {activeProvider.multiAudio
+              ? <>To switch audio language or dubbed tracks, tap the <strong>Settings (⚙️)</strong> icon inside the player controls and select <strong>Audio Tracks</strong>.</>
+              : <>Currently using <strong>{activeProvider.label}</strong>. For multi-language dubbed audio, try <strong>VidLink Cinema</strong> or <strong>Videasy Dubs</strong> above.</>
+            }
           </span>
         </div>
 
