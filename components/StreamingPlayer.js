@@ -392,8 +392,6 @@ export default function StreamingPlayer({
           className="streaming-iframe"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
           allowFullScreen
-          sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-encrypted-media"
-          referrerPolicy="no-referrer"
           loading="eager"
           title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
           onLoad={() => {
