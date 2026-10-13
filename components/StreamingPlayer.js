@@ -13,6 +13,17 @@ const episodeMemoryCache = new Map();
  */
 const PROVIDERS = [
   {
+    key: "vidsrc",
+    label: "VidSrc Cloud",
+    icon: "📡",
+    multiAudio: false,
+    badge: "Direct Cinema",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+        : `https://vidsrc.to/embed/movie/${id}`,
+  },
+  {
     key: "vidlink",
     label: "VidLink Cinema",
     icon: "🎬",
@@ -55,17 +66,6 @@ const PROVIDERS = [
       type === "tv"
         ? `https://anyembed.xyz/embed/tmdb-tv-${id}-${s}-${e}`
         : `https://anyembed.xyz/embed/tmdb-movie-${id}`,
-  },
-  {
-    key: "vidsrc",
-    label: "VidSrc Cloud",
-    icon: "📡",
-    multiAudio: false,
-    badge: "Backup Cloud",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
-        : `https://vidsrc.to/embed/movie/${id}`,
   },
 ];
 
