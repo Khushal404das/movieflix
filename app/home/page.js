@@ -3,8 +3,6 @@ import {
   getPopular,
   getByGenre,
   getTopRated,
-  getDubbedHollywood,
-  getSouthIndianDubbed,
   getAnimeDubbed,
   getKDramas
 } from "@/lib/tmdb";
@@ -26,8 +24,6 @@ export default async function StreamingHome() {
     topRatedMovies,
     actionMovies,
     sciFiMovies,
-    dubbedHollywood,
-    southIndianDubbed,
     animeTitles,
     kDramaTitles,
     classicItems
@@ -39,8 +35,6 @@ export default async function StreamingHome() {
     getTopRated("movie"),
     getByGenre("movie", 28),
     getByGenre("movie", 878),
-    getDubbedHollywood("movie", 1),
-    getSouthIndianDubbed(1),
     getAnimeDubbed(1),
     getKDramas(1),
     classics()
@@ -76,30 +70,12 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
-        {/* Dual Audio & Hindi Dubbed Blockbusters (NetMirror Signature) */}
-        {dubbedHollywood?.length > 0 && (
-          <NetflixRow
-            title="🔥 Dual Audio & Hindi Dubbed Blockbusters"
-            items={dubbedHollywood.slice(0, 15)}
-            seeAllHref="/browse/movie?lang=dual"
-          />
-        )}
-
         {/* Trending Now */}
         <NetflixRow
           title="Trending Now"
           items={trendingAll.slice(0, 15)}
           seeAllHref="/browse/movie"
         />
-
-        {/* South Indian Hindi Dubbed Hits */}
-        {southIndianDubbed?.length > 0 && (
-          <NetflixRow
-            title="🎬 South Indian Hindi Dubbed Hits"
-            items={southIndianDubbed.slice(0, 15)}
-            seeAllHref="/browse/movie?lang=te"
-          />
-        )}
 
         {/* Binge-worthy TV & Web Series */}
         <NetflixRow
@@ -108,19 +84,19 @@ export default async function StreamingHome() {
           seeAllHref="/browse/tv"
         />
 
-        {/* Anime in Dual Audio & Dubbed */}
+        {/* Popular Anime Series */}
         {animeTitles?.length > 0 && (
           <NetflixRow
-            title="⚡ Anime in Dual Audio & Dubbed"
+            title="⚡ Popular Anime Series"
             items={animeTitles.slice(0, 15)}
-            seeAllHref="/browse/tv?lang=ja"
+            seeAllHref="/browse/tv?genre=16"
           />
         )}
 
         {/* K-Drama & Asian Series */}
         {kDramaTitles?.length > 0 && (
           <NetflixRow
-            title="🌟 K-Drama & Asian Series (Multi-Audio)"
+            title="🌟 K-Drama & Asian Series"
             items={kDramaTitles.slice(0, 15)}
             seeAllHref="/browse/tv?lang=ko"
           />

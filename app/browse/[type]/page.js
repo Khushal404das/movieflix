@@ -3,14 +3,11 @@ import { notFound } from "next/navigation";
 import { getDiscover, getGenreList, SUPPORTED_LANGUAGES, OTT_PLATFORMS } from "@/lib/tmdb";
 import { TmdbCard } from "@/components/Card";
 
-export async function generateMetadata({ params, searchParams }) {
+export async function generateMetadata({ params }) {
   const isTv = params.type === "tv";
-  const lang = searchParams?.lang;
-  const langObj = SUPPORTED_LANGUAGES.find((l) => l.code === lang);
-  const langPrefix = langObj ? `${langObj.label} ` : "";
   return {
-    title: `${langPrefix}Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
-    description: `Browse ${langPrefix}HD ${isTv ? "TV shows and web series" : "movies"} by audio language, dubbed tracks, OTT platform, and genre.`
+    title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
+    description: `Browse HD ${isTv ? "TV shows and web series" : "movies"} by OTT platform and genre.`
   };
 }
 
@@ -63,35 +60,12 @@ export default async function Browse({ params, searchParams }) {
           </span>
           <h1 className="page-title">{pageTitle}</h1>
           <p className="page-subtitle">
-            Multi-Language audio, dual-audio tracks, Hindi dubbed hits, and official streaming catalogs from 50+ OTT platforms.
+            Explore top cinema, trending series, and official streaming catalogs from 50+ OTT platforms.
           </p>
         </div>
       </div>
 
-      {/* 1. Language & Dubbed Audio Filter Tabs */}
-      <div className="browse-filters-section">
-        <div className="filter-row-header">
-          <span className="filter-icon">🎧</span>
-          <span className="filter-title">Audio Language & Dubs:</span>
-        </div>
-        <div className="filter-chips-wrapper lang-chips">
-          {SUPPORTED_LANGUAGES.map((l) => {
-            const isSelected = (lang === "" && l.code === "all") || lang === l.code;
-            return (
-              <Link
-                key={l.code}
-                className={`filter-chip ${isSelected ? "active" : ""}`}
-                href={buildUrl(1, genre, l.code, ott)}
-              >
-                <span>{l.flag}</span>
-                <span>{l.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 2. OTT Network Platforms (NetMirror Aggregator) */}
+      {/* 1. OTT Network Platforms (NetMirror Aggregator) */}
       <div className="browse-filters-section">
         <div className="filter-row-header">
           <span className="filter-icon">📺</span>
@@ -114,7 +88,7 @@ export default async function Browse({ params, searchParams }) {
         </div>
       </div>
 
-      {/* 3. Genre Filter Chips */}
+      {/* 2. Genre Filter Chips */}
       <div className="browse-filters-section">
         <div className="filter-row-header">
           <span className="filter-icon">🏷️</span>

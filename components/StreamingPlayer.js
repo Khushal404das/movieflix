@@ -17,7 +17,7 @@ const PROVIDERS = [
     label: "VidLink Cinema",
     icon: "🎬",
     multiAudio: true,
-    badge: "Multi-Audio & Dubs",
+    badge: "Direct Stream",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
@@ -25,10 +25,10 @@ const PROVIDERS = [
   },
   {
     key: "videasy",
-    label: "Videasy Dubs",
+    label: "Videasy",
     icon: "🌍",
     multiAudio: true,
-    badge: "Multi-Language",
+    badge: "Fast Stream",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://player.videasy.to/tv/${id}/${s}/${e}`
@@ -39,7 +39,7 @@ const PROVIDERS = [
     label: "MultiEmbed",
     icon: "🎧",
     multiAudio: true,
-    badge: "Dual-Audio",
+    badge: "HD Stream",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
@@ -331,11 +331,6 @@ export default function StreamingPlayer({
           <span className="live-dot" />
           <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct Cinema Stream"}</b>
           <span className="res-badge">1080p Ultra HD</span>
-          {activeProvider.multiAudio && (
-            <span className="audio-badge" title="Switch between available audio dubs (Hindi, English, etc.) inside the player settings">
-              🎧 Multi-Audio & Dubs
-            </span>
-          )}
         </div>
 
         <div className="player-actions">
@@ -397,11 +392,11 @@ export default function StreamingPlayer({
               type="button"
               className={`provider-pill ${idx === providerIndex ? "active" : ""}`}
               onClick={() => handleProviderSwitch(idx)}
-              title={`Switch to ${p.label}${p.multiAudio ? " (Multi-Audio)" : ""}`}
+              title={`Switch to ${p.label}`}
             >
               <span className="provider-icon">{p.icon}</span>
               <span className="provider-name">{p.label}</span>
-              {p.multiAudio && <span className="provider-multi-tag">🌍 Dubs</span>}
+              
             </button>
           ))}
         </div>
@@ -431,9 +426,7 @@ export default function StreamingPlayer({
             <div className="stream-spinner" />
             <span className="buffering-text">Loading Cinema Stream...</span>
             <span className="buffering-subtext">
-              {activeProvider.multiAudio
-                ? "Multi-Audio & Dubbed tracks available. Tap ⚙️ in video for language options."
-                : `Streaming via ${activeProvider.label}. Tap ⚙️ for quality settings.`}
+              Streaming via {activeProvider.label}. Tap ⚙️ in video for quality & settings.
             </span>
           </div>
         )}
@@ -452,19 +445,9 @@ export default function StreamingPlayer({
         />
       </div>
 
-      {/* Language Switch Notice & TV Navigation Bar */}
-      <div className="player-footer-bar">
-        <div className="audio-tracks-hint">
-          <span className="hint-badge">🎧 Audio Tracks</span>
-          <span className="hint-text">
-            {activeProvider.multiAudio
-              ? <>To switch audio language or dubbed tracks, tap the <strong>Settings (⚙️)</strong> icon inside the player controls and select <strong>Audio Tracks</strong>.</>
-              : <>Currently using <strong>{activeProvider.label}</strong>. For multi-language dubbed audio, try <strong>VidLink Cinema</strong> or <strong>Videasy Dubs</strong> above.</>
-            }
-          </span>
-        </div>
-
-        {type === "tv" && (
+      {/* TV Series Quick Navigation Bar */}
+      {type === "tv" && (
+        <div className="player-footer-bar">
           <div className="tv-quick-nav">
             <button
               type="button"
@@ -488,8 +471,8 @@ export default function StreamingPlayer({
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 18 6-6-6-6"/></svg>
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Interactive Episode Picker for Web Series */}
       {type === "tv" && (
@@ -512,7 +495,7 @@ export default function StreamingPlayer({
             </div>
 
             <div className="episodes-meta-info">
-              <span>{episodesList.length} Episodes available • Instant play with audio switch</span>
+              <span>{episodesList.length} Episodes available • Instant HD Playback</span>
             </div>
           </div>
 

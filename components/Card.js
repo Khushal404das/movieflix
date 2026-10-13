@@ -60,11 +60,7 @@ export default function Card({
 
           {/* Top Badges (Audio/Dub + Top Rated) */}
           <div className="netflix-card-badge-top">
-            {audioBadge && (
-              <span className="audio-badge-pill" title={audioBadge}>
-                {audioBadge}
-              </span>
-            )}
+
             {rating && Number(rating) >= 7.5 && (
               <span className="top-rated-tag">TOP RATED</span>
             )}
@@ -90,9 +86,7 @@ export default function Card({
               </div>
             )}
             <div className="hover-media-overlay-gradient"></div>
-            {audioBadge && (
-              <span className="hover-audio-badge">{audioBadge}</span>
-            )}
+
             {rating && Number(rating) >= 7.5 && (
               <span className="hover-badge-top">TOP 10</span>
             )}

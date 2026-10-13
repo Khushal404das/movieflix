@@ -74,9 +74,7 @@ export default async function TitleDetail({ type = "movie", id, season = 1, epis
             <div className="detail-main-column">
               <div className="detail-meta-pills">
                 <span className="type-pill">{type === "tv" ? "TV Series" : "Movie"}</span>
-                {t.audioBadge && (
-                  <span className="audio-meta-pill">{t.audioBadge}</span>
-                )}
+
                 {metaItems.map((m) => (
                   <span className="meta-pill" key={m}>{m}</span>
                 ))}
