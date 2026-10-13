@@ -3,70 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export const SERVERS = [
-  {
-    id: "multiembed",
-    name: "Server 1 (MultiEmbed Dual-Audio)",
-    speed: "Fast CDN",
-    badge: "Dubbed 🎧",
-    audioMode: "dubbed",
-    getMovieUrl: (id) => `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-    getTvUrl: (id, s, e) => `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
-  },
-  {
-    id: "vidsrc_me",
-    name: "Server 2 (VidSrc VIP)",
-    speed: "Ultra HD",
-    badge: "VIP 1080p ⭐",
-    audioMode: "original",
-    getMovieUrl: (id) => `https://vidsrc.me/embed/movie?tmdb=${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.me/embed/tv?tmdb=${id}&season=${s}&episode=${e}`
-  },
-  {
-    id: "vidsrc_to",
-    name: "Server 3 (VidSrc TO)",
-    speed: "Multi-Mirror",
-    badge: "Pro HD 🚀",
-    audioMode: "original",
-    getMovieUrl: (id) => `https://vidsrc.to/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
-  },
-  {
-    id: "twoembed",
-    name: "Server 4 (2Embed Multi-Lang)",
-    speed: "Global CDN",
-    badge: "Multi-Lang 🌐",
-    audioMode: "multi",
-    getMovieUrl: (id) => `https://www.2embed.cc/embed/${id}`,
-    getTvUrl: (id, s, e) => `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}`
-  },
-  {
-    id: "rgshows",
-    name: "Server 5 (RGShows Turbo)",
-    speed: "Fast Play",
-    badge: "Turbo ⚡",
-    audioMode: "original",
-    getMovieUrl: (id) => `https://rgshows.me/player/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://rgshows.me/player/tv/${id}/${s}/${e}`
-  },
-  {
-    id: "nontongo",
-    name: "Server 6 (NontonGo Mirror)",
-    speed: "Ad-Light",
-    badge: "Mirror 🛡️",
-    audioMode: "multi",
-    getMovieUrl: (id) => `https://www.NontonGo.win/embed/movie/${id}`,
-    getTvUrl: (id, s, e) => `https://www.NontonGo.win/embed/tv/${id}/${s}/${e}`
-  }
-];
-
-const AUDIO_PRESETS = [
-  { id: "dubbed", label: "🎧 Dual Audio / Hindi Dub", targetServer: "multiembed", tip: "Best for Hindi dubbed & dual audio streams" },
-  { id: "vip", label: "⭐ VidSrc VIP (1080p Ultra)", targetServer: "vidsrc_me", tip: "High bitrate crisp 1080p original stream" },
-  { id: "multi", label: "🌐 Multi-Language (2Embed)", targetServer: "twoembed", tip: "Multi-language audio & subtitle support" },
-  { id: "turbo", label: "⚡ Turbo Fast Mirror", targetServer: "vidsrc_to", tip: "Ultra fast cloud mirror with zero buffer" }
-];
-
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
 
@@ -85,8 +21,6 @@ export default function StreamingPlayer({
   const searchParams = useSearchParams();
   const playerRef = useRef(null);
 
-  const [activeServer, setActiveServer] = useState(SERVERS[0].id);
-  const [activeAudioPreset, setActiveAudioPreset] = useState("dubbed");
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
   const [isTheater, setIsTheater] = useState(false);
@@ -95,6 +29,7 @@ export default function StreamingPlayer({
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
   const [downloadNotice, setDownloadNotice] = useState("");
+  const [useBackupStream, setUseBackupStream] = useState(false);
 
   // Cinema Lights Off handler
   useEffect(() => {
@@ -182,12 +117,12 @@ export default function StreamingPlayer({
     return () => { isMounted = false; };
   }, [type, id, currentSeason, initialSeason, episodesData]);
 
-  // Buffer state resets when title or server switches
+  // Buffer state resets when title switches
   useEffect(() => {
     setIsPlayerBuffering(true);
     const timer = setTimeout(() => setIsPlayerBuffering(false), 2000);
     return () => clearTimeout(timer);
-  }, [activeServer, currentSeason, currentEpisode, id]);
+  }, [currentSeason, currentEpisode, id, useBackupStream]);
 
   // Record into Continue Watching (localStorage)
   useEffect(() => {
@@ -213,10 +148,15 @@ export default function StreamingPlayer({
     }
   }, [id, type, title, poster, currentSeason, currentEpisode]);
 
-  const selectedServer = SERVERS.find((s) => s.id === activeServer) || SERVERS[0];
-  const embedUrl = type === "tv"
-    ? selectedServer.getTvUrl(id, currentSeason, currentEpisode)
-    : selectedServer.getMovieUrl(id);
+  // Primary Player: Multi-Audio & Dubbed Track Switcher Enabled (VidLink with Netflix Red accent #e50914)
+  // Fallback Player: MultiEmbed Dual-Audio & Dubs
+  const embedUrl = useBackupStream
+    ? (type === "tv"
+        ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`
+        : `https://multiembed.mov/?video_id=${id}&tmdb=1`)
+    : (type === "tv"
+        ? `https://vidlink.pro/tv/${id}/${currentSeason}/${currentEpisode}?primaryColor=e50914`
+        : `https://vidlink.pro/movie/${id}?primaryColor=e50914`);
 
   const handleEpisodeSelect = (epNum) => {
     setCurrentEpisode(epNum);
@@ -251,17 +191,6 @@ export default function StreamingPlayer({
     }
   };
 
-  const cycleNextServer = () => {
-    const currentIndex = SERVERS.findIndex((s) => s.id === activeServer);
-    const nextIndex = (currentIndex + 1) % SERVERS.length;
-    setActiveServer(SERVERS[nextIndex].id);
-  };
-
-  const handleAudioPreset = (preset) => {
-    setActiveAudioPreset(preset.id);
-    setActiveServer(preset.targetServer);
-  };
-
   // Download Action (Android Native + Web)
   const handleDownloadClick = () => {
     const mediaName = type === "tv" 
@@ -281,7 +210,7 @@ export default function StreamingPlayer({
 
     // Web Fallback: Direct Download Mirror
     window.open(`https://dl.vidsrc.vip/${type}/${id}${type === "tv" ? `/${currentSeason}/${currentEpisode}` : ""}`, "_blank");
-    setDownloadNotice("📥 Opening high-speed download server in new tab...");
+    setDownloadNotice("📥 Opening high-speed download in new tab...");
     setTimeout(() => setDownloadNotice(""), 5000);
   };
 
@@ -314,14 +243,15 @@ export default function StreamingPlayer({
         ref={playerRef}
       >
       
-      {/* Top Player Header Controls */}
+      {/* Top Player Header Controls - Clean Cinema Header (No server buttons) */}
       <div className="player-topbar">
         <div className="player-badge">
           <span className="live-dot" />
-          <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct HD Stream"}</b>
-          <span className="res-badge">1080p Ultra</span>
-          <span className="server-speed-tag">⚡ {selectedServer.speed}</span>
-          <span className="audio-badge">🎧 Multi-Audio & Dubs</span>
+          <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct Cinema Stream"}</b>
+          <span className="res-badge">1080p Ultra HD</span>
+          <span className="audio-badge" title="Switch between available audio dubs (Hindi, English, etc.) inside the player settings">
+            🎧 Multi-Audio & Dubs
+          </span>
         </div>
 
         <div className="player-actions">
@@ -341,12 +271,14 @@ export default function StreamingPlayer({
 
           <button
             type="button"
-            className="tool-btn highlight"
-            onClick={cycleNextServer}
-            title="Fast switch to next streaming server"
+            className="tool-btn"
+            onClick={() => setUseBackupStream(!useBackupStream)}
+            title="Reload or switch backup stream if needed"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
-            <span>Next Server</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/>
+            </svg>
+            <span>{useBackupStream ? "Primary Player" : "Reload Player"}</span>
           </button>
 
           <button
@@ -371,24 +303,6 @@ export default function StreamingPlayer({
         </div>
       </div>
 
-      {/* NetMirror Audio Mode Selector Strip */}
-      <div className="player-audio-selector-strip">
-        <span className="audio-strip-label">🎙️ Audio & Server Presets:</span>
-        <div className="audio-preset-buttons">
-          {AUDIO_PRESETS.map((preset) => (
-            <button
-              key={preset.id}
-              type="button"
-              className={`audio-preset-chip ${activeAudioPreset === preset.id ? "active" : ""}`}
-              onClick={() => handleAudioPreset(preset)}
-              title={preset.tip}
-            >
-              {preset.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Download Alert Notice */}
       {downloadNotice && (
         <div className="player-download-notice">
@@ -401,12 +315,12 @@ export default function StreamingPlayer({
         {isPlayerBuffering && (
           <div className="player-buffering-overlay">
             <div className="stream-spinner" />
-            <span className="buffering-text">Connecting to {selectedServer.name}...</span>
-            <span className="buffering-subtext">Multi-Audio & Dubbed available. Instant HD playback.</span>
+            <span className="buffering-text">Loading Cinema Stream...</span>
+            <span className="buffering-subtext">Multi-Audio & Dubbed tracks available. Tap ⚙️ in video for language options.</span>
           </div>
         )}
         <iframe
-          key={`${activeServer}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+          key={`${useBackupStream}-${type}-${id}-${currentSeason}-${currentEpisode}`}
           src={embedUrl}
           className="streaming-iframe"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
@@ -417,35 +331,13 @@ export default function StreamingPlayer({
         />
       </div>
 
-      {/* NetMirror Multi-Audio Instructions Bar */}
-      <div className="player-audio-tip-banner">
-        <span className="tip-icon">💡</span>
-        <span className="tip-text">
-          <strong>Audio & Dub Switching:</strong> To choose between <strong>Hindi Dubbed, Dual-Audio, Spanish, French</strong>, or other languages, use the presets above or tap the <strong>Settings (⚙️) / Audio (🎧)</strong> icon inside the video player controls.
-        </span>
-      </div>
-
-      {/* Server & TV Episode Quick Navigation Bar */}
-      <div className="player-control-dock">
-        <div className="server-selector-group">
-          <span className="dock-label">🚀 Streaming Mirrors:</span>
-          <div className="server-chips">
-            {SERVERS.map((s, idx) => (
-              <button
-                key={s.id}
-                type="button"
-                className={`server-chip ${activeServer === s.id ? "active" : ""}`}
-                onClick={() => {
-                  setActiveServer(s.id);
-                  if (s.audioMode) setActiveAudioPreset(s.audioMode);
-                }}
-              >
-                <span className="num-badge">{idx + 1}</span>
-                <span className="server-name-text">{s.name.replace(/\(.*\)/, "")}</span>
-                <span className="server-badge-pill">{s.badge}</span>
-              </button>
-            ))}
-          </div>
+      {/* Language Switch Notice & TV Navigation Bar */}
+      <div className="player-footer-bar">
+        <div className="audio-tracks-hint">
+          <span className="hint-badge">🎧 Audio Tracks</span>
+          <span className="hint-text">
+            To switch audio language or dubbed tracks, tap the <strong>Settings (⚙️)</strong> icon inside the player controls and select <strong>Audio Tracks</strong>.
+          </span>
         </div>
 
         {type === "tv" && (
@@ -496,7 +388,7 @@ export default function StreamingPlayer({
             </div>
 
             <div className="episodes-meta-info">
-              <span>{episodesList.length} Episodes available • Instant Multi-Audio</span>
+              <span>{episodesList.length} Episodes available • Instant play with audio switch</span>
             </div>
           </div>
 
