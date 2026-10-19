@@ -92,7 +92,26 @@ export default function Card({
   const handleMoreInfoClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (href) router.push(href);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("movieflix:open-preview", {
+          detail: {
+            item,
+            href,
+            title,
+            poster,
+            backdrop,
+            rating,
+            quality,
+            type,
+            genres,
+            runtime,
+            seasons,
+            number_of_seasons
+          }
+        })
+      );
+    }
   };
 
   const getGradient = (str = "") => {

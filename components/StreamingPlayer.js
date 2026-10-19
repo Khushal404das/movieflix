@@ -3,6 +3,7 @@
 import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
 
 import { useState, useEffect, useRef } from "react";
+import StreamDiagnosticsOverlay from "./StreamDiagnosticsOverlay";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // In-memory client cache for episodes across seasons
@@ -90,6 +91,7 @@ export default function StreamingPlayer({
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
   const [isTheater, setIsTheater] = useState(false);
   const [isLightsOff, setIsLightsOff] = useState(false);
+  const [showStats, setShowStats] = useState(false);
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
@@ -352,6 +354,16 @@ export default function StreamingPlayer({
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="15" x="2" y="4" rx="2"/><path d="m9 10 3 2 3-2"/></svg>
             <span>{isTheater ? "Normal View" : "Theater Mode"}</span>
           </button>
+
+          <button
+            type="button"
+            className={`control-btn ${showStats ? "active" : ""}`}
+            onClick={() => setShowStats((prev) => !prev)}
+            title="Toggle Stream Diagnostics (Stats for Nerds - Press D)"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+            <span>Stats</span>
+          </button>
         </div>
       </div>
 
@@ -387,6 +399,15 @@ export default function StreamingPlayer({
 
       {/* Main Video Embed Player Screen */}
       <div className="player-screen-container">
+        {showStats && (
+          <StreamDiagnosticsOverlay
+            title={title}
+            mediaId={String(id)}
+            streamHost={`${activeProvider.key}.movieflix.cc`}
+            onClose={() => setShowStats(false)}
+            className="player-embedded-stats"
+          />
+        )}
         {isPlayerBuffering && (
           <div className="player-buffering-overlay">
             <div className="stream-spinner" />

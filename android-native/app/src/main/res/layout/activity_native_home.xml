@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0B0B0B">
+
+    <!-- Top Floating Netflix-style Header -->
+    <LinearLayout
+        android:id="@+id/homeHeader"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="#D90B0B0B"
+        android:elevation="4dp"
+        android:translationZ="4dp">
+
+        <!-- MovieFlix Red N Logo -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N"
+            android:textColor="#E50914"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="MOVIEFLIX"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
+
+        <!-- Search Icon -->
+        <TextView
+            android:id="@+id/btnHeaderSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔍"
+            android:textSize="18sp"
+            android:padding="8dp" />
+
+        <!-- User Profile Avatar Pill -->
+        <TextView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:background="#E50914"
+            android:gravity="center"
+            android:text="M"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshHome"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/homeHeader">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 1. Billboard Hero Layout (Replicating NetMirror / Netflix hero) -->
+                <include
+                    android:id="@+id/billboardLayout"
+                    layout="@layout/layout_billboard" />
+
+                <!-- 2. Vertical RecyclerView for All Content Sliders -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHomeRows"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingBottom="40dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Initial Loading Overlay -->
+    <ProgressBar
+        android:id="@+id/homeLoading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="#E50914" />
+
+</RelativeLayout>

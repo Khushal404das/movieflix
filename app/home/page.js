@@ -39,17 +39,25 @@ export default async function StreamingHome() {
     classics()
   ]);
 
-  // High-res backdrop candidate for the Billboard spotlight
+  // High-res backdrop candidate list for auto-rotating Billboard spotlight (NetMirror style)
+  const billboardCandidates = (trendingAll || [])
+    .filter((x) => x && x.backdrop && x.title && x.overview)
+    .slice(0, 6);
+
   const billboardItem =
+    billboardCandidates[0] ||
     trendingMovies.find((x) => x.backdrop && x.overview && x.overview.length > 30) ||
-    trendingAll.find((x) => x.backdrop && x.overview) ||
-    trendingMovies[0] ||
     trendingAll[0];
 
   return (
     <div className="netflix-home-view">
-      {/* 1. Giant Netflix / Prime Hero Billboard */}
-      {billboardItem && <NetflixBillboard item={billboardItem} />}
+      {/* 1. Giant Netflix / NetMirror Hero Billboard with auto-rotation & OTT badges */}
+      {billboardItem && (
+        <NetflixBillboard
+          item={billboardItem}
+          items={billboardCandidates.length > 0 ? billboardCandidates : [billboardItem]}
+        />
+      )}
 
       {/* 2. Main Streaming Slider Rows */}
       <div className="netflix-rows-stack">

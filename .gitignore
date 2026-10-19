@@ -34,10 +34,16 @@ ReelStream ios/
 MovieFlix - android/
 MovieFlix Windows/
 MovieFlix ios/
-android-native/
+
+# Android build outputs & local config
+android-native/.gradle/
+android-native/build/
+android-native/app/build/
+android-native/local.properties
+android-native/**/*.apk
 
 # Cloudflare / OpenNext
 .open-next
 .wrangler
 .dev.vars
-
+.vscode/

@@ -5382,3 +5382,732 @@ body.lights-off-active .player-section-wrapper {
   color: #ffffff;
   font-weight: 900;
 }
+
+/* ==========================================================================
+   STREAMING DIAGNOSTICS ("STATS FOR NERDS") & TITLE PREVIEW MODAL
+   ========================================================================== */
+
+/* Diagnostics HUD Overlay (Matches user screenshot) */
+.stream-diagnostics-hud {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  z-index: 50;
+  background: rgba(16, 24, 38, 0.84);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 14px 18px;
+  color: #8ea3be;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  max-width: 480px;
+  pointer-events: auto;
+  user-select: none;
+  animation: hudFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes hudFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hud-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.hud-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hud-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+}
+
+.hud-col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hud-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.hud-label {
+  color: #8ea3be;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.hud-value {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 12.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-title-val {
+  max-width: 140px;
+}
+
+.hud-hash {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: #cbd5e1;
+}
+
+/* Progress bar meters for BW & Buffer */
+.hud-bar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.hud-progress-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.hud-progress-fill.bw-bar {
+  background: linear-gradient(90deg, #2563eb, #38bdf8);
+}
+
+.hud-progress-fill.buffer-bar {
+  background: linear-gradient(90deg, #0284c7, #22d3ee);
+}
+
+/* Watchlist Toast Success Pill (Matches user screenshot) */
+.watchlist-toast-success {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(19, 78, 74, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  padding: 10px 18px;
+  border-radius: 30px;
+  color: #ecfdf5;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(16, 185, 129, 0.2);
+  animation: toastSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toast-check-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.toast-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================================================
+   TITLE PREVIEW MODAL CONTAINER (Netflix / NetMirror Akira Client Style)
+   ========================================================================== */
+
+.previewModal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px;
+  overflow-y: auto;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.previewModal-container {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  background: #181818;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  margin-bottom: 40px;
+  animation: modalScaleUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.previewModal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 70;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(24, 24, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.previewModal-close:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.08);
+}
+
+/* Player Header inside Modal */
+.previewModal-player-wrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #000000;
+  overflow: hidden;
+}
+
+.previewModal-video-frame,
+.previewModal-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+}
+
+.previewModal-backdrop-img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+.previewModal-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    #181818 0%,
+    rgba(24, 24, 24, 0.6) 35%,
+    rgba(24, 24, 24, 0.1) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.previewModal-audio-btn {
+  position: absolute;
+  bottom: 120px;
+  right: 32px;
+  z-index: 30;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(30, 30, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.previewModal-audio-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.06);
+}
+
+/* Title Treatment & Button Controls Row */
+.previewModal--player-titleTreatmentWrapper {
+  position: absolute;
+  bottom: 24px;
+  left: 36px;
+  right: 36px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.previewModal-title-text {
+  font-family: "Outfit", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+  letter-spacing: -0.5px;
+  max-width: 80%;
+  line-height: 1.15;
+}
+
+.buttonControls--container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Modal Play Button (White pill like Netflix) */
+.modal-main-play {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.8rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.modal-main-play:hover {
+  background-color: rgba(255, 255, 255, 0.78);
+  transform: scale(1.02);
+}
+
+.modal-main-play svg {
+  fill: #000000;
+}
+
+/* Icon Buttons in Modal (Watchlist, Like, Stats) */
+.previewModal-icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(42, 42, 42, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.previewModal-icon-btn:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.06);
+}
+
+.previewModal-icon-btn.active {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.25);
+  color: #e50914;
+}
+
+.previewModal-icon-btn.stats-toggle-btn {
+  width: auto;
+  border-radius: 24px;
+  padding: 0 14px;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.previewModal-icon-btn.stats-toggle-btn.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+/* Modal Content Body */
+.previewModal-body {
+  padding: 24px 36px 40px 36px;
+  background: #181818;
+}
+
+.previewModal-meta-split {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.previewModal-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.meta-match {
+  color: #46d369;
+  font-weight: 700;
+}
+
+.meta-year {
+  color: #9ca3af;
+}
+
+.meta-maturity-badge,
+.meta-badge-hd,
+.meta-badge-audio {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: #e5e7eb;
+}
+
+.meta-runtime {
+  color: #d1d5db;
+}
+
+.previewModal-synopsis {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+.previewModal-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.previewModal-detail-group .detail-label {
+  color: #777777;
+}
+
+.previewModal-detail-group .detail-value {
+  color: #ffffff;
+}
+
+/* More Like This Cards Grid */
+.previewModal-more-like-this {
+  margin-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+}
+
+.section-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.more-like-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.more-card {
+  background: #2f2f2f;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.more-card:hover {
+  background: #383838;
+  transform: translateY(-4px);
+}
+
+.more-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #111827;
+}
+
+.more-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.more-card-duration {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.more-card-info {
+  padding: 12px;
+}
+
+.more-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.more-card-desc {
+  font-size: 12px;
+  color: #a3a3a3;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.previewModal-about {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.about-title {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.about-text code {
+  color: #38bdf8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Embedded Player Stats (in StreamingPlayer.js) */
+.player-screen-container .player-embedded-stats {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 60;
+}
+
+@media (max-width: 768px) {
+  .stream-diagnostics-hud {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    font-size: 11px;
+    padding: 10px 12px;
+  }
+  .hud-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .previewModal-player-wrapper {
+    height: 280px;
+  }
+  .previewModal-title-text {
+    font-size: 1.5rem;
+  }
+  .previewModal-meta-split {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .more-like-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================================
+   NETMIRROR / ENHANCED BILLBOARD STYLES (Animations & Badges)
+   ======================================================== */
+
+.billboard-fade-in {
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.billboard-fade-out {
+  opacity: 0.15;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-fade-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.content-fade-out {
+  opacity: 0.2;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Supplemental Audio/Language banner (NetMirror signature layout) */
+.billboard-supplemental-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(31, 128, 224, 0.18);
+  border: 1px solid rgba(31, 128, 224, 0.45);
+  color: #60a5fa;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  margin-bottom: 12px;
+  max-width: fit-content;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* OTT Platform Badge (Netflix, Hotstar, Prime Video, Disney+) */
+.ott-platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.ott-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 6px currentColor;
+}
+
+/* Audio Language Pill */
+.audio-lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(229, 9, 20, 0.15);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  color: #ff6b6b;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Billboard Carousel Pagination Dots */
+.billboard-pagination-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.billboard-dot {
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+.billboard-dot:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.billboard-dot.active {
+  width: 40px;
+  background: #ffffff;
+}
