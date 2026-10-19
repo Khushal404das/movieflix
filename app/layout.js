@@ -16,14 +16,14 @@ export const metadata = {
   authors: [{ name: "MovieFlix" }],
   icons: {
     icon: [
-      { url: "/favicon.svg?v=2", type: "image/svg+xml" },
-      { url: "/favicon.ico?v=2", sizes: "32x32" },
-      { url: "/icon-192.png?v=2", sizes: "192x192", type: "image/png" }
+      { url: "/favicon.svg?v=3", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=3", sizes: "32x32" },
+      { url: "/icon-192.png?v=3", sizes: "192x192", type: "image/png" }
     ],
     apple: [
-      { url: "/apple-touch-icon.png?v=2", sizes: "180x180", type: "image/png" }
+      { url: "/apple-touch-icon.png?v=3", sizes: "180x180", type: "image/png" }
     ],
-    shortcut: "/favicon.svg?v=2"
+    shortcut: "/favicon.svg?v=3"
   }
 };
 
@@ -32,9 +32,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         {/* Favicon & Web App Icons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-        <link rel="alternate icon" href="/favicon.ico?v=2" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
+        <link rel="alternate icon" href="/favicon.ico?v=3" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
