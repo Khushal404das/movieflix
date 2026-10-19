@@ -1,14 +1,12 @@
 import "./globals.css";
-import Header from "@/components/Header";
-import MobileNav from "@/components/MobileNav";
 import { AuthProvider } from "@/lib/AuthContext";
-import AuthModal from "@/components/AuthModal";
+import AppShell from "@/components/AppShell";
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#07080c",
+  themeColor: "#000000",
 };
 
 export const metadata = {
@@ -61,59 +59,22 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <AuthProvider>
-          <div className="site-wrapper">
-            <Header />
-            <div className="content-container">{children}</div>
-            <footer className="site-footer">
-              <div className="footer-content">
-                <div className="footer-brand">
-                  <div className="footer-logo">
-                    MOVIE<span className="accent">FLIX</span>
-                  </div>
-                  <p className="footer-desc">
-                    Your premium cinema & web series streaming hub. Watch the latest blockbuster movies, top-rated TV shows, and legendary classics in high definition.
-                  </p>
-                </div>
-
-                <div className="footer-links-group">
-                  <div className="footer-col">
-                    <h4>Discover</h4>
-                    <a href="/browse/movie">Trending Movies</a>
-                    <a href="/browse/tv">Web Series</a>
-                    <a href="/classics">Free Classics</a>
-                    <a href="/list">My Watchlist</a>
-                    <a href="/profile">My Account</a>
-                  </div>
-                  <div className="footer-col">
-                    <h4>Top Genres</h4>
-                    <a href="/browse/movie?genre=28">Action & Adventure</a>
-                    <a href="/browse/movie?genre=878">Sci-Fi & Cyberpunk</a>
-                    <a href="/browse/tv?genre=10765">Fantasy Series</a>
-                    <a href="/browse/movie?genre=16">Anime & Animation</a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="footer-bottom">
-                <span className="copy-text">&copy; {new Date().getFullYear()} MovieFlix. All rights reserved.</span>
-              </div>
-            </footer>
-            <MobileNav />
-            <AuthModal />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-                    window.addEventListener('load', function() {
-                      navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                        console.log('ServiceWorker registration error:', err);
-                      });
+          <AppShell>
+            {children}
+          </AppShell>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                      console.log('ServiceWorker registration error:', err);
                     });
-                  }
-                `
-              }}
-            />
-          </div>
+                  });
+                }
+              `
+            }}
+          />
         </AuthProvider>
       </body>
     </html>

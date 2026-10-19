@@ -81,6 +81,11 @@ export default function NetflixRow({
                       quality={item.quality}
                       type={item.type}
                       sub={item.year}
+                      genres={item.genres}
+                      runtime={item.runtime}
+                      seasons={item.seasons}
+                      number_of_seasons={item.number_of_seasons}
+                      item={item}
                     />
                   </div>
                 </div>
@@ -99,6 +104,11 @@ export default function NetflixRow({
                   type={item.type}
                   sub={item.year}
                   isWide={backdropStyle}
+                  genres={item.genres}
+                  runtime={item.runtime}
+                  seasons={item.seasons}
+                  number_of_seasons={item.number_of_seasons}
+                  item={item}
                 />
               </div>
             );

@@ -1,5 +1,7 @@
 "use client";
 
+import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -97,6 +99,14 @@ export default function StreamingPlayer({
   const [providerError, setProviderError] = useState(false);
 
   const activeProvider = PROVIDERS[providerIndex];
+
+  // Verify session validity before streaming (like NetMirror)
+  useEffect(() => {
+    const session = getSessionState();
+    if (session.isExpired || session.isTimedOut) {
+      redirectToVerification(window.location.pathname + window.location.search);
+    }
+  }, [id, currentSeason, currentEpisode]);
 
   // Cinema Lights Off handler
   useEffect(() => {

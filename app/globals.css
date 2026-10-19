@@ -870,34 +870,34 @@ img {
   letter-spacing: 0.05em;
 }
 
-/* Netflix Hover Card Overlay Details */
+/* Netflix Hover Card Overlay Details (Quick Preview Popup) */
 .netflix-card-hover-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 270px;
+  width: 320px;
   max-width: 90vw;
   transform: translate(-50%, -50%) scale(0.85);
-  background: #181818;
-  border-radius: 6px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.85);
+  background: #141414;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.85);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.22s cubic-bezier(0.25, 1, 0.5, 1), transform 0.24s cubic-bezier(0.25, 1, 0.5, 1);
-  z-index: 100;
+  z-index: 999;
 }
 
 .netflix-card-item:hover {
-  z-index: 100;
+  z-index: 999;
 }
 
 .netflix-card-item:hover .netflix-card-hover-overlay {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
 .hover-media-box {
@@ -935,16 +935,37 @@ img {
 
 .hover-fallback-title {
   font-size: 12px;
-  font-weight: 700;
-  color: #fff;
   line-height: 1.2;
 }
 
 .hover-media-overlay-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, #181818 0%, rgba(24, 24, 24, 0.25) 45%, transparent 100%);
+  background: linear-gradient(to top, #141414 0%, rgba(20, 20, 20, 0.35) 50%, transparent 100%);
   pointer-events: none;
+}
+
+.hover-media-title-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  right: 14px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hover-preview-title {
+  font-size: 17px;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: -0.4px;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 6px rgba(0, 0, 0, 0.85);
 }
 
 .hover-badge-top {
@@ -977,22 +998,29 @@ img {
 }
 
 .hover-info-body {
-  padding: 12px 14px 16px;
+  padding: 14px 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  background: #181818;
+  gap: 10px;
+  background: #141414;
 }
 
 .hover-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.hover-action-left {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .hover-btn-play {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #ffffff;
   color: #000000;
@@ -1001,30 +1029,68 @@ img {
   justify-content: center;
   transition: transform 0.15s ease, background 0.15s ease;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .hover-btn-play:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
   background: #e6e6e6;
 }
 
 .hover-btn-circle {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  background: rgba(42, 42, 42, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(42, 42, 42, 0.65);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
   flex-shrink: 0;
+  cursor: pointer;
+  padding: 0;
 }
 
 .hover-btn-circle:hover {
   border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+.hover-btn-circle.active {
+  border-color: #ffffff;
+  background: var(--netflix-red);
+  color: #ffffff;
+}
+
+/* Chevron Down Arrow Button on the right */
+.hover-btn-more-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(42, 42, 42, 0.65);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.hover-btn-more-arrow:hover {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+.hover-btn-more-arrow:active {
+  transform: scale(0.96);
 }
 
 .hover-meta-row {
@@ -1032,48 +1098,62 @@ img {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .hover-match {
-  color: var(--netflix-green);
+  color: #46d369;
   font-weight: 800;
+  font-size: 13px;
+  letter-spacing: -0.2px;
 }
 
-.hover-age {
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 0 4px;
-  font-size: 10px;
+.hover-age-badge {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
   color: #ffffff;
-  border-radius: 2px;
+  border-radius: 3px;
+  line-height: 1.3;
 }
 
-.hover-res {
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 0 4px;
-  font-size: 10px;
-  border-radius: 2px;
+.hover-duration {
+  font-size: 12px;
+  font-weight: 600;
   color: #ffffff;
 }
 
-.hover-title-row {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.hover-title {
-  font-size: 14px;
+.hover-res-badge {
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 1px 5px;
+  font-size: 10px;
   font-weight: 700;
   color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-radius: 3px;
+  line-height: 1.3;
 }
 
-.hover-sub {
+.hover-genres-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   font-size: 12px;
-  color: var(--text-muted);
+  color: #ffffff;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.hover-genre-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hover-genre-dot {
+  color: #737373;
+  font-size: 12px;
 }
 
 /* =======================================
@@ -5072,4 +5152,233 @@ body.lights-off-active .player-section-wrapper {
 .try-next-btn:hover {
   background: #f97316;
   transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   NETMIRROR / CLOUDFLARE BOT VERIFICATION PAGE (verify2)
+   ========================================================================== */
+
+.verification-isolated-viewport {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.cf-verify-screen {
+  background-color: #000000;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.cf-verify-content {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 100px 32px 40px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.cf-verify-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.cf-netflix-n-logo {
+  width: 32px;
+  height: 50px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 8px rgba(229, 9, 20, 0.3));
+}
+
+.cf-brand-domain {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.4px;
+  line-height: 1;
+}
+
+.cf-verify-heading {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 14px 0;
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+}
+
+.cf-verify-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #9ca3af;
+  max-width: 620px;
+  margin: 0 0 28px 0;
+  font-weight: 400;
+}
+
+.cf-challenge-zone {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.cf-spinner-container {
+  padding: 6px 0;
+}
+
+.cf-security-spinner {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 3.5px solid rgba(255, 255, 255, 0.14);
+  border-top-color: #ffffff;
+  animation: cf-spin 0.85s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+}
+
+@keyframes cf-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cf-success-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.cf-turnstile-invisible {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.cf-turnstile-container {
+  min-height: 65px;
+}
+
+.cf-turnstile-container.hidden {
+  display: none !important;
+}
+
+.cf-error-notice {
+  font-size: 13px;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+.cf-verify-footer {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 32px 32px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.cf-footer-divider {
+  width: 100%;
+  height: 1px;
+  background: #1f2228;
+  margin-bottom: 18px;
+}
+
+.cf-footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+  color: #71717a;
+}
+
+.cf-ray-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13px;
+  color: #71717a;
+}
+
+.cf-ray-code {
+  color: #a1a1aa;
+}
+
+.cf-credits {
+  font-size: 12px;
+  color: #71717a;
+}
+
+.cf-link {
+  color: #60a5fa;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.cf-link:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.cf-dot-separator {
+  color: #3f3f46;
+  margin: 0 4px;
+}
+
+@media (max-width: 640px) {
+  .cf-verify-content {
+    padding: 60px 20px 30px;
+  }
+  .cf-brand-domain {
+    font-size: 24px;
+  }
+  .cf-verify-heading {
+    font-size: 22px;
+  }
+  .cf-verify-description {
+    font-size: 14px;
+  }
+  .cf-verify-footer {
+    padding: 16px 20px 24px;
+  }
+}
+
+.cf-movieflix-logo {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 10px rgba(229, 9, 20, 0.4));
+  border-radius: 8px;
+}
+
+.cf-brand-domain .logo-n-mark {
+  color: #e50914;
+  font-weight: 900;
+}
+
+.cf-brand-domain .logo-flix-mark {
+  color: #ffffff;
+  font-weight: 900;
 }
