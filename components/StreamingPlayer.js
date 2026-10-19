@@ -4,6 +4,7 @@ import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
 
 import { useState, useEffect, useRef } from "react";
 import StreamDiagnosticsOverlay from "./StreamDiagnosticsOverlay";
+import JWPlayerInstance from "./JWPlayerInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // In-memory client cache for episodes across seasons
@@ -15,6 +16,14 @@ const episodeMemoryCache = new Map();
  * and a `multiAudio` flag indicating built-in language switcher.
  */
 const PROVIDERS = [
+  {
+    key: "jwplayer",
+    label: "JW Player 8 (Multi-Audio)",
+    icon: "⚡",
+    multiAudio: true,
+    isNativeJw: true,
+    badge: "Cinema Multi-Audio",
+  },
   {
     key: "vidsrc",
     label: "VidSrc Cloud",
@@ -229,7 +238,7 @@ export default function StreamingPlayer({
   }, [id, type, title, poster, currentSeason, currentEpisode]);
 
   // Build embed URL from active provider
-  const embedUrl = activeProvider.getUrl(type, id, currentSeason, currentEpisode);
+  const embedUrl = activeProvider.getUrl ? activeProvider.getUrl(type, id, currentSeason, currentEpisode) : "";
 
   // Provider switching
   const handleProviderSwitch = (index) => {
@@ -276,13 +285,14 @@ export default function StreamingPlayer({
 
   // Handle iframe load error detection via timeout
   useEffect(() => {
+    if (activeProvider?.isNativeJw) return;
     const errorTimer = setTimeout(() => {
       if (isPlayerBuffering) {
         setProviderError(true);
       }
     }, 12000);
     return () => clearTimeout(errorTimer);
-  }, [providerIndex, isPlayerBuffering]);
+  }, [providerIndex, isPlayerBuffering, activeProvider]);
 
   return (
     <>
@@ -408,28 +418,46 @@ export default function StreamingPlayer({
             className="player-embedded-stats"
           />
         )}
-        {isPlayerBuffering && (
-          <div className="player-buffering-overlay">
-            <div className="stream-spinner" />
-            <span className="buffering-text">Loading Cinema Stream...</span>
-            <span className="buffering-subtext">
-              Streaming via {activeProvider.label}. Tap ⚙️ in video for quality & settings.
-            </span>
-          </div>
+        {activeProvider?.isNativeJw ? (
+          <JWPlayerInstance
+            type={type}
+            id={id}
+            title={title}
+            season={currentSeason}
+            episode={currentEpisode}
+            poster={poster}
+            backdrop={backdrop}
+            onSwitchToEmbed={() => {
+              const vidlinkIdx = PROVIDERS.findIndex((p) => p.key === "vidlink");
+              setProviderIndex(vidlinkIdx !== -1 ? vidlinkIdx : 1);
+            }}
+          />
+        ) : (
+          <>
+            {isPlayerBuffering && (
+              <div className="player-buffering-overlay">
+                <div className="stream-spinner" />
+                <span className="buffering-text">Loading Cinema Stream...</span>
+                <span className="buffering-subtext">
+                  Streaming via {activeProvider.label}. Tap ⚙️ in video for quality & settings.
+                </span>
+              </div>
+            )}
+            <iframe
+              key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+              src={embedUrl}
+              className="streaming-iframe"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              loading="eager"
+              title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
+              onLoad={() => {
+                setIsPlayerBuffering(false);
+                setProviderError(false);
+              }}
+            />
+          </>
         )}
-        <iframe
-          key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
-          src={embedUrl}
-          className="streaming-iframe"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-          allowFullScreen
-          loading="eager"
-          title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
-          onLoad={() => {
-            setIsPlayerBuffering(false);
-            setProviderError(false);
-          }}
-        />
       </div>
 
       {/* TV Series Quick Navigation Bar */}
