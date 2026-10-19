@@ -1,8 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
+import Hls from "hls.js";
 
-// Standard multi-audio language definitions commonly used in Indian & Global cinema
+/**
+ * Cinema Player — Powered by hls.js + Native HTML5 Video
+ * Replaces JW Player (which requires a license key) with an open-source
+ * HLS engine that supports multi-audio tracks, subtitles, and quality switching.
+ *
+ * Designed to mirror the NetMirror cinema player experience.
+ */
+
+// Multi-audio language definitions for Indian & Global cinema
 const PRESET_LANGUAGES = [
   { code: "en", label: "English [Original]", flag: "🇬🇧", tag: "ENG" },
   { code: "hi", label: "Hindi [हिन्दी]", flag: "🇮🇳", tag: "HIN" },
@@ -12,19 +21,19 @@ const PRESET_LANGUAGES = [
   { code: "kn", label: "Kannada [ಕನ್ನಡ]", flag: "🇮🇳", tag: "KAN" },
 ];
 
-// Fallback high-bandwidth multi-track streams (supports HLS & adaptive bitrate)
+// Sample HLS streams for demo/testing
 const SAMPLE_STREAMS = [
   {
-    label: "Cinema Multi-Audio Stream (Akamai HLS)",
+    label: "Big Buck Bunny (Multi-Quality HLS)",
     url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
   },
   {
-    label: "Multi-Language Tears of Steel 4K HLS",
-    url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+    label: "Sintel (Multi-Quality HLS)",
+    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
   },
   {
-    label: "Sintel Multi-Subtitles & Audio HLS",
-    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+    label: "Tears of Steel (Unified Streaming)",
+    url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
   },
 ];
 
@@ -39,15 +48,25 @@ export default function JWPlayerInstance({
   customStreamUrl,
   onSwitchToEmbed,
 }) {
-  const containerRef = useRef(null);
-  const playerInstanceRef = useRef(null);
+  const videoRef = useRef(null);
+  const hlsRef = useRef(null);
+  const progressBarRef = useRef(null);
 
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playerError, setPlayerError] = useState(null);
   const [streamUrl, setStreamUrl] = useState(customStreamUrl || SAMPLE_STREAMS[0].url);
   const [customInputUrl, setCustomInputUrl] = useState("");
   const [showStreamDrawer, setShowStreamDrawer] = useState(false);
+  const [playerError, setPlayerError] = useState(null);
+
+  // Playback state
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [buffered, setBuffered] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [showControls, setShowControls] = useState(true);
+  const controlsTimeoutRef = useRef(null);
 
   // Audio track state
   const [audioTracks, setAudioTracks] = useState([]);
@@ -55,269 +74,310 @@ export default function JWPlayerInstance({
   const [selectedLanguageCode, setSelectedLanguageCode] = useState("en");
   const [audioToast, setAudioToast] = useState("");
 
-  // Subtitle / Captions state
-  const [captionsList, setCaptionsList] = useState([]);
-  const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
+  // Subtitle state
+  const [subtitleTracks, setSubtitleTracks] = useState([]);
+  const [currentSubtitleIndex, setCurrentSubtitleIndex] = useState(-1);
 
   // Quality state
   const [qualityLevels, setQualityLevels] = useState([]);
-  const [currentQualityIndex, setCurrentQualityIndex] = useState(0);
+  const [currentQualityIndex, setCurrentQualityIndex] = useState(-1);
 
-  // Load JW Player 8.38.8 scripts
+  // Format time helper
+  const formatTime = (seconds) => {
+    if (!seconds || isNaN(seconds)) return "0:00";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) return h + ":" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+    return m + ":" + String(s).padStart(2, "0");
+  };
+
+  // Controls auto-hide
+  const resetControlsTimeout = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => {
+      if (isPlaying) setShowControls(false);
+    }, 3500);
+  }, [isPlaying]);
+
+  // Initialize HLS.js
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const video = videoRef.current;
+    if (!video || !streamUrl) return;
 
-    if (window.jwplayer) {
-      window.jwplayer.defaults = { basePath: "/jwplayer/" };
-      setIsScriptLoaded(true);
-      return;
+    setPlayerError(null);
+
+    // Destroy previous HLS instance
+    if (hlsRef.current) {
+      hlsRef.current.destroy();
+      hlsRef.current = null;
     }
 
-    // Load local JW Player script
-    const script = document.createElement("script");
-    script.src = "/jwplayer/jwplayer.js";
-    script.async = true;
+    if (Hls.isSupported()) {
+      const hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: false,
+        startLevel: -1,
+        capLevelToPlayerSize: true,
+      });
+      hlsRef.current = hls;
 
-    script.onload = () => {
-      if (window.jwplayer) {
-        window.jwplayer.defaults = { basePath: "/jwplayer/" };
-      }
-      setIsScriptLoaded(true);
-    };
+      hls.loadSource(streamUrl);
+      hls.attachMedia(video);
 
-    script.onerror = () => {
-      console.warn("Local JW Player script load failed, trying official CDN fallback...");
-      const cdnScript = document.createElement("script");
-      cdnScript.src = "https://ssl.p.jwpcdn.com/player/v/8.38.8/jwplayer.js";
-      cdnScript.async = true;
-      cdnScript.onload = () => {
-        setIsScriptLoaded(true);
-      };
-      cdnScript.onerror = () => {
-        setPlayerError("Failed to load JW Player engine. Please switch to Embed mirror.");
-      };
-      document.head.appendChild(cdnScript);
-    };
-
-    document.head.appendChild(script);
-
-    return () => {
-      // Cleanup script reference if needed
-    };
-  }, []);
-
-  // Initialize or re-setup JW Player when script is ready or streamUrl changes
-  useEffect(() => {
-    if (!isScriptLoaded || typeof window === "undefined" || !window.jwplayer) return;
-
-    const playerId = "movieflix-jwplayer-cinema";
-    const el = document.getElementById(playerId);
-    if (!el) return;
-
-    try {
-      // If previous instance exists, remove it cleanly
-      if (playerInstanceRef.current) {
-        try {
-          playerInstanceRef.current.remove();
-        } catch (e) {
-          console.warn("Cleanup warning:", e);
+      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        // Quality levels
+        if (data.levels && data.levels.length > 0) {
+          const levels = data.levels.map((lvl, i) => ({
+            index: i,
+            height: lvl.height,
+            width: lvl.width,
+            bitrate: lvl.bitrate,
+            label: lvl.height ? lvl.height + "p" : "Level " + (i + 1),
+          }));
+          setQualityLevels(levels);
+          setCurrentQualityIndex(-1);
         }
-      }
 
-      const player = window.jwplayer(playerId);
-      playerInstanceRef.current = player;
+        // Audio tracks
+        if (data.audioTracks && data.audioTracks.length > 0) {
+          setAudioTracks(data.audioTracks);
+          setCurrentAudioIndex(hls.audioTrack);
+        } else if (hls.audioTracks && hls.audioTracks.length > 0) {
+          setAudioTracks(hls.audioTracks);
+          setCurrentAudioIndex(hls.audioTrack);
+        }
 
-      player.setup({
-        playlist: [
-          {
-            title: `${title} ${type === "tv" ? `(S${season}:E${episode})` : ""}`,
-            description: "MovieFlix Ultra HD Cinema",
-            image: backdrop || poster || "/images/banner.jpg",
-            sources: [
-              {
-                file: streamUrl,
-                type: streamUrl.includes(".m3u8") ? "hls" : "mp4",
-                default: true,
-              },
-            ],
-            tracks: [
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "English CC",
-                kind: "captions",
-                default: true,
-              },
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "Hindi [हिन्दी]",
-                kind: "captions",
-              },
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "Tamil [தமிழ்]",
-                kind: "captions",
-              },
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "Spanish [Español]",
-                kind: "captions",
-              },
-            ],
-          },
-        ],
-        autostart: true,
-        width: "100%",
-        height: "100%",
-        aspectratio: "16:9",
-        stretching: "uniform",
-        controls: true,
-        displaytitle: true,
-        displaydescription: false,
-        playbackRateControls: [0.5, 0.75, 1, 1.25, 1.5, 2],
-        skin: {
-          name: "netflix-cinema",
-          active: "#e50914",
-          inactive: "#ffffff",
-          background: "rgba(14, 14, 14, 0.95)",
-        },
+        // Auto-play
+        video.play().catch(() => {});
       });
 
-      // Events
-      player.on("ready", () => {
-        setPlayerError(null);
-        // Sync tracks
-        const aTracks = player.getAudioTracks ? player.getAudioTracks() : [];
-        if (aTracks && aTracks.length > 0) {
-          setAudioTracks(aTracks);
-          setCurrentAudioIndex(player.getCurrentAudioTrack ? player.getCurrentAudioTrack() : 0);
-        }
-        const cList = player.getCaptionsList ? player.getCaptionsList() : [];
-        if (cList && cList.length > 0) {
-          setCaptionsList(cList);
-          setCurrentCaptionIndex(player.getCurrentCaptions ? player.getCurrentCaptions() : 0);
-        }
-        const qList = player.getQualityLevels ? player.getQualityLevels() : [];
-        if (qList && qList.length > 0) {
-          setQualityLevels(qList);
-          setCurrentQualityIndex(player.getCurrentQuality ? player.getCurrentQuality() : 0);
+      // Listen for audio track updates
+      hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (event, data) => {
+        if (data.audioTracks) {
+          setAudioTracks(data.audioTracks);
+          setCurrentAudioIndex(hls.audioTrack);
         }
       });
 
-      player.on("play", () => setIsPlaying(true));
-      player.on("pause", () => setIsPlaying(false));
+      hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (event, data) => {
+        setCurrentAudioIndex(data.id);
+      });
 
-      // Audio track events (Chunk 98 / provider.hlsjs)
-      player.on("audioTracks", (data) => {
-        if (data?.tracks) {
-          setAudioTracks(data.tracks);
-          if (typeof data.currentTrack === "number") {
-            setCurrentAudioIndex(data.currentTrack);
-          }
+      // Listen for subtitle track updates
+      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (event, data) => {
+        if (data.subtitleTracks) {
+          setSubtitleTracks(data.subtitleTracks);
         }
       });
 
-      player.on("audioTrackChanged", (data) => {
-        if (typeof data?.currentTrack === "number") {
-          setCurrentAudioIndex(data.currentTrack);
-        }
-      });
-
-      // Captions events (Chunk 63 / polyfills.webvtt)
-      player.on("captionsList", (data) => {
-        if (data?.tracks) setCaptionsList(data.tracks);
-      });
-
-      player.on("captionsChanged", (data) => {
-        if (typeof data?.currentTrack === "number") {
-          setCurrentCaptionIndex(data.currentTrack);
-        }
-      });
-
-      // Quality events
-      player.on("levels", (data) => {
-        if (data?.levels) setQualityLevels(data.levels);
-      });
-
-      player.on("levelsChanged", (data) => {
-        if (typeof data?.currentQuality === "number") {
-          setCurrentQualityIndex(data.currentQuality);
-        }
+      hls.on(Hls.Events.SUBTITLE_TRACK_SWITCH, (event, data) => {
+        setCurrentSubtitleIndex(data.id);
       });
 
       // Error handling
-      player.on("error", (e) => {
-        console.error("JW Player Error:", e);
-        setPlayerError(
-          e?.message || "Direct stream playback error. You can switch to an embed server or try another stream."
-        );
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              console.error("HLS Network Error:", data);
+              setPlayerError("Network error — stream may be unavailable. Try another source or switch to embed.");
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.error("HLS Media Error:", data);
+              hls.recoverMediaError();
+              break;
+            default:
+              console.error("HLS Fatal Error:", data);
+              setPlayerError("Playback error. Try a different stream source or switch to embed.");
+              hls.destroy();
+              break;
+          }
+        }
       });
-
-      player.on("setupError", (e) => {
-        console.error("JW Player Setup Error:", e);
-        setPlayerError(
-          e?.message || "Failed to initialize JW Player cinema engine."
-        );
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      // Native HLS support (Safari)
+      video.src = streamUrl;
+      video.addEventListener("loadedmetadata", () => {
+        video.play().catch(() => {});
       });
-    } catch (err) {
-      console.error("JW Player Init Exception:", err);
-      setPlayerError(err.message);
+    } else {
+      setPlayerError("Your browser does not support HLS streaming.");
     }
 
     return () => {
-      if (playerInstanceRef.current) {
-        try {
-          playerInstanceRef.current.remove();
-          playerInstanceRef.current = null;
-        } catch (e) {}
+      if (hlsRef.current) {
+        hlsRef.current.destroy();
+        hlsRef.current = null;
       }
     };
-  }, [isScriptLoaded, streamUrl, title, type, season, episode, poster, backdrop]);
+  }, [streamUrl]);
 
-  // Audio Language Selection Handler
+  // Video event listeners
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => { setIsPlaying(false); setShowControls(true); };
+    const onTimeUpdate = () => {
+      setCurrentTime(video.currentTime);
+      if (video.buffered.length > 0) {
+        setBuffered(video.buffered.end(video.buffered.length - 1));
+      }
+    };
+    const onDurationChange = () => setDuration(video.duration);
+    const onVolumeChange = () => {
+      setVolume(video.volume);
+      setIsMuted(video.muted);
+    };
+
+    video.addEventListener("play", onPlay);
+    video.addEventListener("pause", onPause);
+    video.addEventListener("timeupdate", onTimeUpdate);
+    video.addEventListener("durationchange", onDurationChange);
+    video.addEventListener("volumechange", onVolumeChange);
+
+    return () => {
+      video.removeEventListener("play", onPlay);
+      video.removeEventListener("pause", onPause);
+      video.removeEventListener("timeupdate", onTimeUpdate);
+      video.removeEventListener("durationchange", onDurationChange);
+      video.removeEventListener("volumechange", onVolumeChange);
+    };
+  }, []);
+
+  // Fullscreen change listener
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const video = videoRef.current;
+      if (!video) return;
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+      switch (e.key.toLowerCase()) {
+        case " ":
+        case "k":
+          e.preventDefault();
+          video.paused ? video.play() : video.pause();
+          resetControlsTimeout();
+          break;
+        case "f":
+          e.preventDefault();
+          toggleFullscreen();
+          break;
+        case "m":
+          e.preventDefault();
+          video.muted = !video.muted;
+          break;
+        case "arrowleft":
+          e.preventDefault();
+          video.currentTime = Math.max(0, video.currentTime - 10);
+          resetControlsTimeout();
+          break;
+        case "arrowright":
+          e.preventDefault();
+          video.currentTime = Math.min(video.duration, video.currentTime + 10);
+          resetControlsTimeout();
+          break;
+        case "arrowup":
+          e.preventDefault();
+          video.volume = Math.min(1, video.volume + 0.1);
+          break;
+        case "arrowdown":
+          e.preventDefault();
+          video.volume = Math.max(0, video.volume - 0.1);
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [resetControlsTimeout]);
+
+  // Player actions
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.paused ? video.play() : video.pause();
+    resetControlsTimeout();
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+  };
+
+  const toggleFullscreen = () => {
+    const wrapper = videoRef.current?.closest(".cinema-player-viewport");
+    if (!wrapper) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      wrapper.requestFullscreen().catch(() => {});
+    }
+  };
+
+  const handleSeek = (e) => {
+    const video = videoRef.current;
+    const bar = progressBarRef.current;
+    if (!video || !bar) return;
+    const rect = bar.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    video.currentTime = pct * duration;
+    resetControlsTimeout();
+  };
+
+  // Audio Language Selection
   const handleSelectLanguage = (lang) => {
     setSelectedLanguageCode(lang.code);
 
     let switched = false;
-    if (playerInstanceRef.current && audioTracks.length > 0) {
-      // Look for a track whose name or language matches
+    if (hlsRef.current && audioTracks.length > 0) {
       const targetIdx = audioTracks.findIndex((t) => {
-        const name = (t.name || t.label || "").toLowerCase();
-        const language = (t.language || "").toLowerCase();
+        const name = (t.name || t.lang || "").toLowerCase();
         return (
           name.includes(lang.code) ||
-          name.includes(lang.tag.toLowerCase()) ||
-          language.includes(lang.code)
+          name.includes(lang.tag.toLowerCase())
         );
       });
 
       if (targetIdx !== -1) {
-        playerInstanceRef.current.setCurrentAudioTrack(targetIdx);
+        hlsRef.current.audioTrack = targetIdx;
         setCurrentAudioIndex(targetIdx);
         switched = true;
       }
     }
 
-    // Show visual confirmation toast
     setAudioToast(
       switched
-        ? `Switched to native ${lang.label} (Track #${currentAudioIndex + 1})`
-        : `Selected ${lang.label} - Audio Channel Active`
+        ? "✓ Switched to " + lang.label + " audio track"
+        : "Selected " + lang.label + " — Audio channel active"
     );
     setTimeout(() => setAudioToast(""), 3500);
   };
 
-  // Caption Selection Handler
-  const handleSelectCaption = (idx) => {
-    if (playerInstanceRef.current && playerInstanceRef.current.setCurrentCaptions) {
-      playerInstanceRef.current.setCurrentCaptions(idx);
-      setCurrentCaptionIndex(idx);
+  // Subtitle Selection
+  const handleSelectSubtitle = (idx) => {
+    if (hlsRef.current) {
+      hlsRef.current.subtitleTrack = idx;
+      setCurrentSubtitleIndex(idx);
     }
   };
 
-  // Quality Selection Handler
+  // Quality Selection
   const handleSelectQuality = (idx) => {
-    if (playerInstanceRef.current && playerInstanceRef.current.setCurrentQuality) {
-      playerInstanceRef.current.setCurrentQuality(idx);
+    if (hlsRef.current) {
+      hlsRef.current.currentLevel = idx;
       setCurrentQualityIndex(idx);
     }
   };
@@ -332,6 +392,9 @@ export default function JWPlayerInstance({
     }
   };
 
+  const progressPct = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const bufferedPct = duration > 0 ? (buffered / duration) * 100 : 0;
+
   return (
     <div className="jwplayer-cinema-wrapper">
       {/* Toast Notification */}
@@ -342,18 +405,21 @@ export default function JWPlayerInstance({
         </div>
       )}
 
-      {/* Main JW Player Viewport */}
-      <div className="jwplayer-viewport-box">
-        <div id="movieflix-jwplayer-cinema" className="jwplayer-target-element" ref={containerRef}>
-          {!isScriptLoaded && (
-            <div className="jwplayer-loading-shimmer">
-              <div className="stream-spinner" />
-              <span>Initializing JW Player 8.38.8 Cinema Engine...</span>
-            </div>
-          )}
-        </div>
+      {/* Cinema Player Viewport */}
+      <div
+        className="cinema-player-viewport jwplayer-viewport-box"
+        onMouseMove={resetControlsTimeout}
+        onMouseLeave={() => isPlaying && setShowControls(false)}
+      >
+        <video
+          ref={videoRef}
+          className="cinema-video-element"
+          poster={backdrop || poster || ""}
+          playsInline
+          onClick={togglePlay}
+        />
 
-        {/* Overlay Error State with Switch Provider action */}
+        {/* Overlay Error State */}
         {playerError && (
           <div className="jwplayer-error-overlay">
             <div className="jw-error-card">
@@ -371,14 +437,99 @@ export default function JWPlayerInstance({
                 <button
                   type="button"
                   className="jw-btn-secondary"
-                  onClick={() => setStreamUrl(SAMPLE_STREAMS[0].url)}
+                  onClick={() => {
+                    setStreamUrl(SAMPLE_STREAMS[0].url);
+                    setPlayerError(null);
+                  }}
                 >
-                  Reload Multi-Audio Demo
+                  Reload Demo Stream
                 </button>
               </div>
             </div>
           </div>
         )}
+
+        {/* Custom Controls Overlay */}
+        <div className={"cinema-controls-overlay " + (showControls || !isPlaying ? "visible" : "")}>
+          {/* Top gradient */}
+          <div className="cinema-controls-gradient-top" />
+
+          {/* Center Play Button (when paused) */}
+          {!isPlaying && !playerError && (
+            <button type="button" className="cinema-center-play" onClick={togglePlay}>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </button>
+          )}
+
+          {/* Bottom gradient + controls bar */}
+          <div className="cinema-controls-gradient-bottom" />
+          <div className="cinema-controls-bar">
+            {/* Progress bar */}
+            <div
+              className="cinema-progress-bar"
+              ref={progressBarRef}
+              onClick={handleSeek}
+            >
+              <div className="cinema-progress-buffered" style={{ width: bufferedPct + "%" }} />
+              <div className="cinema-progress-played" style={{ width: progressPct + "%" }}>
+                <div className="cinema-progress-knob" />
+              </div>
+            </div>
+
+            {/* Controls row */}
+            <div className="cinema-controls-row">
+              <div className="cinema-controls-left">
+                {/* Play/Pause */}
+                <button type="button" className="cinema-ctrl-btn" onClick={togglePlay} title={isPlaying ? "Pause (K)" : "Play (K)"}>
+                  {isPlaying ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                </button>
+
+                {/* Volume */}
+                <button type="button" className="cinema-ctrl-btn" onClick={toggleMute} title={isMuted ? "Unmute (M)" : "Mute (M)"}>
+                  {isMuted || volume === 0 ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                    </svg>
+                  )}
+                </button>
+
+                {/* Time display */}
+                <span className="cinema-time-display">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </span>
+              </div>
+
+              <div className="cinema-controls-right">
+                {/* Fullscreen */}
+                <button type="button" className="cinema-ctrl-btn" onClick={toggleFullscreen} title="Fullscreen (F)">
+                  {isFullscreen ? (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Multi-Audio & Cinema Console Bar */}
@@ -388,21 +539,49 @@ export default function JWPlayerInstance({
             <span className="audio-icon-pulse">🔊</span>
             <span className="audio-title">Multi-Audio & Dubbed Tracks:</span>
             <span className="audio-tag">Dolby 5.1 / Stereo</span>
+            {audioTracks.length > 0 && (
+              <span className="audio-track-count">{audioTracks.length} tracks detected</span>
+            )}
           </div>
 
           <div className="audio-extra-controls">
-            {/* Subtitles dropdown */}
-            {captionsList.length > 0 && (
+            {/* Native HLS Audio Track dropdown (when available) */}
+            {audioTracks.length > 1 && (
               <div className="jw-control-dropdown">
-                <label htmlFor="jw-sub-select">💬 Subtitles:</label>
+                <label htmlFor="hls-audio-select">🎵 Audio:</label>
                 <select
-                  id="jw-sub-select"
-                  value={currentCaptionIndex}
-                  onChange={(e) => handleSelectCaption(Number(e.target.value))}
+                  id="hls-audio-select"
+                  value={currentAudioIndex}
+                  onChange={(e) => {
+                    const idx = Number(e.target.value);
+                    if (hlsRef.current) {
+                      hlsRef.current.audioTrack = idx;
+                      setCurrentAudioIndex(idx);
+                    }
+                  }}
                 >
-                  {captionsList.map((c, i) => (
+                  {audioTracks.map((t, i) => (
                     <option key={i} value={i}>
-                      {c.label || (i === 0 ? "Off" : `Subtitle ${i}`)}
+                      {t.name || t.lang || "Track " + (i + 1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Subtitles dropdown */}
+            {subtitleTracks.length > 0 && (
+              <div className="jw-control-dropdown">
+                <label htmlFor="hls-sub-select">💬 Subtitles:</label>
+                <select
+                  id="hls-sub-select"
+                  value={currentSubtitleIndex}
+                  onChange={(e) => handleSelectSubtitle(Number(e.target.value))}
+                >
+                  <option value={-1}>Off</option>
+                  {subtitleTracks.map((t, i) => (
+                    <option key={i} value={i}>
+                      {t.name || t.lang || "Subtitle " + (i + 1)}
                     </option>
                   ))}
                 </select>
@@ -412,15 +591,16 @@ export default function JWPlayerInstance({
             {/* Quality dropdown */}
             {qualityLevels.length > 0 && (
               <div className="jw-control-dropdown">
-                <label htmlFor="jw-quality-select">⚙️ Quality:</label>
+                <label htmlFor="hls-quality-select">⚙️ Quality:</label>
                 <select
-                  id="jw-quality-select"
+                  id="hls-quality-select"
                   value={currentQualityIndex}
                   onChange={(e) => handleSelectQuality(Number(e.target.value))}
                 >
-                  {qualityLevels.map((q, i) => (
-                    <option key={i} value={i}>
-                      {q.label || `${q.height || "Auto"}p`}
+                  <option value={-1}>Auto</option>
+                  {qualityLevels.map((q) => (
+                    <option key={q.index} value={q.index}>
+                      {q.label} {q.bitrate ? "(" + Math.round(q.bitrate / 1000) + "k)" : ""}
                     </option>
                   ))}
                 </select>
@@ -447,7 +627,7 @@ export default function JWPlayerInstance({
               <button
                 key={lang.code}
                 type="button"
-                className={`audio-lang-chip ${isActive ? "active" : ""}`}
+                className={"audio-lang-chip " + (isActive ? "active" : "")}
                 onClick={() => handleSelectLanguage(lang)}
               >
                 <span className="chip-flag">{lang.flag}</span>

@@ -6519,3 +6519,189 @@ body.lights-off-active .player-section-wrapper {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* =========================================================
+   CINEMA PLAYER — Custom HTML5 Video Controls (Netflix-style)
+   ========================================================= */
+.cinema-player-viewport {
+  position: relative;
+  cursor: pointer;
+}
+
+.cinema-video-element {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: #000000;
+}
+
+.cinema-controls-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.cinema-controls-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cinema-controls-gradient-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.cinema-controls-gradient-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.cinema-center-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.9);
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 30px rgba(229, 9, 20, 0.6);
+  transition: transform 0.2s ease, background 0.2s ease;
+  z-index: 15;
+}
+
+.cinema-center-play:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: #f40612;
+}
+
+.cinema-controls-bar {
+  position: relative;
+  z-index: 12;
+  padding: 0 16px 10px;
+}
+
+.cinema-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 2px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: height 0.15s ease;
+}
+
+.cinema-progress-bar:hover {
+  height: 6px;
+}
+
+.cinema-progress-buffered {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.cinema-progress-played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #e50914;
+  border-radius: 2px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.cinema-progress-knob {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #e50914;
+  box-shadow: 0 0 8px rgba(229, 9, 20, 0.8);
+  transform: translateX(50%) translateY(0);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cinema-progress-bar:hover .cinema-progress-knob {
+  opacity: 1;
+}
+
+.cinema-controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cinema-controls-left,
+.cinema-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cinema-ctrl-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.cinema-ctrl-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.cinema-time-display {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-track-count {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #aaaaaa;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
