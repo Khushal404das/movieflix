@@ -32,22 +32,31 @@ export default function JWPlayerInstance({
   type = "movie",
   id,
   title,
-  season,
-  episode,
+  season = 1,
+  episode = 1,
   poster,
   backdrop,
   customStreamUrl,
+  movieStreamUrl,
   onSwitchToEmbed,
 }) {
   const containerRef = useRef(null);
   const playerInstanceRef = useRef(null);
 
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playerError, setPlayerError] = useState(null);
-  const [streamUrl, setStreamUrl] = useState(customStreamUrl || SAMPLE_STREAMS[0].url);
+  // Default movie stream resolved dynamically for this specific title
+  const resolvedMovieStream =
+    movieStreamUrl ||
+    (type === "tv"
+      ? `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=e50914&autoplay=true`
+      : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`);
+
+  // State: "movie" (default - plays the real movie) or "hls" (JW Player direct .m3u8 engine)
+  const [playerMode, setPlayerMode] = useState(customStreamUrl ? "hls" : "movie");
+  const [streamUrl, setStreamUrl] = useState(customStreamUrl || "");
   const [customInputUrl, setCustomInputUrl] = useState("");
   const [showStreamDrawer, setShowStreamDrawer] = useState(false);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [playerError, setPlayerError] = useState(null);
 
   // Audio track state
   const [audioTracks, setAudioTracks] = useState([]);
@@ -63,11 +72,10 @@ export default function JWPlayerInstance({
   const [qualityLevels, setQualityLevels] = useState([]);
   const [currentQualityIndex, setCurrentQualityIndex] = useState(0);
 
-  // Load JW Player 8.38.8 scripts and dependencies (matching NetMirror configuration)
+  // Load JW Player 8.38.8 scripts and dependencies
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Set base path for JW Player chunks so webpack loads from /jwplayer/
     window.__jwplayer_public_path__ = "/jwplayer/";
 
     if (window.jwplayer && typeof window.jwplayer === "function") {
@@ -75,7 +83,6 @@ export default function JWPlayerInstance({
       return;
     }
 
-    // Helper to sequentially load a script tag
     const loadScript = (src) => {
       return new Promise((resolve, reject) => {
         const existing = document.querySelector(`script[src="${src}"]`);
@@ -92,7 +99,6 @@ export default function JWPlayerInstance({
       });
     };
 
-    // Load jQuery then JW Player
     loadScript("/jwplayer/jquery.min.js")
       .catch(() => loadScript("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"))
       .finally(() => {
@@ -117,8 +123,9 @@ export default function JWPlayerInstance({
       });
   }, []);
 
-  // Initialize or re-setup JW Player when script is ready or streamUrl changes
+  // Initialize or re-setup JW Player when streamUrl is active in "hls" mode
   useEffect(() => {
+    if (playerMode !== "hls" || !streamUrl) return;
     if (!isScriptLoaded || typeof window === "undefined" || !window.jwplayer) return;
 
     const playerId = "movieflix-jwplayer-cinema";
@@ -126,7 +133,6 @@ export default function JWPlayerInstance({
     if (!el) return;
 
     try {
-      // If previous instance exists, clean it up
       if (playerInstanceRef.current) {
         try {
           playerInstanceRef.current.remove();
@@ -165,16 +171,6 @@ export default function JWPlayerInstance({
                 label: "Hindi [हिन्दी]",
                 kind: "captions",
               },
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "Tamil [தமிழ்]",
-                kind: "captions",
-              },
-              {
-                file: "https://raw.githubusercontent.com/brenopolanski/html5-video-webvtt-example/master/subtitles-en.vtt",
-                label: "Spanish [Español]",
-                kind: "captions",
-              },
             ],
           },
         ],
@@ -195,10 +191,8 @@ export default function JWPlayerInstance({
         },
       });
 
-      // Events
       player.on("ready", () => {
         setPlayerError(null);
-        // Sync tracks
         const aTracks = player.getAudioTracks ? player.getAudioTracks() : [];
         if (aTracks && aTracks.length > 0) {
           setAudioTracks(aTracks);
@@ -216,10 +210,6 @@ export default function JWPlayerInstance({
         }
       });
 
-      player.on("play", () => setIsPlaying(true));
-      player.on("pause", () => setIsPlaying(false));
-
-      // Audio track events (Chunk 98 / provider.hlsjs)
       player.on("audioTracks", (data) => {
         if (data?.tracks) {
           setAudioTracks(data.tracks);
@@ -235,45 +225,30 @@ export default function JWPlayerInstance({
         }
       });
 
-      // Captions events (Chunk 63 / polyfills.webvtt)
       player.on("captionsList", (data) => {
         if (data?.tracks) setCaptionsList(data.tracks);
       });
 
-      player.on("captionsChanged", (data) => {
-        if (typeof data?.currentTrack === "number") {
-          setCurrentCaptionIndex(data.currentTrack);
-        }
-      });
-
-      // Quality events
       player.on("levels", (data) => {
         if (data?.levels) setQualityLevels(data.levels);
       });
 
-      player.on("levelsChanged", (data) => {
-        if (typeof data?.currentQuality === "number") {
-          setCurrentQualityIndex(data.currentQuality);
-        }
-      });
-
-      // Error handling
       player.on("error", (e) => {
         console.error("JW Player Error:", e);
-        setPlayerError(
-          e?.message || "Direct stream playback error. You can switch to an embed server or try another stream."
-        );
+        setPlayerError(e?.message || "Direct HLS stream error. Switched to Cinema Cloud stream.");
+        // Fallback to real movie stream on error
+        setPlayerMode("movie");
       });
 
       player.on("setupError", (e) => {
         console.error("JW Player Setup Error:", e);
-        setPlayerError(
-          e?.message || "Failed to initialize JW Player cinema engine."
-        );
+        setPlayerError(e?.message || "HLS setup error. Switched to Cinema Cloud stream.");
+        setPlayerMode("movie");
       });
     } catch (err) {
       console.error("JW Player Init Exception:", err);
       setPlayerError(err.message);
+      setPlayerMode("movie");
     }
 
     return () => {
@@ -284,15 +259,14 @@ export default function JWPlayerInstance({
         } catch (e) {}
       }
     };
-  }, [isScriptLoaded, streamUrl, title, type, season, episode, poster, backdrop]);
+  }, [playerMode, isScriptLoaded, streamUrl, title, type, season, episode, poster, backdrop]);
 
   // Audio Language Selection Handler
   const handleSelectLanguage = (lang) => {
     setSelectedLanguageCode(lang.code);
 
     let switched = false;
-    if (playerInstanceRef.current && audioTracks.length > 0) {
-      // Look for a track whose name or language matches
+    if (playerMode === "hls" && playerInstanceRef.current && audioTracks.length > 0) {
       const targetIdx = audioTracks.findIndex((t) => {
         const name = (t.name || t.label || "").toLowerCase();
         const language = (t.language || "").toLowerCase();
@@ -310,11 +284,10 @@ export default function JWPlayerInstance({
       }
     }
 
-    // Show visual confirmation toast
     setAudioToast(
       switched
         ? `Switched to native ${lang.label} (Track #${currentAudioIndex + 1})`
-        : `Selected ${lang.label} - Audio Channel Active`
+        : `Selected ${lang.label} - Audio Track Active`
     );
     setTimeout(() => setAudioToast(""), 3500);
   };
@@ -340,6 +313,7 @@ export default function JWPlayerInstance({
     e.preventDefault();
     if (customInputUrl.trim()) {
       setStreamUrl(customInputUrl.trim());
+      setPlayerMode("hls");
       setShowStreamDrawer(false);
       setPlayerError(null);
     }
@@ -357,39 +331,50 @@ export default function JWPlayerInstance({
 
       {/* Main JW Player Viewport */}
       <div className="jwplayer-viewport-box">
-        <div id="movieflix-jwplayer-cinema" className="jwplayer-target-element" ref={containerRef}>
-          {!isScriptLoaded && (
-            <div className="jwplayer-loading-shimmer">
-              <div className="stream-spinner" />
-              <span>Initializing JW Player 8.38.8 Cinema Engine...</span>
-            </div>
-          )}
-        </div>
+        {playerMode === "hls" && streamUrl ? (
+          <div id="movieflix-jwplayer-cinema" className="jwplayer-target-element" ref={containerRef}>
+            {!isScriptLoaded && (
+              <div className="jwplayer-loading-shimmer">
+                <div className="stream-spinner" />
+                <span>Initializing JW Player 8.38.8 Cinema Engine...</span>
+              </div>
+            )}
+          </div>
+        ) : (
+          <iframe
+            key={`cinema-movie-${id}-${season}-${episode}`}
+            src={resolvedMovieStream}
+            className="player-iframe"
+            allowFullScreen
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            title={`${title} - Cinema Player`}
+          />
+        )}
 
         {/* Overlay Error State with Switch Provider action */}
         {playerError && (
           <div className="jwplayer-error-overlay">
             <div className="jw-error-card">
               <span className="jw-error-icon">⚠️</span>
-              <h4>Cinema Stream Unavailable</h4>
+              <h4>Stream Notice</h4>
               <p>{playerError}</p>
               <div className="jw-error-actions">
                 <button
                   type="button"
                   className="jw-btn-primary"
-                  onClick={() => onSwitchToEmbed && onSwitchToEmbed()}
+                  onClick={() => {
+                    setPlayerMode("movie");
+                    setPlayerError(null);
+                  }}
                 >
-                  Switch to VidLink / VidSrc Embed
+                  Play Cinema Cloud Stream
                 </button>
                 <button
                   type="button"
                   className="jw-btn-secondary"
-                  onClick={() => {
-                    setPlayerError(null);
-                    setStreamUrl(SAMPLE_STREAMS[0].url);
-                  }}
+                  onClick={() => onSwitchToEmbed && onSwitchToEmbed()}
                 >
-                  Reload Multi-Audio Demo
+                  Switch Provider
                 </button>
               </div>
             </div>
@@ -407,50 +392,27 @@ export default function JWPlayerInstance({
           </div>
 
           <div className="audio-extra-controls">
-            {/* Subtitles dropdown */}
-            {captionsList.length > 0 && (
-              <div className="jw-control-dropdown">
-                <label htmlFor="jw-sub-select">💬 Subtitles:</label>
-                <select
-                  id="jw-sub-select"
-                  value={currentCaptionIndex}
-                  onChange={(e) => handleSelectCaption(Number(e.target.value))}
-                >
-                  {captionsList.map((c, i) => (
-                    <option key={i} value={i}>
-                      {c.label || (i === 0 ? "Off" : `Subtitle ${i}`)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Quality dropdown */}
-            {qualityLevels.length > 0 && (
-              <div className="jw-control-dropdown">
-                <label htmlFor="jw-quality-select">⚙️ Quality:</label>
-                <select
-                  id="jw-quality-select"
-                  value={currentQualityIndex}
-                  onChange={(e) => handleSelectQuality(Number(e.target.value))}
-                >
-                  {qualityLevels.map((q, i) => (
-                    <option key={i} value={i}>
-                      {q.label || `${q.height || "Auto"}p`}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+            {/* Stream Mode Switcher */}
+            <button
+              type="button"
+              className={`jw-custom-stream-btn ${playerMode === "movie" ? "active" : ""}`}
+              onClick={() => {
+                setPlayerMode("movie");
+                setPlayerError(null);
+              }}
+              title="Play actual movie / episode"
+            >
+              🎬 Movie Stream
+            </button>
 
             {/* Custom Stream Input Toggle */}
             <button
               type="button"
-              className="jw-custom-stream-btn"
+              className={`jw-custom-stream-btn ${playerMode === "hls" ? "active" : ""}`}
               onClick={() => setShowStreamDrawer(!showStreamDrawer)}
-              title="Test custom HLS/M3U8 Stream"
+              title="Test custom HLS / M3U8 stream in JW Player"
             >
-              🔗 {showStreamDrawer ? "Hide Stream URL" : "Custom Stream URL"}
+              ⚡ {showStreamDrawer ? "Hide HLS URL" : "Direct HLS Stream"}
             </button>
           </div>
         </div>
@@ -498,6 +460,7 @@ export default function JWPlayerInstance({
                   className="jw-sample-chip"
                   onClick={() => {
                     setStreamUrl(s.url);
+                    setPlayerMode("hls");
                     setPlayerError(null);
                   }}
                 >

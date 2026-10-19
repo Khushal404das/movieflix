@@ -17,12 +17,15 @@ const episodeMemoryCache = new Map();
  */
 const PROVIDERS = [
   {
-    key: "jwplayer",
-    label: "JW Player 8 (Multi-Audio)",
-    icon: "⚡",
+    key: "vidlink",
+    label: "VidLink Cinema (Multi-Audio)",
+    icon: "🎬",
     multiAudio: true,
-    isNativeJw: true,
-    badge: "Cinema Multi-Audio",
+    badge: "Direct Stream",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
+        : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`,
   },
   {
     key: "vidsrc",
@@ -36,15 +39,12 @@ const PROVIDERS = [
         : `https://vidsrc.to/embed/movie/${id}`,
   },
   {
-    key: "vidlink",
-    label: "VidLink Cinema",
-    icon: "🎬",
+    key: "jwplayer",
+    label: "JW Player 8 (Cinema Direct)",
+    icon: "⚡",
     multiAudio: true,
-    badge: "Direct Stream",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
-        : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`,
+    isNativeJw: true,
+    badge: "JW Player 8.38.8",
   },
   {
     key: "videasy",
