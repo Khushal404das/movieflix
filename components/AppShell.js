@@ -31,7 +31,7 @@ export default function AppShell({ children }) {
               MOVIE<span className="accent">FLIX</span>
             </div>
             <p className="footer-desc">
-              Your premium cinema & web series streaming hub. Watch the latest blockbuster movies, top-rated TV shows, and legendary classics in high definition.
+              Your premium cinema & web series streaming hub. Watch the latest blockbuster movies, trending TV shows, and web series in high definition.
             </p>
           </div>
 
@@ -40,7 +40,7 @@ export default function AppShell({ children }) {
               <h4>Discover</h4>
               <a href="/browse/movie">Trending Movies</a>
               <a href="/browse/tv">Web Series</a>
-              <a href="/classics">Free Classics</a>
+              
               <a href="/list">My Watchlist</a>
               <a href="/profile">My Account</a>
             </div>

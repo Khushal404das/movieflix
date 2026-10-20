@@ -149,9 +149,6 @@ export default function Header() {
             <Link href="/browse/movie?genre=28" className={`netflix-nav-item ${pathname.includes("genre") ? "active" : ""}`}>
               Action & Sci-Fi
             </Link>
-            <Link href="/classics" className={`netflix-nav-item ${pathname.startsWith("/classics") ? "active" : ""}`}>
-              Classics
-            </Link>
             <Link href="/list" className={`netflix-nav-item ${pathname === "/list" ? "active" : ""}`}>
               My List
             </Link>
@@ -388,7 +385,6 @@ export default function Header() {
             <Link href="/browse/tv?genre=16" className="mobile-link">⚡ Anime Series</Link>
             <Link href="/browse/movie?genre=28" className="mobile-link">Action & Adventure</Link>
             <Link href="/browse/movie?genre=878" className="mobile-link">Sci-Fi & Fantasy</Link>
-            <Link href="/classics" className="mobile-link">Free Classics</Link>
             <Link href="/list" className="mobile-link">My List</Link>
             {user && (
               <>

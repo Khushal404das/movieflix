@@ -377,8 +377,7 @@ export default function Card({
 
 export function TmdbCard({ item, isWide = false }) {
   if (!item) return null;
-  const isClassics = item.type === "classics";
-  const targetHref = isClassics ? `/classics/${item.id}` : `/${item.type || "movie"}/${item.id}`;
+  const targetHref = `/${item.type || "movie"}/${item.id}`;
 
   return (
     <Card

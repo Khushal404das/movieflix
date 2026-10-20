@@ -44,16 +44,6 @@ export default function MobileNav() {
       )
     },
     {
-      label: "Classics",
-      href: "/classics",
-      icon: (active) => (
-        <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? "0" : "2"}>
-          <circle cx="12" cy="12" r="10"/>
-          <polygon points="10 8 16 12 10 16 10 8"/>
-        </svg>
-      )
-    },
-    {
       label: "My List",
       href: "/list",
       icon: (active) => (

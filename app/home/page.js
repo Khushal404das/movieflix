@@ -6,7 +6,7 @@ import {
   getAnimeDubbed,
   getKDramas
 } from "@/lib/tmdb";
-import { classics, poster } from "@/lib/archive";
+
 import NetflixBillboard from "@/components/NetflixBillboard";
 import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
@@ -25,7 +25,6 @@ export default async function StreamingHome() {
     sciFiMovies,
     animeTitles,
     kDramaTitles,
-    classicItems
   ] = await Promise.all([
     getTrending("all", "day"),
     getTrending("movie", "week"),
@@ -36,7 +35,6 @@ export default async function StreamingHome() {
     getByGenre("movie", 878),
     getAnimeDubbed(1),
     getKDramas(1),
-    classics()
   ]);
 
   // High-res backdrop candidate list for auto-rotating Billboard spotlight (NetMirror style)
@@ -132,22 +130,7 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
-        {/* Free Public Domain Classics */}
-        {classicItems?.docs?.length > 0 && (
-          <NetflixRow
-            title="Public Domain Cinema & Golden Classics"
-            items={classicItems.docs.slice(0, 12).map((d) => ({
-              id: d.id,
-              type: "classics",
-              title: d.title,
-              year: d.year || "Classic",
-              rating: "Vintage",
-              poster: poster(d.id),
-              quality: "Archive"
-            }))}
-            seeAllHref="/classics"
-          />
-        )}
+
       </div>
     </div>
   );

@@ -11,7 +11,7 @@ export const viewport = {
 
 export const metadata = {
   title: "MovieFlix – Free HD Movies & Web Series Streaming",
-  description: "Watch latest HD movies, TV shows, trending web series, and public domain classics online with multiple fast streaming servers.",
+  description: "Watch latest HD movies, TV shows, and trending web series online with multiple fast streaming servers.",
   keywords: "watch movies online, stream web series, free movies hd, tv shows online, stream series",
   authors: [{ name: "MovieFlix" }],
   icons: {
