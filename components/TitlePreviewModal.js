@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import StreamDiagnosticsOverlay from "./StreamDiagnosticsOverlay";
 
 export default function TitlePreviewModal() {
   const router = useRouter();
@@ -11,7 +10,6 @@ export default function TitlePreviewModal() {
   const [data, setData] = useState(null);
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showStats, setShowStats] = useState(true);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
@@ -26,7 +24,6 @@ export default function TitlePreviewModal() {
       if (!itemData) return;
       setData(itemData);
       setIsOpen(true);
-      setShowStats(true); // Default open with Stats for Nerds as in user screenshot
 
       // Check watchlist state
       const targetHref = itemData.href || `/${itemData.type || "movie"}/${itemData.item?.id || itemData.id}`;
@@ -62,7 +59,6 @@ export default function TitlePreviewModal() {
       document.body.style.overflow = "hidden";
       const handleKeyDown = (e) => {
         if (e.key === "Escape") handleClose();
-        if (e.key === "d" || e.key === "D") setShowStats((prev) => !prev);
       };
       window.addEventListener("keydown", handleKeyDown);
       return () => {
@@ -194,16 +190,7 @@ export default function TitlePreviewModal() {
           {/* Vignette Shadow Overlay */}
           <div className="previewModal-vignette" />
 
-          {/* STREAMING DIAGNOSTICS / STATS FOR NERDS HUD OVERLAY (Matches user screenshot) */}
-          {showStats && (
-            <StreamDiagnosticsOverlay
-              title={title}
-              duration={formattedDuration}
-              mediaId={String(id)}
-              streamHost="stream.movieflix.cc"
-              onClose={() => setShowStats(false)}
-            />
-          )}
+
 
           {/* WATCHLIST SUCCESS TOAST (Matches user screenshot exactly) */}
           {showWatchlistToast && (
@@ -290,21 +277,7 @@ export default function TitlePreviewModal() {
                 </svg>
               </button>
 
-              {/* Stats for Nerds HUD Toggle Button */}
-              <button
-                type="button"
-                className={`previewModal-icon-btn stats-toggle-btn ${showStats ? "active" : ""}`}
-                onClick={() => setShowStats((prev) => !prev)}
-                title={showStats ? "Hide Stats for Nerds (D)" : "Show Stats for Nerds (D)"}
-                aria-label="Toggle Streaming Diagnostics"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 20V10"/>
-                  <path d="M12 20V4"/>
-                  <path d="M6 20v-6"/>
-                </svg>
-                <span className="stats-btn-text">Stats</span>
-              </button>
+
             </div>
           </div>
         </div>
