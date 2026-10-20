@@ -123,10 +123,31 @@ export default function NetflixBillboard({ item, items = [] }) {
         </p>
 
         <div className="billboard-actions">
-          <Link href={`/${current.type || "movie"}/${current.id}`} prefetch={true} className="btn-netflix-play">
+          <button
+            type="button"
+            className="btn-netflix-play"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(
+                  new CustomEvent("movieflix:open-preview", {
+                    detail: {
+                      item: current,
+                      type: current.type || "movie",
+                      id: current.id,
+                      title: current.title,
+                      backdrop: current.backdrop,
+                      poster: current.poster,
+                      rating: current.rating,
+                      href: `/${current.type || "movie"}/${current.id}`
+                    }
+                  })
+                );
+              }
+            }}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
             <span>Play</span>
-          </Link>
+          </button>
           <button type="button" className="btn-netflix-info" onClick={() => {
             if (typeof window !== "undefined") {
               window.dispatchEvent(new CustomEvent("movieflix:open-preview", {

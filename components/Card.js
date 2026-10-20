@@ -82,8 +82,10 @@ export default function Card({
   };
 
   const handleMoreInfoClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (typeof window !== "undefined") {
       window.dispatchEvent(
         new CustomEvent("movieflix:open-preview", {
@@ -100,6 +102,13 @@ export default function Card({
           }
         })
       );
+    }
+  };
+
+  const handleCardClick = (e) => {
+    if (!e.metaKey && !e.ctrlKey && e.button === 0) {
+      e.preventDefault();
+      handleMoreInfoClick(e);
     }
   };
 
@@ -175,7 +184,7 @@ export default function Card({
 
   return (
     <div className={`netflix-card-item ${isWide ? "wide-card" : ""}`}>
-      <Link href={href} prefetch={true} className="netflix-card-link">
+      <Link href={href} prefetch={true} className="netflix-card-link" onClick={handleCardClick}>
         {/* Base Card Poster Display */}
         <div className="netflix-card-media">
           {poster && !imgError ? (
@@ -243,7 +252,7 @@ export default function Card({
             <div className="hover-action-row">
               <div className="hover-action-left">
                 {/* Play Button */}
-                <div className="hover-btn-play" title="Play Now">
+                <div className="hover-btn-play" title="View Details & Play" onClick={handleMoreInfoClick}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="6 3 20 12 6 21 6 3"/>
                   </svg>
