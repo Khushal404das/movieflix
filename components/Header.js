@@ -101,9 +101,39 @@ export default function Header() {
       <div className="netflix-header-inner">
         {/* Left Side: Brand Logo + Primary Nav */}
         <div className="header-left">
-          <Link href="/home" className="netflix-brand-logo">
-            <span className="logo-n-mark">MOVIE</span>
-            <span className="logo-flix-mark">FLIX</span>
+          <Link href="/home" className="netflix-brand-logo" aria-label="MovieFlix Home">
+            <svg
+              className="brand-logo-icon"
+              width="28"
+              height="28"
+              viewBox="0 0 512 512"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="headerRedBack" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#c4151c" />
+                  <stop offset="100%" stopColor="#6e070c" />
+                </linearGradient>
+                <linearGradient id="headerRedDiagLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ff2b33" />
+                  <stop offset="100%" stopColor="#b81219" />
+                </linearGradient>
+                <linearGradient id="headerRedDiagRight" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#e50914" />
+                  <stop offset="100%" stopColor="#96080e" />
+                </linearGradient>
+              </defs>
+              <rect width="512" height="512" rx="116" fill="#141418" />
+              <path d="M 104 116 L 168 116 L 168 396 L 104 396 Z" fill="url(#headerRedBack)" />
+              <path d="M 344 116 L 408 116 L 408 396 L 344 396 Z" fill="url(#headerRedBack)" />
+              <path d="M 104 116 L 180 116 L 276 324 L 236 324 Z" fill="url(#headerRedDiagLeft)" />
+              <path d="M 408 116 L 332 116 L 236 324 L 276 324 Z" fill="url(#headerRedDiagRight)" />
+            </svg>
+            <span className="logo-text-wrap">
+              <span className="logo-n-mark">MOVIE</span>
+              <span className="logo-flix-mark">FLIX</span>
+            </span>
           </Link>
 
           <nav className="netflix-desktop-nav">
