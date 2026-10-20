@@ -652,14 +652,25 @@ img {
 
 .continue-watching-row {
   position: relative;
-  z-index: 25;
+  z-index: 15;
   margin-bottom: 38px;
   padding-top: 6px;
+  transition: z-index 0.2s ease;
+}
+
+.continue-watching-row:hover {
+  z-index: 200 !important;
 }
 
 .netflix-row-container {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   position: relative;
+  z-index: 10;
+  transition: z-index 0.2s ease;
+}
+
+.netflix-row-container:hover {
+  z-index: 200 !important;
 }
 
 .row-header {
@@ -701,17 +712,6 @@ img {
 }
 
 /* Carousel Slider Wrapper */
-.netflix-row-container {
-  margin-bottom: 28px;
-  position: relative;
-  z-index: 10;
-  transition: z-index 0.2s ease;
-}
-
-.netflix-row-container:hover {
-  z-index: 80;
-}
-
 .row-slider-wrapper {
   position: relative;
   overflow: visible;
@@ -725,9 +725,9 @@ img {
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
   touch-action: pan-x pan-y;
-  padding: 55px clamp(20px, 4vw, 56px) 75px;
-  margin-top: -35px;
-  margin-bottom: -50px;
+  padding: 80px clamp(20px, 4vw, 56px) 100px;
+  margin-top: -60px;
+  margin-bottom: -80px;
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -789,7 +789,12 @@ img {
    ======================================= */
 .top10-row {
   position: relative;
-  z-index: 25;
+  z-index: 20;
+  transition: z-index 0.2s ease;
+}
+
+.top10-row:hover {
+  z-index: 200 !important;
 }
 
 .top10-row .row-slider-wrapper {
@@ -801,13 +806,13 @@ img {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  overflow-y: visible !important; /* allow hover preview popup to escape vertically */
+  overflow-y: visible !important;
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
   touch-action: pan-x pan-y;
-  padding: 65px clamp(20px, 4vw, 56px) 75px;
-  margin-top: -45px;
-  margin-bottom: -50px;
+  padding: 100px clamp(20px, 4vw, 56px) 115px;
+  margin-top: -80px;
+  margin-bottom: -95px;
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -832,7 +837,7 @@ img {
 .top10-item-wrap:hover .netflix-card-hover-overlay {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, -50%) scale(1.12);
 }
 
 .top10-rank-number {
