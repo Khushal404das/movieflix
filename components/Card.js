@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 
 const GENRE_MAP = {
@@ -50,7 +50,33 @@ export default function Card({
   number_of_seasons,
   item
 }) {
+  const cardRef = useRef(null);
   const [imgError, setImgError] = useState(false);
+
+  const handleCardMouseEnter = () => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    window.dispatchEvent(
+      new CustomEvent("movieflix:card-hover", {
+        detail: {
+          rect,
+          item,
+          href,
+          title,
+          poster,
+          backdrop,
+          rating,
+          type,
+          genres,
+          runtime
+        }
+      })
+    );
+  };
+
+  const handleCardMouseLeave = () => {
+    window.dispatchEvent(new CustomEvent("movieflix:card-leave"));
+  };
   const [hoverImgError, setHoverImgError] = useState(false);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -183,7 +209,7 @@ export default function Card({
   const genreList = resolveGenres();
 
   return (
-    <div className={`netflix-card-item ${isWide ? "wide-card" : ""}`}>
+    <div ref={cardRef} className={`netflix-card-item ${isWide ? "wide-card" : ""}`} onMouseEnter={handleCardMouseEnter} onMouseLeave={handleCardMouseLeave}>
       <Link href={href} prefetch={true} className="netflix-card-link" onClick={handleCardClick}>
         {/* Base Card Poster Display */}
         <div className="netflix-card-media">

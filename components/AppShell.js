@@ -6,6 +6,7 @@ import MobileNav from "@/components/MobileNav";
 import AuthModal from "@/components/AuthModal";
 import SessionGuard from "@/components/SessionGuard";
 import TitlePreviewModal from "@/components/TitlePreviewModal";
+import MiniPreviewModal from "@/components/MiniPreviewModal";
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
@@ -61,6 +62,7 @@ export default function AppShell({ children }) {
       <AuthModal />
       <SessionGuard />
       <TitlePreviewModal />
+      <MiniPreviewModal />
     </div>
   );
 }
