@@ -212,6 +212,17 @@ export default function Card({
               <span className="top-rated-tag">TOP RATED</span>
             )}
           </div>
+
+          {/* Base Card Title Overlay & Red Badge for Landscape Cards (NetMirror style) */}
+          {isWide && (
+            <>
+              <div className="netflix-card-base-gradient"></div>
+              <div className="netflix-card-base-info">
+                <span className="netflix-card-base-title">{title}</span>
+                <span className="netflix-card-red-badge">{type === "tv" ? "New Season" : "Recently added"}</span>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Floating Quick Preview Pop-up Overlay on Hover */}
@@ -245,6 +256,7 @@ export default function Card({
             {type && (
               <span className="hover-type-badge">{type === "tv" ? "SERIES" : "MOVIE"}</span>
             )}
+            <span className="hover-badge-bottom-red">{type === "tv" ? "New Season" : "Recently added"}</span>
           </div>
 
           <div className="hover-info-body">

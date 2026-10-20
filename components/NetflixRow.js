@@ -9,7 +9,7 @@ export default function NetflixRow({
   items = [],
   isTop10 = false,
   seeAllHref,
-  backdropStyle = false
+  backdropStyle = true
 }) {
   const rowRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -81,6 +81,7 @@ export default function NetflixRow({
                       quality={item.quality}
                       type={item.type}
                       sub={item.year}
+                      isWide={false}
                       genres={item.genres}
                       runtime={item.runtime}
                       seasons={item.seasons}

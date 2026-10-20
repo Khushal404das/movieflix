@@ -20,7 +20,7 @@ const PROVIDERS = [
     label: "VidLink Cinema (Multi-Audio)",
     icon: "🎬",
     multiAudio: true,
-    badge: "Direct Stream",
+    badge: "Direct Stream (Multi-Audio)",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
@@ -28,10 +28,10 @@ const PROVIDERS = [
   },
   {
     key: "vidsrc",
-    label: "VidSrc Cloud",
+    label: "VidSrc Cloud (Fast)",
     icon: "📡",
     multiAudio: false,
-    badge: "Direct Cinema",
+    badge: "Fast Stream",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
@@ -47,36 +47,25 @@ const PROVIDERS = [
   },
   {
     key: "videasy",
-    label: "Videasy",
+    label: "Videasy Ultra",
     icon: "🌍",
     multiAudio: true,
-    badge: "Fast Stream",
+    badge: "Ultra HD",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://player.videasy.to/tv/${id}/${s}/${e}`
         : `https://player.videasy.to/movie/${id}`,
   },
   {
-    key: "multiembed",
-    label: "MultiEmbed",
-    icon: "🎧",
-    multiAudio: true,
-    badge: "HD Stream",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://multiembed.mov/?video_id=${id}&tmdb=1&s=${s}&e=${e}`
-        : `https://multiembed.mov/?video_id=${id}&tmdb=1`,
-  },
-  {
-    key: "anyembed",
-    label: "AnyEmbed Fast",
-    icon: "⚡",
+    key: "2embed",
+    label: "2Embed Cinema",
+    icon: "🎞️",
     multiAudio: false,
-    badge: "1080p Ultra HD",
+    badge: "1080p Cinema",
     getUrl: (type, id, s, e) =>
       type === "tv"
-        ? `https://anyembed.xyz/embed/tmdb-tv-${id}-${s}-${e}`
-        : `https://anyembed.xyz/embed/tmdb-movie-${id}`,
+        ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}`
+        : `https://www.2embed.cc/embed/${id}`,
   },
 ];
 
