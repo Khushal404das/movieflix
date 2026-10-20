@@ -47,8 +47,8 @@ export default function JWPlayerInstance({
   const resolvedMovieStream =
     movieStreamUrl ||
     (type === "tv"
-      ? `https://vidlink.pro/tv/${id}/${season}/${episode}?primaryColor=e50914&autoplay=true`
-      : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`);
+      ? `https://vidsrc.to/embed/tv/${id}/${season}/${episode}`
+      : `https://vidsrc.to/embed/movie/${id}`);
 
   // State: "movie" (default - plays the real movie) or "hls" (JW Player direct .m3u8 engine)
   const [playerMode, setPlayerMode] = useState(customStreamUrl ? "hls" : "movie");
@@ -72,11 +72,11 @@ export default function JWPlayerInstance({
   const [qualityLevels, setQualityLevels] = useState([]);
   const [currentQualityIndex, setCurrentQualityIndex] = useState(0);
 
-  // Load JW Player 8.38.8 scripts and dependencies
+  // Load JW Player scripts and dependencies directly from /player/
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    window.__jwplayer_public_path__ = "/jwplayer/";
+    window.__jwplayer_public_path__ = "/player/";
 
     if (window.jwplayer && typeof window.jwplayer === "function") {
       setIsScriptLoaded(true);
@@ -99,25 +99,25 @@ export default function JWPlayerInstance({
       });
     };
 
-    loadScript("/jwplayer/jquery.min.js")
-      .catch(() => loadScript("https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"))
-      .finally(() => {
+    loadScript("/player/jwplayer.js")
+      .then(() => {
+        if (window.jwplayer) {
+          setIsScriptLoaded(true);
+        }
+      })
+      .catch((err) => {
+        console.warn("Loading /player/jwplayer.js failed, fallback to /jwplayer/jwplayer.js", err);
         loadScript("/jwplayer/jwplayer.js")
           .then(() => {
-            if (window.jwplayer) {
-              setIsScriptLoaded(true);
-            }
+            if (window.jwplayer) setIsScriptLoaded(true);
           })
-          .catch((err) => {
-            console.warn("Local JW Player script failed, loading official CDN fallback...", err);
+          .catch(() => {
             loadScript("https://ssl.p.jwpcdn.com/player/v/8.38.8/jwplayer.js")
               .then(() => {
-                if (window.jwplayer) {
-                  setIsScriptLoaded(true);
-                }
+                if (window.jwplayer) setIsScriptLoaded(true);
               })
               .catch(() => {
-                setPlayerError("Failed to load JW Player engine. Please switch to Embed mirror.");
+                setPlayerError("Failed to initialize JW Player engine.");
               });
           });
       });
@@ -147,6 +147,7 @@ export default function JWPlayerInstance({
       const mediaTitle = `${title || "Cinema"} ${type === "tv" ? `(S${season}:E${episode})` : ""}`;
 
       player.setup({
+        key: "c6Wt+3BVVfc9af5UKM76pP5Vxu+Tu55CBvqMZGg3pEc=",
         playlist: [
           {
             title: mediaTitle,
@@ -183,11 +184,25 @@ export default function JWPlayerInstance({
         displaytitle: true,
         displaydescription: false,
         playbackRateControls: [0.5, 0.75, 1, 1.25, 1.5, 2],
+        hlshtml: true,
+        androidhls: true,
+        primary: "html5",
         skin: {
           name: "netflix-cinema",
-          active: "#e50914",
-          inactive: "#ffffff",
-          background: "rgba(14, 14, 14, 0.95)",
+          controlbar: {
+            background: "rgba(10, 10, 10, 0.85)",
+            icons: "#ffffff",
+            iconsActive: "#e50914"
+          },
+          timeslider: {
+            progress: "#e50914",
+            rail: "rgba(255, 255, 255, 0.35)",
+            buffer: "rgba(255, 255, 255, 0.6)"
+          },
+          tooltips: {
+            background: "rgba(20, 20, 20, 0.95)",
+            text: "#ffffff"
+          }
         },
       });
 

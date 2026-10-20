@@ -3,6 +3,7 @@
 import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import JWPlayerInstance from "./JWPlayerInstance";
 
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
@@ -257,28 +258,17 @@ export default function StreamingPlayer({
         </div>
       </div>
 
-      {/* Main Video Embed Player Screen */}
+      {/* Main Video Cinema Screen Powered by JW Player */}
       <div className="player-screen-container">
-        {isPlayerBuffering && (
-          <div className="player-buffering-overlay">
-            <div className="stream-spinner" />
-            <span className="buffering-text">Loading Cinema Stream...</span>
-            <span className="buffering-subtext">
-              Direct Cinema Stream • Tap ⚙️ in video for settings.
-            </span>
-          </div>
-        )}
-        <iframe
-          key={`${type}-${id}-${currentSeason}-${currentEpisode}`}
-          src={embedUrl}
-          className="streaming-iframe"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-          allowFullScreen
-          loading="eager"
-          title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
-          onLoad={() => {
-            setIsPlayerBuffering(false);
-          }}
+        <JWPlayerInstance
+          type={type}
+          id={id}
+          title={title}
+          season={currentSeason}
+          episode={currentEpisode}
+          poster={poster}
+          backdrop={backdrop}
+          movieStreamUrl={embedUrl}
         />
       </div>
 

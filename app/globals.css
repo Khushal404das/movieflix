@@ -1647,7 +1647,6 @@ body.lights-off-active .player-section-wrapper {
 .player-screen-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 16/9;
   background: #000000;
 }
 
