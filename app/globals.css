@@ -846,11 +846,12 @@ img {
 }
 
 .top10-card-box .netflix-card-hover-overlay {
-  left: 60%;
-  width: clamp(270px, 18vw, 300px);
+  left: 45%;
+  width: 320px;
+  max-width: 90vw;
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.98), 0 0 20px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.98), 0 0 20px rgba(0, 0, 0, 0.85);
   border-radius: 8px;
   z-index: 9999;
 }
@@ -968,10 +969,7 @@ img {
   transform: translate(-50%, -50%) scale(1.05);
 }
 
-.top10-card-box .netflix-card-hover-overlay {
-  left: 65%;
-  width: clamp(240px, 16vw, 280px);
-}
+
 
 .hover-media-box {
   position: relative;
