@@ -1,0 +1,26 @@
+{
+  "https://net77.cc/home": {
+    "file": "scraped_site/home.html",
+    "title": "Home - NetMirror"
+  },
+  "https://net77.cc/": {
+    "file": "scraped_site/index.html",
+    "title": "Home - NetMirror"
+  },
+  "https://net77.cc/series": {
+    "file": "scraped_site/series.html",
+    "title": "Home - NetMirror"
+  },
+  "https://net77.cc/movies": {
+    "file": "scraped_site/movies.html",
+    "title": "Home - NetMirror"
+  },
+  "https://net77.cc/login_182-184-225-187": {
+    "file": "scraped_site/login_182-184-225-187.html",
+    "title": "Home - NetMirror"
+  },
+  "https://net77.cc/mobile/app-info.php": {
+    "file": "scraped_site/mobile/app-info.php.html",
+    "title": "Netflix Mirror"
+  }
+}
