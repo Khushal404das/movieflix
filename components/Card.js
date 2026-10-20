@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const GENRE_MAP = {
   28: "Action",
@@ -25,60 +26,67 @@ const GENRE_MAP = {
   37: "Western",
   10759: "Action & Adventure",
   10762: "Kids",
-  10763: "News",
-  10764: "Reality",
-  10765: "Sci-Fi & Fantasy",
-  10766: "Soap",
-  10767: "Talk",
-  10768: "War & Politics"
+  10765: "Sci-Fi & Fantasy"
 };
 
 export default function Card({
   href,
   title,
+  sub,
   poster,
   backdrop,
   rating,
-  sub,
-  quality,
-  type = "movie",
+  quality = "HD",
+  type,
   audioBadge,
   isWide = false,
   genres = [],
   runtime,
-  seasons,
+  seasons = [],
   number_of_seasons,
-  item
+  item = null
 }) {
+  const router = useRouter();
   const [imgError, setImgError] = useState(false);
   const [hoverImgError, setHoverImgError] = useState(false);
   const [inWatchlist, setInWatchlist] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  // Sync initial watchlist and like status on first client mount
+  // Check if item is already in watchlist
+  useEffect(() => {
+    if (!href) return;
+    try {
+      const list = JSON.parse(localStorage.getItem("rh-list") || "[]");
+      setInWatchlist(list.some((x) => x.href === href));
+      const liked = JSON.parse(localStorage.getItem("rh-liked") || "[]");
+      setIsLiked(liked.includes(href));
+    } catch (_) {}
+  }, [href]);
+
   const handleToggleWatchlist = (e) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const stored = JSON.parse(localStorage.getItem("rh-watchlist") || "[]");
-      const exists = stored.some((x) => String(x.href) === String(href));
-      let next;
-      if (exists) {
-        next = stored.filter((x) => String(x.href) !== String(href));
-        setInWatchlist(false);
-      } else {
-        next = [...stored, { href, title, poster, rating, sub, type }];
-        setInWatchlist(true);
-      }
-      localStorage.setItem("rh-watchlist", JSON.stringify(next));
-      window.dispatchEvent(new Event("movieflix:watchlist-updated"));
-    } catch (err) {}
+      const list = JSON.parse(localStorage.getItem("rh-list") || "[]");
+      const exists = list.some((x) => x.href === href);
+      const next = exists
+        ? list.filter((x) => x.href !== href)
+        : [{ href, title, poster: poster || backdrop, rating, type, year: sub }, ...list];
+      localStorage.setItem("rh-list", JSON.stringify(next));
+      setInWatchlist(!exists);
+    } catch (_) {}
   };
 
   const handleToggleLike = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsLiked(!isLiked);
+    try {
+      const liked = JSON.parse(localStorage.getItem("rh-liked") || "[]");
+      const exists = liked.includes(href);
+      const next = exists ? liked.filter((x) => x !== href) : [...liked, href];
+      localStorage.setItem("rh-liked", JSON.stringify(next));
+      setIsLiked(!exists);
+    } catch (_) {}
   };
 
   const handleMoreInfoClick = (e) => {
@@ -89,26 +97,26 @@ export default function Card({
         new CustomEvent("movieflix:open-preview", {
           detail: {
             item,
-            type,
-            id: item?.id,
+            href,
             title,
             poster,
             backdrop,
             rating,
+            quality,
+            type,
             genres,
-            href
+            runtime,
+            seasons,
+            number_of_seasons
           }
         })
       );
     }
   };
 
-  // Generate pleasant fallback background colors if image is missing
   const getGradient = (str = "") => {
     let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
     const hues = [
       "linear-gradient(145deg, #380d19, #120509)",
       "linear-gradient(145deg, #101d3b, #070e1e)",
@@ -119,12 +127,7 @@ export default function Card({
     return hues[Math.abs(hash) % hues.length];
   };
 
-  // Robust calculation preventing NaN% match
-  const parsedRating = parseFloat(rating);
-  const matchScore = !isNaN(parsedRating) && parsedRating > 0
-    ? Math.min(99, Math.max(76, Math.round(parsedRating * 10 + (parsedRating < 8 ? 12 : 6))))
-    : 95;
-
+  const matchScore = rating ? Math.min(99, Math.round(Number(rating) * 10 + 15)) : 94;
   const previewMediaUrl = backdrop || poster;
 
   // Resolve duration label
@@ -143,32 +146,30 @@ export default function Card({
 
   // Resolve maturity rating
   const resolveMaturity = () => {
-    const r = parseFloat(rating);
-    if (!isNaN(r) && r >= 8.0) return "A 18+";
-    if (!isNaN(r) && r >= 7.0) return "U/A 16+";
+    const r = Number(rating) || 7.0;
+    if (r >= 8.0) return "A 18+";
+    if (r >= 7.0) return "U/A 16+";
     return "U/A 13+";
   };
 
-  // Resolve genre tags intelligently
+  // Resolve genre tags
   const resolveGenres = () => {
     if (Array.isArray(genres) && genres.length > 0) {
-      const list = genres
+      return genres
         .map((g) => (typeof g === "string" ? g : g.name || GENRE_MAP[g]))
         .filter(Boolean)
-        .slice(0, 3);
-      if (list.length > 0) return list;
+        .slice(0, 4);
     }
     if (Array.isArray(item?.genre_ids) && item.genre_ids.length > 0) {
-      const list = item.genre_ids
+      return item.genre_ids
         .map((id) => GENRE_MAP[id])
         .filter(Boolean)
-        .slice(0, 3);
-      if (list.length > 0) return list;
+        .slice(0, 4);
     }
     if (type === "tv") {
-      return ["Drama", "Web Series"];
+      return ["Drama", "Series", "Mystery", "Action"];
     }
-    return ["Cinema", "Feature Film"];
+    return ["Action", "Adventure", "Drama", "Sci-Fi"];
   };
 
   const genreList = resolveGenres();
@@ -199,7 +200,7 @@ export default function Card({
 
           {/* Top Badges */}
           <div className="netflix-card-badge-top">
-            {rating && Number(rating) >= 7.8 && (
+            {rating && Number(rating) >= 7.5 && (
               <span className="top-rated-tag">TOP RATED</span>
             )}
           </div>
