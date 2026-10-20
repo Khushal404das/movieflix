@@ -706,13 +706,13 @@ img {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;        /* allow hover popup to escape vertically */
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
   touch-action: pan-x pan-y;
-  padding: 40px clamp(20px, 4vw, 56px) 60px;
-  margin-top: -24px;
-  margin-bottom: -36px;
+  padding: 80px clamp(20px, 4vw, 56px) 80px; /* generous padding so hover card has room */
+  margin-top: -60px;
+  margin-bottom: -60px;
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -890,30 +890,32 @@ img {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: clamp(260px, 18vw, 300px);
-  max-width: 90vw;
-  transform: translate(-50%, -50%) scale(0.92);
+  width: clamp(270px, 20vw, 310px);
+  max-width: 92vw;
+  transform: translate(-50%, -50%) scale(0.88);
+  transform-origin: center center;
   background: #161616;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.95), 0 0 20px rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.98), 0 8px 24px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0,0,0,0.5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s cubic-bezier(0.25, 1, 0.5, 1) 0.15s, transform 0.22s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
-  z-index: 999;
+  transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1) 0.18s,
+              transform 0.28s cubic-bezier(0.25, 1, 0.5, 1) 0.18s;
+  z-index: 9999;
 }
 
 .netflix-card-item:hover {
-  z-index: 999;
+  z-index: 9999;
 }
 
 .netflix-card-item:hover .netflix-card-hover-overlay {
   opacity: 1;
   pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, -50%) scale(1.08);
 }
 
 .top10-card-box .netflix-card-hover-overlay {
@@ -2179,6 +2181,7 @@ body.lights-off-active .player-section-wrapper {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
+  overflow: visible;          /* allow hover card popup to escape grid cell */
 }
 
 .pagination-bar {
@@ -2631,7 +2634,7 @@ body.lights-off-active .player-section-wrapper {
   .row-items-scroll {
     display: flex;
     overflow-x: auto !important;
-    overflow-y: hidden !important;
+    overflow-y: visible !important;
     overscroll-behavior-x: contain !important;
     overscroll-behavior-y: auto !important;
     touch-action: pan-x pan-y !important;
@@ -6155,6 +6158,16 @@ body.lights-off-active .player-section-wrapper {
 .jwplayer-target-element {
   width: 100% !important;
   height: 100% !important;
+  display: block;
+}
+
+/* Fallback movie iframe inside JWPlayerInstance (playerMode === "movie") */
+.player-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
   display: block;
 }
 
