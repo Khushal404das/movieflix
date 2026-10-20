@@ -3,7 +3,6 @@
 import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
 
 import { useState, useEffect, useRef } from "react";
-import JWPlayerInstance from "./JWPlayerInstance";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // In-memory client cache for episodes across seasons
@@ -16,17 +15,6 @@ const episodeMemoryCache = new Map();
  */
 const PROVIDERS = [
   {
-    key: "vidlink",
-    label: "VidLink Cinema (Multi-Audio)",
-    icon: "🎬",
-    multiAudio: true,
-    badge: "Direct Stream (Multi-Audio)",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=true`
-        : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=true`,
-  },
-  {
     key: "vidsrc",
     label: "VidSrc Cloud (Fast)",
     icon: "📡",
@@ -36,25 +24,6 @@ const PROVIDERS = [
       type === "tv"
         ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
         : `https://vidsrc.to/embed/movie/${id}`,
-  },
-  {
-    key: "jwplayer",
-    label: "JW Player 8 (Cinema Direct)",
-    icon: "⚡",
-    multiAudio: true,
-    isNativeJw: true,
-    badge: "JW Player 8.38.8",
-  },
-  {
-    key: "videasy",
-    label: "Videasy Ultra",
-    icon: "🌍",
-    multiAudio: true,
-    badge: "Ultra HD",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://player.videasy.to/tv/${id}/${s}/${e}`
-        : `https://player.videasy.to/movie/${id}`,
   },
   {
     key: "2embed",
@@ -96,7 +65,7 @@ export default function StreamingPlayer({
   const [providerIndex, setProviderIndex] = useState(0);
   const [providerError, setProviderError] = useState(false);
 
-  const activeProvider = PROVIDERS[providerIndex];
+  const activeProvider = PROVIDERS[providerIndex] || PROVIDERS[0];
 
   // Verify session validity before streaming (like NetMirror)
   useEffect(() => {
@@ -272,14 +241,13 @@ export default function StreamingPlayer({
 
   // Handle iframe load error detection via timeout
   useEffect(() => {
-    if (activeProvider?.isNativeJw) return;
     const errorTimer = setTimeout(() => {
       if (isPlayerBuffering) {
         setProviderError(true);
       }
     }, 12000);
     return () => clearTimeout(errorTimer);
-  }, [providerIndex, isPlayerBuffering, activeProvider]);
+  }, [providerIndex, isPlayerBuffering]);
 
   return (
     <>
@@ -388,47 +356,28 @@ export default function StreamingPlayer({
 
       {/* Main Video Embed Player Screen */}
       <div className="player-screen-container">
-
-        {activeProvider?.isNativeJw ? (
-          <JWPlayerInstance
-            type={type}
-            id={id}
-            title={title}
-            season={currentSeason}
-            episode={currentEpisode}
-            poster={poster}
-            backdrop={backdrop}
-            onSwitchToEmbed={() => {
-              const vidlinkIdx = PROVIDERS.findIndex((p) => p.key === "vidlink");
-              setProviderIndex(vidlinkIdx !== -1 ? vidlinkIdx : 1);
-            }}
-          />
-        ) : (
-          <>
-            {isPlayerBuffering && (
-              <div className="player-buffering-overlay">
-                <div className="stream-spinner" />
-                <span className="buffering-text">Loading Cinema Stream...</span>
-                <span className="buffering-subtext">
-                  Streaming via {activeProvider.label}. Tap ⚙️ in video for quality & settings.
-                </span>
-              </div>
-            )}
-            <iframe
-              key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
-              src={embedUrl}
-              className="streaming-iframe"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              loading="eager"
-              title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
-              onLoad={() => {
-                setIsPlayerBuffering(false);
-                setProviderError(false);
-              }}
-            />
-          </>
+        {isPlayerBuffering && (
+          <div className="player-buffering-overlay">
+            <div className="stream-spinner" />
+            <span className="buffering-text">Loading Cinema Stream...</span>
+            <span className="buffering-subtext">
+              Streaming via {activeProvider?.label || "Server"}. Tap ⚙️ in video for quality & settings.
+            </span>
+          </div>
         )}
+        <iframe
+          key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+          src={embedUrl}
+          className="streaming-iframe"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowFullScreen
+          loading="eager"
+          title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
+          onLoad={() => {
+            setIsPlayerBuffering(false);
+            setProviderError(false);
+          }}
+        />
       </div>
 
       {/* TV Series Quick Navigation Bar */}
