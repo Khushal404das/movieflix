@@ -1,42 +1,17 @@
 "use client";
 
 import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
-
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
 
-/**
- * Ordered list of embed providers.
- * Each has: label, icon, a getUrl(type, id, season, episode) builder,
- * and a `multiAudio` flag indicating built-in language switcher.
- */
-const PROVIDERS = [
-  {
-    key: "vidsrc",
-    label: "VidSrc Cloud (Fast)",
-    icon: "📡",
-    multiAudio: false,
-    badge: "Fast Stream",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
-        : `https://vidsrc.to/embed/movie/${id}`,
-  },
-  {
-    key: "2embed",
-    label: "2Embed Cinema",
-    icon: "🎞️",
-    multiAudio: false,
-    badge: "1080p Cinema",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://www.2embed.cc/embedtv/${id}&s=${s}&e=${e}`
-        : `https://www.2embed.cc/embed/${id}`,
-  },
-];
+// Direct embedded streaming source
+const getEmbedUrl = (type, id, s = 1, e = 1) =>
+  type === "tv"
+    ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+    : `https://vidsrc.to/embed/movie/${id}`;
 
 export default function StreamingPlayer({
   type = "movie",
@@ -60,12 +35,6 @@ export default function StreamingPlayer({
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
-
-  // Provider state: index into PROVIDERS array
-  const [providerIndex, setProviderIndex] = useState(0);
-  const [providerError, setProviderError] = useState(false);
-
-  const activeProvider = PROVIDERS[providerIndex] || PROVIDERS[0];
 
   // Verify session validity before streaming (like NetMirror)
   useEffect(() => {
@@ -161,13 +130,12 @@ export default function StreamingPlayer({
     return () => { isMounted = false; };
   }, [type, id, currentSeason, initialSeason, episodesData]);
 
-  // Buffer state resets when title or provider switches
+  // Buffer state resets when title or episode switches
   useEffect(() => {
     setIsPlayerBuffering(true);
-    setProviderError(false);
     const timer = setTimeout(() => setIsPlayerBuffering(false), 2500);
     return () => clearTimeout(timer);
-  }, [currentSeason, currentEpisode, id, providerIndex]);
+  }, [currentSeason, currentEpisode, id]);
 
   // Record into Continue Watching (localStorage)
   useEffect(() => {
@@ -193,18 +161,8 @@ export default function StreamingPlayer({
     }
   }, [id, type, title, poster, currentSeason, currentEpisode]);
 
-  // Build embed URL from active provider
-  const embedUrl = activeProvider.getUrl ? activeProvider.getUrl(type, id, currentSeason, currentEpisode) : "";
-
-  // Provider switching
-  const handleProviderSwitch = (index) => {
-    if (index === providerIndex) return;
-    setProviderIndex(index);
-  };
-
-  const handleNextProvider = () => {
-    setProviderIndex((prev) => (prev + 1) % PROVIDERS.length);
-  };
+  // Build embed URL directly
+  const embedUrl = getEmbedUrl(type, id, currentSeason, currentEpisode);
 
   const handleEpisodeSelect = (epNum) => {
     setCurrentEpisode(epNum);
@@ -238,16 +196,6 @@ export default function StreamingPlayer({
       handleEpisodeSelect(nextEp);
     }
   };
-
-  // Handle iframe load error detection via timeout
-  useEffect(() => {
-    const errorTimer = setTimeout(() => {
-      if (isPlayerBuffering) {
-        setProviderError(true);
-      }
-    }, 12000);
-    return () => clearTimeout(errorTimer);
-  }, [providerIndex, isPlayerBuffering]);
 
   return (
     <>
@@ -287,19 +235,6 @@ export default function StreamingPlayer({
         </div>
 
         <div className="player-actions">
-
-          <button
-            type="button"
-            className="tool-btn"
-            onClick={handleNextProvider}
-            title="Try next streaming provider if this one isn't working"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/>
-            </svg>
-            <span>Switch Provider</span>
-          </button>
-
           <button
             type="button"
             className={`tool-btn ${isLightsOff ? "active" : ""}`}
@@ -319,40 +254,8 @@ export default function StreamingPlayer({
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="15" x="2" y="4" rx="2"/><path d="m9 10 3 2 3-2"/></svg>
             <span>{isTheater ? "Normal View" : "Theater Mode"}</span>
           </button>
-
-
         </div>
       </div>
-
-      {/* Provider Selector Pill Bar */}
-      <div className="provider-selector">
-        <span className="provider-label">Stream Source:</span>
-        <div className="provider-pills">
-          {PROVIDERS.map((p, idx) => (
-            <button
-              key={p.key}
-              type="button"
-              className={`provider-pill ${idx === providerIndex ? "active" : ""}`}
-              onClick={() => handleProviderSwitch(idx)}
-              title={`Switch to ${p.label}`}
-            >
-              <span className="provider-icon">{p.icon}</span>
-              <span className="provider-name">{p.label}</span>
-              
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Provider Error Banner */}
-      {providerError && (
-        <div className="provider-error-banner">
-          <span>⚠️ This provider may be slow or unavailable.</span>
-          <button type="button" onClick={handleNextProvider} className="try-next-btn">
-            Try Next Provider →
-          </button>
-        </div>
-      )}
 
       {/* Main Video Embed Player Screen */}
       <div className="player-screen-container">
@@ -361,12 +264,12 @@ export default function StreamingPlayer({
             <div className="stream-spinner" />
             <span className="buffering-text">Loading Cinema Stream...</span>
             <span className="buffering-subtext">
-              Streaming via {activeProvider?.label || "Server"}. Tap ⚙️ in video for quality & settings.
+              Direct Cinema Stream • Tap ⚙️ in video for settings.
             </span>
           </div>
         )}
         <iframe
-          key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+          key={`${type}-${id}-${currentSeason}-${currentEpisode}`}
           src={embedUrl}
           className="streaming-iframe"
           allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
@@ -375,7 +278,6 @@ export default function StreamingPlayer({
           title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
           onLoad={() => {
             setIsPlayerBuffering(false);
-            setProviderError(false);
           }}
         />
       </div>
