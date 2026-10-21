@@ -12,10 +12,11 @@ const episodeMemoryCache = new Map();
  * Delivers 1080p Ultra HD with Multi-Audio tracks (English, Hindi, Tamil, Telugu, etc.)
  * Zero dummy/test streams, zero manual URL pasting required.
  */
+// VidSrc Cloud - universal reliable streaming server
 const getEmbedUrl = (type, id, s = 1, e = 1) =>
   type === "tv"
-    ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=false`
-    : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=false`;
+    ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+    : `https://vidsrc.to/embed/movie/${id}`;
 
 export default function StreamingPlayer({
   type = "movie",
