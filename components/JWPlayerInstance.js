@@ -13,20 +13,7 @@ const PRESET_LANGUAGES = [
 ];
 
 // Fallback high-bandwidth multi-track streams (supports HLS & adaptive bitrate)
-const SAMPLE_STREAMS = [
-  {
-    label: "Cinema Multi-Audio Stream (Akamai HLS)",
-    url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-  },
-  {
-    label: "Multi-Language Tears of Steel 4K HLS",
-    url: "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
-  },
-  {
-    label: "Sintel Multi-Subtitles & Audio HLS",
-    url: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-  },
-];
+
 
 export default function JWPlayerInstance({
   type = "movie",
@@ -451,41 +438,7 @@ export default function JWPlayerInstance({
           })}
         </div>
 
-        {/* Collapsible Custom Stream Drawer */}
-        {showStreamDrawer && (
-          <form className="jw-stream-drawer" onSubmit={handleCustomStreamSubmit}>
-            <div className="jw-stream-input-row">
-              <input
-                type="url"
-                placeholder="Paste direct HLS (.m3u8) or video URL..."
-                value={customInputUrl}
-                onChange={(e) => setCustomInputUrl(e.target.value)}
-                className="jw-stream-input"
-              />
-              <button type="submit" className="jw-stream-submit-btn">
-                Play Stream
-              </button>
-            </div>
-            <div className="jw-sample-streams-row">
-              <span className="sample-label">Presets:</span>
-              {SAMPLE_STREAMS.map((s, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className="jw-sample-chip"
-                  onClick={() => {
-                    setStreamUrl(s.url);
-                    setPlayerMode("hls");
-                    setPlayerError(null);
-                  }}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </form>
-        )}
-      </div>
+        </div>
     </div>
   );
 }

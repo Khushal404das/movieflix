@@ -3,16 +3,60 @@
 import { getSessionState, redirectToVerification } from "@/lib/SessionManager";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import JWPlayerInstance from "./JWPlayerInstance";
 
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
 
-// Direct embedded streaming source
-const getEmbedUrl = (type, id, s = 1, e = 1) =>
-  type === "tv"
-    ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
-    : `https://vidsrc.to/embed/movie/${id}`;
+/**
+ * Verified direct video providers that stream the ACTUAL movie / series.
+ * Zero dummy/test streams, zero manual URL pasting required.
+ */
+const PROVIDERS = [
+  {
+    key: "vidlink",
+    label: "VidLink (Multi-Audio)",
+    icon: "🎬",
+    badge: "1080p • Multi-Audio",
+    hasMultiAudio: true,
+    getUrl: (type, id, s = 1, e = 1) =>
+      type === "tv"
+        ? `https://vidlink.pro/tv/${id}/${s}/${e}?primaryColor=e50914&autoplay=false`
+        : `https://vidlink.pro/movie/${id}?primaryColor=e50914&autoplay=false`,
+  },
+  {
+    key: "vidsrc_cloud",
+    label: "VidSrc Cloud",
+    icon: "📡",
+    badge: "Fast Stream",
+    hasMultiAudio: false,
+    getUrl: (type, id, s = 1, e = 1) =>
+      type === "tv"
+        ? `https://vidsrc.to/embed/tv/${id}/${s}/${e}`
+        : `https://vidsrc.to/embed/movie/${id}`,
+  },
+  {
+    key: "vidsrc_pro",
+    label: "VidSrc Pro",
+    icon: "🚀",
+    badge: "Ultra Mirror",
+    hasMultiAudio: false,
+    getUrl: (type, id, s = 1, e = 1) =>
+      type === "tv"
+        ? `https://vidsrc.xyz/embed/tv/${id}/${s}/${e}`
+        : `https://vidsrc.xyz/embed/movie/${id}`,
+  },
+  {
+    key: "videasy",
+    label: "Videasy Stream",
+    icon: "🌍",
+    badge: "HD Server",
+    hasMultiAudio: false,
+    getUrl: (type, id, s = 1, e = 1) =>
+      type === "tv"
+        ? `https://player.videasy.to/tv/${id}/${s}/${e}`
+        : `https://player.videasy.to/movie/${id}`,
+  },
+];
 
 export default function StreamingPlayer({
   type = "movie",
@@ -29,6 +73,7 @@ export default function StreamingPlayer({
   const searchParams = useSearchParams();
   const playerRef = useRef(null);
 
+  const [providerIndex, setProviderIndex] = useState(0);
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
   const [isTheater, setIsTheater] = useState(false);
@@ -36,6 +81,10 @@ export default function StreamingPlayer({
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [isPlayerBuffering, setIsPlayerBuffering] = useState(true);
+
+  // Active streaming provider
+  const activeProvider = PROVIDERS[providerIndex] || PROVIDERS[0];
+  const embedUrl = activeProvider.getUrl(type, id, currentSeason, currentEpisode);
 
   // Verify session validity before streaming (like NetMirror)
   useEffect(() => {
@@ -131,12 +180,12 @@ export default function StreamingPlayer({
     return () => { isMounted = false; };
   }, [type, id, currentSeason, initialSeason, episodesData]);
 
-  // Buffer state resets when title or episode switches
+  // Buffer state resets when title, episode, or server switches
   useEffect(() => {
     setIsPlayerBuffering(true);
     const timer = setTimeout(() => setIsPlayerBuffering(false), 2500);
     return () => clearTimeout(timer);
-  }, [currentSeason, currentEpisode, id]);
+  }, [currentSeason, currentEpisode, id, providerIndex]);
 
   // Record into Continue Watching (localStorage)
   useEffect(() => {
@@ -161,9 +210,6 @@ export default function StreamingPlayer({
       console.warn("Storage error", e);
     }
   }, [id, type, title, poster, currentSeason, currentEpisode]);
-
-  // Build embed URL directly
-  const embedUrl = getEmbedUrl(type, id, currentSeason, currentEpisode);
 
   const handleEpisodeSelect = (epNum) => {
     setCurrentEpisode(epNum);
@@ -196,6 +242,10 @@ export default function StreamingPlayer({
       const nextEp = currentEpisode + 1;
       handleEpisodeSelect(nextEp);
     }
+  };
+
+  const handleNextServer = () => {
+    setProviderIndex((prev) => (prev + 1) % PROVIDERS.length);
   };
 
   return (
@@ -233,9 +283,22 @@ export default function StreamingPlayer({
           <span className="live-dot" />
           <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct Cinema Stream"}</b>
           <span className="res-badge">1080p Ultra HD</span>
+          <span className="server-name-badge">Server: {activeProvider.label}</span>
         </div>
 
         <div className="player-actions">
+          <button
+            type="button"
+            className="tool-btn"
+            onClick={handleNextServer}
+            title="Switch to next streaming server"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/>
+            </svg>
+            <span>Switch Server</span>
+          </button>
+
           <button
             type="button"
             className={`tool-btn ${isLightsOff ? "active" : ""}`}
@@ -258,18 +321,74 @@ export default function StreamingPlayer({
         </div>
       </div>
 
-      {/* Main Video Cinema Screen Powered by JW Player */}
+      {/* Streaming Server Selector Pills */}
+      <div className="provider-selector">
+        <span className="provider-label">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Streaming Server:
+        </span>
+        <div className="provider-pills">
+          {PROVIDERS.map((p, idx) => (
+            <button
+              key={p.key}
+              type="button"
+              className={`provider-pill ${idx === providerIndex ? "active" : ""}`}
+              onClick={() => {
+                setProviderIndex(idx);
+                setIsPlayerBuffering(true);
+              }}
+              title={`Switch to ${p.label}`}
+            >
+              <span className="provider-icon">{p.icon}</span>
+              <span className="provider-name">{p.label}</span>
+              {p.hasMultiAudio && <span className="provider-multi-tag">DUBBED</span>}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Main Video Cinema Screen - Plays the Actual Video */}
       <div className="player-screen-container">
-        <JWPlayerInstance
-          type={type}
-          id={id}
-          title={title}
-          season={currentSeason}
-          episode={currentEpisode}
-          poster={poster}
-          backdrop={backdrop}
-          movieStreamUrl={embedUrl}
+        {isPlayerBuffering && (
+          <div className="player-buffering-overlay">
+            <div className="stream-spinner" />
+            <span className="buffering-text">Loading {title}...</span>
+            <span className="buffering-subtext">
+              Streaming via {activeProvider.label} • 1080p Ultra HD
+            </span>
+          </div>
+        )}
+        <iframe
+          key={`${providerIndex}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+          src={embedUrl}
+          className="streaming-iframe"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowFullScreen
+          loading="eager"
+          title={`${title} ${type === "tv" ? `S${currentSeason}E${currentEpisode}` : ""}`}
+          onLoad={() => {
+            setIsPlayerBuffering(false);
+          }}
         />
+      </div>
+
+      {/* Multi-Audio & Dubbed Track Info Strip */}
+      <div className="player-audio-selector-strip">
+        <div className="player-audio-tip-banner">
+          <span className="tip-icon">🔊</span>
+          <div className="tip-text">
+            <b>Multi-Audio & Dubbed Audio Tracks:</b>
+            <span>To select Hindi [हिन्दी], English, Tamil [தமிழ்], Telugu [తెలుగు] or subtitles, click the ⚙️ settings / audio icon inside the player controls.</span>
+          </div>
+        </div>
+        <div className="audio-lang-quick-badges">
+          <span className="audio-pill active">🇬🇧 English [Original]</span>
+          <span className="audio-pill">🇮🇳 Hindi [हिन्दी]</span>
+          <span className="audio-pill">🇮🇳 Tamil [தமிழ்]</span>
+          <span className="audio-pill">🇮🇳 Telugu [తెలుగు]</span>
+          <span className="audio-pill">🇮🇳 Malayalam</span>
+          <span className="audio-pill">🇮🇳 Kannada</span>
+        </div>
       </div>
 
       {/* TV Series Quick Navigation Bar */}

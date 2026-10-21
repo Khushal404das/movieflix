@@ -1647,7 +1647,9 @@ body.lights-off-active .player-section-wrapper {
 .player-screen-container {
   position: relative;
   width: 100%;
+  aspect-ratio: 16 / 9;
   background: #000000;
+  overflow: hidden;
 }
 
 .player-buffering-overlay {
@@ -7328,4 +7330,42 @@ body.lights-off-active .player-section-wrapper {
   content: "•";
   margin-left: 6px;
   color: #737373;
+}
+
+.server-name-badge {
+  background: rgba(229, 9, 20, 0.15);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  color: #ff4d58;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.audio-lang-quick-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.audio-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.audio-pill.active {
+  background: rgba(229, 9, 20, 0.18);
+  border-color: rgba(229, 9, 20, 0.5);
+  color: #ffffff;
 }
