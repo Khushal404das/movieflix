@@ -236,7 +236,6 @@ export default function StreamingPlayer({
             <span className="live-dot" />
             <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : "Direct Cinema Stream"}</b>
             <span className="res-badge">1080p Ultra HD</span>
-            <span className="server-name-badge">Multi-Audio</span>
           </div>
 
           <div className="player-actions">
@@ -287,24 +286,7 @@ export default function StreamingPlayer({
           />
         </div>
 
-        {/* Multi-Audio & Dubbed Track Info Strip */}
-        <div className="player-audio-selector-strip">
-          <div className="player-audio-tip-banner">
-            <span className="tip-icon">🔊</span>
-            <div className="tip-text">
-              <b>Multi-Audio & Dubbed Audio Tracks:</b>
-              <span>To select Hindi [हिन्दी], English, Tamil [தமிழ்], Telugu [తెలుగు] or subtitles, click the ⚙️ settings / audio icon inside the player controls.</span>
-            </div>
-          </div>
-          <div className="audio-lang-quick-badges">
-            <span className="audio-pill active">🇬🇧 English [Original]</span>
-            <span className="audio-pill">🇮🇳 Hindi [हिन्दी]</span>
-            <span className="audio-pill">🇮🇳 Tamil [தமிழ்]</span>
-            <span className="audio-pill">🇮🇳 Telugu [తెలుగు]</span>
-            <span className="audio-pill">🇮🇳 Malayalam</span>
-            <span className="audio-pill">🇮🇳 Kannada</span>
-          </div>
-        </div>
+
 
         {/* TV Series Quick Navigation Bar */}
         {type === "tv" && (
