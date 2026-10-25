@@ -1,4 +1,4 @@
-package com.reelstream.app;
+package com.movieflix.app;
 
 import org.json.JSONObject;
 import java.io.Serializable;

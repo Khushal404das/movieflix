@@ -1,4 +1,4 @@
-package com.reelstream.app;
+package com.movieflix.app;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -134,8 +134,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        webView.setWebViewClient(new ReelStreamWebViewClient());
-        webView.setWebChromeClient(new ReelStreamChromeClient());
+        webView.setWebViewClient(new MovieFlixWebViewClient());
+        webView.setWebChromeClient(new MovieFlixChromeClient());
     }
 
     private void handleNativeDownload(String url, String contentDisposition, String mimeType, String customTitle) {
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private class ReelStreamWebViewClient extends WebViewClient {
+    private class MovieFlixWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             String url = request.getUrl().toString();
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ReelStreamChromeClient extends WebChromeClient {
+    private class MovieFlixChromeClient extends WebChromeClient {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             if (newProgress < 100) {

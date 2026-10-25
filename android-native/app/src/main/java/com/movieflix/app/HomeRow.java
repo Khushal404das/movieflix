@@ -1,4 +1,4 @@
-package com.reelstream.app;
+package com.movieflix.app;
 
 import java.util.List;
 
