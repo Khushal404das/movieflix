@@ -36,7 +36,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String APP_URL = "https://reelstream-production.up.railway.app/home";
+    private static final String APP_URL = "https://movieflix.movie-flix.workers.dev/home";
     
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
