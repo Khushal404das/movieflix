@@ -37,7 +37,6 @@ public class HomeRowAdapter extends RecyclerView.Adapter<HomeRowAdapter.RowViewH
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         holder.rvCards.setLayoutManager(layoutManager);
-        holder.rvCards.setHasFixedSize(true);
 
         MediaCardAdapter cardAdapter = new MediaCardAdapter(context, row.getItems(), row.isTop10(), listener);
         holder.rvCards.setAdapter(cardAdapter);
