@@ -12,7 +12,7 @@ const PLATFORMS = [
     bg: "rgb(184, 29, 36)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/movie",
+    href: "/platform/netflix",
   },
   {
     name: "Amazon Prime Video",
@@ -21,7 +21,7 @@ const PLATFORMS = [
     bg: "rgb(15, 61, 92)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/prime",
   },
   {
     name: "AMC+",
@@ -30,7 +30,7 @@ const PLATFORMS = [
     bg: "rgb(58, 44, 22)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/amc",
   },
   {
     name: "Apple TV+",
@@ -39,7 +39,7 @@ const PLATFORMS = [
     bg: "rgb(28, 28, 30)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "brightness(0) invert(1)",
-    href: "/browse/movie",
+    href: "/platform/appletv",
   },
   {
     name: "Crunchyroll",
@@ -48,7 +48,7 @@ const PLATFORMS = [
     bg: "rgb(122, 52, 16)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/crunchyroll",
   },
   {
     name: "Disney+",
@@ -57,7 +57,7 @@ const PLATFORMS = [
     bg: "rgb(26, 77, 184)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/movie",
+    href: "/platform/disney",
   },
   {
     name: "Hulu",
@@ -66,7 +66,7 @@ const PLATFORMS = [
     bg: "rgb(12, 61, 44)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/hulu",
   },
   {
     name: "HBO Max",
@@ -75,7 +75,7 @@ const PLATFORMS = [
     bg: "rgb(74, 26, 120)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/hbo",
   },
   {
     name: "MGM+",
@@ -84,7 +84,7 @@ const PLATFORMS = [
     bg: "rgb(61, 50, 20)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/movie",
+    href: "/platform/mgm",
   },
   {
     name: "Paramount+",
@@ -93,7 +93,7 @@ const PLATFORMS = [
     bg: "rgb(10, 58, 122)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/movie",
+    href: "/platform/paramount",
   },
   {
     name: "Peacock",
@@ -102,7 +102,7 @@ const PLATFORMS = [
     bg: "rgb(18, 38, 28)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/peacock",
   },
   {
     name: "Shudder",
@@ -111,7 +111,7 @@ const PLATFORMS = [
     bg: "rgb(92, 16, 20)",
     bgDark: "rgb(5,5,5)",
     logoFilter: "",
-    href: "/browse/tv",
+    href: "/platform/shudder",
   },
 ];
 
