@@ -30,11 +30,11 @@ const AUDIO_TRACKS = [
   { code: "fr", label: "French", flag: "🇫🇷" }
 ];
 
-// Multi-server embed list — Vidbolt Pro is the #1 flagship player
+// Multi-server embed list — Orion (powered by Vidbolt Pro) is the flagship #1 server
 const SERVERS = [
   {
-    name: "⚡ Vidbolt Pro (Multi-Audio & Subs)",
-    shortName: "Vidbolt Pro",
+    name: "Orion (Vidbolt Pro • Multi-Audio & Subs)",
+    shortName: "Orion",
     isVidbolt: true,
     getUrl: (type, id, s, e, audio = "hindi") => {
       const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
@@ -107,6 +107,8 @@ export default function StreamingPlayer({
   const searchParams = useSearchParams();
   const playerRef = useRef(null);
   const iframeRef = useRef(null);
+  const playbackModeRef = useRef(null);
+  const serverMenuRef = useRef(null);
 
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
@@ -115,6 +117,11 @@ export default function StreamingPlayer({
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [serverIndex, setServerIndex] = useState(0);
+
+  // Playback Mode state: "embed" | "cinema"
+  const [playbackMode, setPlaybackMode] = useState("embed");
+  const [playbackModeOpen, setPlaybackModeOpen] = useState(false);
+  const [serverMenuOpen, setServerMenuOpen] = useState(false);
 
   // Preferred audio track
   const [preferredAudio, setPreferredAudio] = useState(() => {
@@ -146,7 +153,7 @@ export default function StreamingPlayer({
 
   // Current active server config
   const currentServer = SERVERS[serverIndex] || SERVERS[0];
-  const isVidboltActive = Boolean(currentServer.isVidbolt);
+  const isVidboltActive = Boolean(currentServer.isVidbolt && playbackMode === "embed");
 
   // Resolve custom licensed stream if available
   const stream = useMemo(
@@ -163,6 +170,23 @@ export default function StreamingPlayer({
       iframe.contentWindow.postMessage({ type: cmdType, ...params }, "https://vidbolt.pro");
     }
   }, []);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (playbackModeRef.current && !playbackModeRef.current.contains(e.target)) {
+        setPlaybackModeOpen(false);
+      }
+      if (serverMenuRef.current && !serverMenuRef.current.contains(e.target)) {
+        setServerMenuOpen(false);
+      }
+      if (showAudioMenu && !e.target.closest(".audio-selector-wrapper")) {
+        setShowAudioMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showAudioMenu]);
 
   // Verify session validity before streaming
   useEffect(() => {
@@ -318,7 +342,6 @@ export default function StreamingPlayer({
           }
           break;
         case "mobile-panel": {
-          // Mobile sheets integration from Step 05 docs
           const { options = [], initialGroup } = data;
           const tabs = {};
           for (const row of options) {
@@ -375,7 +398,6 @@ export default function StreamingPlayer({
       value: row.value
     });
 
-    // Update selection indicator in active bottom sheet
     setBottomSheet((prev) => {
       if (!prev.isOpen) return prev;
       const updatedTabs = { ...prev.tabs };
@@ -459,7 +481,7 @@ export default function StreamingPlayer({
     };
   }, []);
 
-  // Global player keyboard hotkeys (when not in an input)
+  // Global player keyboard hotkeys
   useEffect(() => {
     const handleHotkeys = (e) => {
       if (["INPUT", "TEXTAREA", "SELECT"].includes(e.target?.tagName)) return;
@@ -537,13 +559,148 @@ export default function StreamingPlayer({
           <div className="player-badge">
             <span className="live-dot" />
             <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : title}</b>
-            <span className="res-badge">HD • Multi-Audio</span>
-            {isVidboltActive && isPlayerReady && (
-              <span className="vidbolt-status-chip">
-                <span className="bolt-icon">⚡</span>
-                <span>Vidbolt Cinema Engine</span>
-              </span>
-            )}
+            <span className="res-badge">HD</span>
+          </div>
+
+          {/* Exact User Trigger Container: Playback Mode & Change Server Controls */}
+          <div className="flex min-w-0 justify-start sm:justify-center">
+            <div className="pointer-events-auto flex min-w-0 items-center">
+              <div className="flex shrink-0 items-center gap-2 sm:min-w-0 sm:flex-1 sm:justify-start">
+                
+                {/* 1. Playback Mode Trigger */}
+                <div className="relative inline-flex w-auto max-w-full shrink-0" ref={playbackModeRef}>
+                  <button
+                    type="button"
+                    id="watch-playback-mode-trigger"
+                    aria-label="Playback mode"
+                    aria-haspopup="listbox"
+                    aria-expanded={playbackModeOpen ? "true" : "false"}
+                    aria-controls="watch-playback-mode-listbox"
+                    onClick={() => {
+                      setPlaybackModeOpen(!playbackModeOpen);
+                      setServerMenuOpen(false);
+                    }}
+                    className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
+                  >
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-monitor-play h-3.5 w-3.5" aria-hidden="true">
+                          <path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"></path>
+                          <path d="M12 17v4"></path>
+                          <path d="M8 21h8"></path>
+                          <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                        </svg>
+                      </span>
+                      <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
+                        {playbackMode === "cinema" ? "Cinema" : "Embed"}
+                      </span>
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down h-3 w-3 shrink-0 text-white/55 transition-transform duration-200" aria-hidden="true">
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </button>
+
+                  {/* Playback Mode Dropdown Menu */}
+                  {playbackModeOpen && (
+                    <ul id="watch-playback-mode-listbox" role="listbox" className="watch-dropdown-listbox">
+                      <div className="watch-dropdown-header">Playback Mode</div>
+                      <li
+                        role="option"
+                        aria-selected={playbackMode === "embed"}
+                        className={`watch-dropdown-option ${playbackMode === "embed" ? "active" : ""}`}
+                        onClick={() => {
+                          setPlaybackMode("embed");
+                          setPlaybackModeOpen(false);
+                        }}
+                      >
+                        <div className="option-text-group">
+                          <span className="option-title">Embed</span>
+                          <span className="option-desc">Cloud Multi-Server Player</span>
+                        </div>
+                        {playbackMode === "embed" && <span className="option-check">✓</span>}
+                      </li>
+                      <li
+                        role="option"
+                        aria-selected={playbackMode === "cinema"}
+                        className={`watch-dropdown-option ${playbackMode === "cinema" ? "active" : ""}`}
+                        onClick={() => {
+                          setPlaybackMode("cinema");
+                          setPlaybackModeOpen(false);
+                        }}
+                      >
+                        <div className="option-text-group">
+                          <span className="option-title">Cinema Player</span>
+                          <span className="option-desc">Native Streaming Player</span>
+                        </div>
+                        {playbackMode === "cinema" && <span className="option-check">✓</span>}
+                      </li>
+                    </ul>
+                  )}
+                </div>
+
+                {/* 2. Change Server Trigger */}
+                <div className="relative inline-flex w-auto max-w-full shrink-0" ref={serverMenuRef}>
+                  <button
+                    type="button"
+                    id="watch-server-trigger"
+                    aria-label="Change server"
+                    aria-haspopup="listbox"
+                    aria-expanded={serverMenuOpen ? "true" : "false"}
+                    aria-controls="watch-server-listbox"
+                    onClick={() => {
+                      setServerMenuOpen(!serverMenuOpen);
+                      setPlaybackModeOpen(false);
+                    }}
+                    className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
+                  >
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-server h-3.5 w-3.5" aria-hidden="true">
+                          <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+                          <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+                          <line x1="6" x2="6.01" y1="6" y2="6"></line>
+                          <line x1="6" x2="6.01" y1="18" y2="18"></line>
+                        </svg>
+                      </span>
+                      <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
+                        {currentServer.shortName || "Orion"}
+                      </span>
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down h-3 w-3 shrink-0 text-white/55 transition-transform duration-200" aria-hidden="true">
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </button>
+
+                  {/* Change Server Dropdown Menu */}
+                  {serverMenuOpen && (
+                    <ul id="watch-server-listbox" role="listbox" className="watch-dropdown-listbox server-listbox">
+                      <div className="watch-dropdown-header">Change Server:</div>
+                      {SERVERS.map((srv, i) => (
+                        <li
+                          key={srv.name}
+                          role="option"
+                          aria-selected={serverIndex === i}
+                          className={`watch-dropdown-option ${serverIndex === i ? "active" : ""}`}
+                          onClick={() => {
+                            setServerIndex(i);
+                            setServerMenuOpen(false);
+                            if (playbackMode === "cinema") setPlaybackMode("embed");
+                          }}
+                        >
+                          <div className="option-text-group">
+                            <span className="option-title">{srv.shortName || srv.name}</span>
+                            {srv.isVidbolt && <span className="option-desc">Multi-Audio & Dubs</span>}
+                          </div>
+                          {srv.isVidbolt && <span className="option-badge">FAST</span>}
+                          {serverIndex === i && <span className="option-check">✓</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+              </div>
+            </div>
           </div>
 
           <div className="player-actions">
@@ -583,22 +740,6 @@ export default function StreamingPlayer({
               </div>
             )}
 
-            {/* Server switcher */}
-            <div className="server-selector-group">
-              {SERVERS.map((srv, i) => (
-                <button
-                  key={srv.name}
-                  type="button"
-                  className={`server-chip ${serverIndex === i ? "active" : ""}`}
-                  onClick={() => setServerIndex(i)}
-                  title={srv.name}
-                >
-                  {serverIndex === i && <span className="live-dot" style={{ width: 6, height: 6, marginRight: 4 }} />}
-                  {srv.shortName || srv.name}
-                </button>
-              ))}
-            </div>
-
             {/* Toggle Lights Button */}
             <button
               type="button"
@@ -625,14 +766,14 @@ export default function StreamingPlayer({
 
         {/* Main Video Cinema Screen */}
         <div className="player-screen-container">
-          {stream ? (
+          {playbackMode === "cinema" ? (
             <CinemaPlayer
-              key={`${type}-${id}-${currentSeason}-${currentEpisode}`}
-              src={stream.src}
+              key={`cinema-${type}-${id}-${currentSeason}-${currentEpisode}`}
+              src={stream ? stream.src : undefined}
               title={title}
               poster={backdrop || poster}
-              mimeType={stream.mimeType}
-              subtitles={stream.subtitles}
+              mimeType={stream ? stream.mimeType : undefined}
+              subtitles={stream ? stream.subtitles : []}
             />
           ) : (
             <iframe
@@ -683,7 +824,7 @@ export default function StreamingPlayer({
         </div>
 
         {/* Vidbolt Remote Control Bar (Interactive Host Console) */}
-        {isVidboltActive && !stream && (
+        {isVidboltActive && (
           <div className="vidbolt-remote-dock">
             <div className="remote-controls-left">
               <button
@@ -750,23 +891,6 @@ export default function StreamingPlayer({
                 <span>🔊 Multi-Audio & Subtitles Active</span>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Fallback server selector nudge */}
-        {!stream && (
-          <div className="server-nudge">
-            <span>Server:</span>
-            {SERVERS.map((srv, i) => (
-              <button
-                key={srv.name}
-                type="button"
-                className={`server-chip ${serverIndex === i ? "active" : ""}`}
-                onClick={() => setServerIndex(i)}
-              >
-                {srv.shortName || srv.name}
-              </button>
-            ))}
           </div>
         )}
 
