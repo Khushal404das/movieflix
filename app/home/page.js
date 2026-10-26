@@ -10,6 +10,7 @@ import {
 import NetflixBillboard from "@/components/NetflixBillboard";
 import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
+import StudiosPlatformsRow from "@/components/StudiosPlatformsRow";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
@@ -61,6 +62,9 @@ export default async function StreamingHome() {
       <div className="netflix-rows-stack">
         {/* Continue Watching (Local storage client state) */}
         <ContinueWatching />
+
+        {/* Studios & Platforms */}
+        <StudiosPlatformsRow />
 
         {/* Top 10 Movies Today (Iconic Netflix Giant Numbers) */}
         <NetflixRow
