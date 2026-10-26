@@ -32,6 +32,18 @@ export default function AppPage() {
           <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993.0001.5511-.4483.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.996-3.4572c.156-.2704.0635-.6153-.2069-.7713-.2699-.1565-.615-.0636-.7713.2069l-2.0223 3.5026c-1.4646-.6692-3.1118-1.0475-4.877-1.0475s-3.4124.3783-4.877 1.0475L5.1007 5.3004c-.1563-.2705-.5014-.3634-.7713-.2069-.2704.156-.3629.5009-.2069.7713l1.996 3.4572C2.658 11.2334.3333 14.8876.3333 19.1667h23.3334c0-4.2791-2.3247-7.9333-5.7862-9.8453"/>
         </svg>
       )
+    },
+    {
+      id: "ios",
+      title: "APPLE IOS",
+      subtitle: "iPhone, iPad & Mac",
+      badge: "INSTALL ON IOS",
+      tag: "NEW RELEASE",
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.66 1.39-.56.65-.96 1.71-.83 2.74 1.05.08 2.05-.53 2.57-1.26z"/>
+        </svg>
+      )
     }
   ];
 
@@ -61,15 +73,15 @@ export default function AppPage() {
             Everything You <span className="highlight-love">Love</span> to Watch
           </h1>
           <p className="landing-subtitle">
-            Unlimited Movies & TV Series on your Web browser or Android device. Completely free forever.
+            Unlimited Movies & TV Series on your Web browser, Android phone, or iOS device. Completely free forever.
           </p>
 
           {/* Feature Badges */}
           <div className="landing-feature-pills">
             <span className="f-pill">4K Ultra HD</span>
             <span className="f-pill active">HD Content</span>
-            <span className="f-pill">Original Audio</span>
-            <span className="f-pill">Multi-Server</span>
+            <span className="f-pill">Vidbolt Pro Engine</span>
+            <span className="f-pill">Multi-Audio & Dubs</span>
             <span className="f-pill">Zero Subscription</span>
           </div>
 
@@ -83,7 +95,7 @@ export default function AppPage() {
             </Link>
             <span className="cta-sub-notice">Instant High-Speed Streaming Online</span>
             <a href="#pick-device" className="landing-scroll-link">
-              See details for Web & Android <span className="down-arrow">↓</span>
+              See details for Web, Android & iOS <span className="down-arrow">↓</span>
             </a>
           </div>
         </section>
@@ -91,13 +103,13 @@ export default function AppPage() {
         {/* Pick Your Platform Section */}
         <section id="pick-device" className="pick-device-section">
           <div className="section-label-tag">CHOOSE PLATFORM</div>
-          <h2 className="section-title">Stream on Web or Android</h2>
+          <h2 className="section-title">Stream on Web, Android, or iOS</h2>
           <p className="section-desc">
-            Enjoy instant browser streaming or download the standalone native Android app.
+            Enjoy instant browser streaming or download the standalone native app for Android and Apple iOS.
           </p>
 
-          {/* 2 Platform Selection Cards */}
-          <div className="devices-grid two-cards">
+          {/* 3 Platform Selection Cards */}
+          <div className="devices-grid three-cards">
             {devices.map((d) => (
               <button
                 key={d.id}
@@ -185,6 +197,53 @@ export default function AppPage() {
                       <span className="step-num">3</span>
                       <span>Launch MovieFlix from your home screen and enjoy 4K streaming!</span>
                     </div>
+                  </div>
+                </>
+              )}
+
+              {selectedDevice === "ios" && (
+                <>
+                  <h3 className="detail-instruction-title">
+                    Install MovieFlix on iPhone & iPad (iOS 15+)
+                  </h3>
+                  <p className="detail-instruction-sub">
+                    Install MovieFlix directly on your iPhone or iPad as a standalone full-screen app with zero browser bars, offline caching, and native Vidbolt player support.
+                  </p>
+
+                  <div className="download-action-group">
+                    <Link href="/home" className="btn-device-action primary-download">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.66 1.39-.56.65-.96 1.71-.83 2.74 1.05.08 2.05-.53 2.57-1.26z"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>OPEN ON IPHONE & IPAD</span>
+                        <small>Instant Install via Safari · iOS 15, 16, 17 & 18 Compatible</small>
+                      </div>
+                    </Link>
+                  </div>
+
+                  <div className="step-list">
+                    <div className="step-item">
+                      <span className="step-num">1</span>
+                      <span>Open <strong>MovieFlix</strong> in <strong>Safari</strong> on your iPhone or iPad.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">2</span>
+                      <span>Tap the <strong>Share</strong> button (the square with an arrow pointing up <span style={{ fontSize: "15px" }}>⎋</span>) at the bottom toolbar.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">3</span>
+                      <span>Scroll down and tap <strong>Add to Home Screen</strong>, then tap <strong>Add</strong> in the top-right corner.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">4</span>
+                      <span>Launch MovieFlix from your home screen — enjoy pure full-screen cinema with no browser bars!</span>
+                    </div>
+                  </div>
+
+                  <div className="detail-notice-box info" style={{ marginTop: "16px" }}>
+                    <span className="notice-icon">📱</span>
+                    <span>For developers: Xcode native project is ready in the repository under <code>MovieFlix ios/</code> (Bundle ID: <code>com.movieflix.app</code>).</span>
                   </div>
                 </>
               )}

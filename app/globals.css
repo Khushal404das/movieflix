@@ -3148,6 +3148,19 @@ body.lights-off-active .player-section-wrapper {
   margin: 0 auto 28px;
 }
 
+.devices-grid.three-cards {
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 960px;
+  margin: 0 auto 28px;
+}
+
+@media (max-width: 768px) {
+  .devices-grid.three-cards {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+  }
+}
+
 .device-card {
   position: relative;
   display: flex;

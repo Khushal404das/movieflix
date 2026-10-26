@@ -47,3 +47,10 @@ android-native/**/*.apk
 .wrangler
 .dev.vars
 .vscode/
+
+# iOS build outputs & local Xcode config
+ios-native/Pods/
+ios-native/**/xcuserdata/
+ios-native/build/
+ios-native/DerivedData/
+*.ipa
