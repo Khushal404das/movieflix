@@ -40,7 +40,6 @@ export default function AppShell({ children }) {
               <h4>Discover</h4>
               <a href="/browse/movie">Trending Movies</a>
               <a href="/browse/tv">Web Series</a>
-              
               <a href="/list">My Watchlist</a>
               <a href="/profile">My Account</a>
             </div>
@@ -50,6 +49,13 @@ export default function AppShell({ children }) {
               <a href="/browse/movie?genre=878">Sci-Fi & Cyberpunk</a>
               <a href="/browse/tv?genre=10765">Fantasy Series</a>
               <a href="/browse/movie?genre=16">Anime & Animation</a>
+            </div>
+            <div className="footer-col">
+              <h4>Apps & Devices</h4>
+              <a href="/app">Apple iOS (iPhone/iPad)</a>
+              <a href="/app">Android Native (.APK)</a>
+              <a href="/home">Web Browser Player</a>
+              <a href="/download">All Platforms</a>
             </div>
           </div>
         </div>

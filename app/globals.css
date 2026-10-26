@@ -8287,3 +8287,19 @@ body.lights-off-active .player-section-wrapper {
   color: var(--netflix-red, #e50914);
   font-weight: 800;
 }
+
+/* Nav App Pill */
+.nav-app-pill {
+  font-size: 10px;
+  background: linear-gradient(135deg, #e50914 0%, #b20710 100%);
+  color: #ffffff;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-left: 6px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1.2;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+}

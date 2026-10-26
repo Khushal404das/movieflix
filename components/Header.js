@@ -153,7 +153,7 @@ export default function Header() {
               My List
             </Link>
             <Link href="/app" className={`netflix-nav-item ${pathname === "/app" || pathname === "/" ? "active" : ""}`}>
-              Get App
+              Get App <span className="nav-app-pill">iOS / APK</span>
             </Link>
           </nav>
         </div>

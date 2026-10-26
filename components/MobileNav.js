@@ -51,13 +51,25 @@ export default function MobileNav() {
           <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
         </svg>
       )
+    },
+    {
+      label: "Get App",
+      href: "/app",
+      icon: (active) => (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? "currentColor" : "none"} stroke="currentColor" strokeWidth={active ? "0" : "2"}>
+          <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+          <path d="M12 18h.01"/>
+        </svg>
+      )
     }
   ];
 
   return (
     <nav className="netflix-mobile-bottom-bar" aria-label="Mobile Navigation">
       {navItems.map((item) => {
-        const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+        const isActive = item.href === "/home"
+          ? (pathname === "/home" || pathname === "/")
+          : (pathname === item.href || pathname.startsWith(item.href + "/"));
         return (
           <Link
             key={item.href}
