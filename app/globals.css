@@ -8471,264 +8471,186 @@ body.lights-off-active .player-section-wrapper {
    STUDIOS & PLATFORMS ROW
    ═══════════════════════════════════════════════════ */
 
-.studios-platforms-row .studios-scroll {
-  gap: 12px;
-  padding: 4px 2px 12px;
+.platforms-section {
+  position: relative;
+  margin-bottom: 28px;
+  scroll-margin-top: 72px;
 }
 
-.studio-card {
+.platforms-heading-wrap {
+  margin-bottom: 12px;
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+  .platforms-heading-wrap { padding: 0 32px; margin-bottom: 16px; }
+}
+@media (min-width: 1024px) {
+  .platforms-heading-wrap { padding: 0 64px; }
+}
+
+.platforms-row-outer {
+  padding: 0 16px;
+}
+
+@media (min-width: 768px) { .platforms-row-outer { padding: 0 32px; } }
+@media (min-width: 1024px) { .platforms-row-outer { padding: 0 64px; } }
+
+/* Wrapper with hover-group for arrow visibility */
+.platforms-group {
+  position: relative;
+}
+
+/* Scrollable track */
+.platforms-scroll-track {
+  display: flex;
+  min-width: 0;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  padding-top: 4px;
+  padding-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.platforms-scroll-track::-webkit-scrollbar { display: none; }
+
+@media (min-width: 768px) {
+  .platforms-scroll-track { gap: 14px; padding-top: 8px; padding-bottom: 16px; }
+}
+
+/* ── Individual platform card ── */
+.platform-card-link {
+  position: relative;
   display: block;
   flex: 0 0 auto;
-  width: 160px;
-  height: 90px;
-  border-radius: 10px;
+  /* Responsive card widths matching the reference exactly */
+  width: calc((100vw - 2rem - 0.75rem) / 2.15);
+  max-width: 168px;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
   overflow: hidden;
+  color: #fff;
   text-decoration: none;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.22s ease,
-              filter 0.22s ease;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.45);
-  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  isolation: isolate;
 }
 
-.studio-card:hover {
-  transform: scale(1.07) translateY(-3px);
-  box-shadow: 0 10px 32px rgba(0,0,0,0.6);
-  filter: brightness(1.1);
-  z-index: 2;
+@media (min-width: 480px) {
+  .platform-card-link {
+    width: calc((100vw - 2rem - 0.75rem) / 2.65);
+    max-width: 180px;
+  }
+}
+@media (min-width: 768px) {
+  .platform-card-link {
+    width: calc((100vw - 4rem - 1rem) / 3.35);
+    max-width: 210px;
+  }
+}
+@media (min-width: 1024px) {
+  .platform-card-link {
+    width: calc((100vw - 8rem - 1rem) / 4.35);
+    max-width: 232px;
+  }
+}
+@media (min-width: 1280px) {
+  .platform-card-link {
+    width: calc((100vw - 8rem - 1.25rem) / 5.35);
+    max-width: 248px;
+  }
 }
 
-.studio-card-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.08);
-  position: relative;
-  overflow: hidden;
+.platform-card-link:hover {
+  transform: scale(1.06) translateY(-2px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.65);
 }
 
-.studio-card-inner::after {
-  content: "";
+/* Gradient background fills the card */
+.platform-card-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
-  pointer-events: none;
-  border-radius: 10px;
+  border-radius: 12px;
+  z-index: 0;
 }
 
-/* ── Logo base ── */
-.studio-logo {
+/* Radial shine overlay — top-right */
+.platform-card-shine {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(120% 80% at 80% -10%, rgba(255,255,255,0.18), transparent 55%);
+  border-radius: 12px;
+}
+
+/* Logo image — centered */
+.platform-card-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 52%;
+  max-width: 78%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+  drop-shadow: 0 8px 18px rgba(0,0,0,0.45);
+  transition: transform 450ms ease;
+}
+
+.platform-card-link:hover .platform-card-logo {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* Edge fade gradients */
+.platform-edge-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.platform-edge-fade--left {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-base, #141414), transparent);
+}
+
+.platform-edge-fade--right {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-base, #141414), transparent);
+}
+
+/* Scroll buttons */
+.platform-scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateY(-8px);
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  font-size: 22px;
-  line-height: 1;
-  text-align: center;
-  user-select: none;
-  pointer-events: none;
-}
-
-/* ── Netflix ── */
-.studio-logo-netflix {
-  font-family: "Arial Black", "Impact", sans-serif;
-  font-size: 26px;
-  font-style: italic;
-  letter-spacing: -0.05em;
-  color: #fff;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-}
-
-/* ── Prime Video ── */
-.studio-logo-prime {
-  flex-direction: column;
-  gap: 0;
-}
-
-.prime-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
-}
-
-.prime-text {
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: #1A1A2E;
-}
-
-.prime-video {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #1A1A2E;
-}
-
-.prime-arrow {
-  width: 60px;
-  height: 10px;
-  display: block;
-}
-
-/* ── AMC+ ── */
-.studio-logo-amc {
-  font-size: 20px;
-  letter-spacing: 0.06em;
-}
-
-.amc-box {
-  border: 2.5px solid currentColor;
-  padding: 3px 10px;
-  border-radius: 4px;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
-}
-
-/* ── Apple TV+ ── */
-.studio-logo-appletv {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.appletv-wrap {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.apple-icon {
-  width: 20px;
-  height: 24px;
-  fill: currentColor;
-  flex-shrink: 0;
-}
-
-.appletv-text {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-}
-
-/* ── Crunchyroll ── */
-.studio-logo-crunchyroll {
-  flex-direction: column;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.cr-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
-.cr-icon {
   width: 36px;
   height: 36px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.2s;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.75);
 }
 
-/* ── Disney+ ── */
-.studio-logo-disney {
-  font-family: Georgia, "Times New Roman", serif;
-  font-style: italic;
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+.platform-scroll-btn:hover {
+  background: rgba(255,255,255,0.15);
 }
 
-/* ── Hulu ── */
-.studio-logo-hulu {
-  font-size: 30px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-}
-
-/* ── HBO ── */
-.studio-logo-hbo {
-  font-family: "Arial Black", Georgia, serif;
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-/* ── MGM+ ── */
-.studio-logo-mgm {
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  font-size: 28px;
-  font-weight: 700;
-  font-style: italic;
-  letter-spacing: 0.02em;
-}
-
-/* ── Paramount+ ── */
-.studio-logo-paramount {
-  font-family: "Palatino Linotype", Georgia, serif;
-  font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 1px;
-}
-
-.studio-logo-paramount em {
-  font-style: italic;
-  font-size: 18px;
-}
-
-/* ── Peacock ── */
-.studio-logo-peacock {
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.peacock-dots {
-  font-size: 20px;
-  font-weight: 900;
-  opacity: 0.7;
-}
-
-/* ── Shudder ── */
-.studio-logo-shudder {
-  font-family: "Arial Black", Impact, sans-serif;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-}
-
-/* Responsive: smaller on mobile */
-@media (max-width: 640px) {
-  .studio-card {
-    width: 130px;
-    height: 74px;
-  }
-
-  .studio-logo {
-    font-size: 18px;
-  }
-
-  .studio-logo-netflix { font-size: 20px; }
-  .studio-logo-hulu    { font-size: 24px; }
-  .studio-logo-hbo     { font-size: 22px; }
-  .studio-logo-mgm     { font-size: 22px; }
-  .studio-logo-shudder { font-size: 18px; }
-}
+.platform-scroll-btn--left  { left: -8px; }
+.platform-scroll-btn--right { right: -8px; }
