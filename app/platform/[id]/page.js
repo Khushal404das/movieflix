@@ -55,26 +55,24 @@ export default async function PlatformPage({ params, searchParams }) {
   const items      = discoverData.results || [];
   const totalPages = Math.min(discoverData.total_pages || 1, 500);
 
-  const buildUrl = (overrides = {}) => {
-    const sp = new URLSearchParams();
-    const m = overrides.media   ?? mediaType;
-    const g = overrides.genre   ?? genre;
-    const s = overrides.sort    ?? sort;
-    const p = overrides.page    ?? 1;
-    if (m !== "movie") sp.set("media", m);
-    if (g && g !== "all") sp.set("genre", g);
-    if (s !== "popularity.desc") sp.set("sort", s);
-    if (p > 1) sp.set("page", p);
-    const qs = sp.toString();
-    return `/platform/${params.id}${qs ? `?${qs}` : ""}`;
-  };
-
   const SORT_OPTIONS = [
     { value: "popularity.desc",     label: "Most popular" },
     { value: "vote_average.desc",   label: "Highest rated" },
     { value: "primary_release_date.desc", label: "Newest first" },
     { value: "primary_release_date.asc",  label: "Oldest first" },
   ];
+
+
+  // Server-side URL builder (only used for SSR pagination links)
+  const makePageUrl = (p) => {
+    const sp = new URLSearchParams();
+    if (mediaType !== "movie") sp.set("media", mediaType);
+    if (genre && genre !== "all") sp.set("genre", genre);
+    if (sort !== "popularity.desc") sp.set("sort", sort);
+    if (p > 1) sp.set("page", String(p));
+    const qs = sp.toString();
+    return `/platform/${params.id}${qs ? `?${qs}` : ""}`;
+  };
 
   return (
     <main className="platform-page">
@@ -118,7 +116,6 @@ export default async function PlatformPage({ params, searchParams }) {
         genres={genres}
         sortOptions={SORT_OPTIONS}
         platformName={platform.name}
-        buildUrl={buildUrl}
       />
 
       {/* ── Grid ── */}
@@ -139,11 +136,11 @@ export default async function PlatformPage({ params, searchParams }) {
       {totalPages > 1 && (
         <div className="pagination-bar">
           {page > 1 && (
-            <Link className="page-btn ghost" href={buildUrl({ page: page - 1 })}>← Previous</Link>
+            <Link className="page-btn ghost" href={makePageUrl(page - 1)}>← Previous</Link>
           )}
           <span className="page-indicator">Page {page} of {totalPages}</span>
           {page < totalPages && (
-            <Link className="page-btn primary" href={buildUrl({ page: page + 1 })}>Next →</Link>
+            <Link className="page-btn primary" href={makePageUrl(page + 1)}>Next →</Link>
           )}
         </div>
       )}

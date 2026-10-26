@@ -3,6 +3,17 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+// Build URL entirely on the client — no function props from Server Components
+function buildUrl(platformId, { media, genre, sort, page } = {}) {
+  const sp = new URLSearchParams();
+  if (media && media !== "movie") sp.set("media", media);
+  if (genre && genre !== "" && genre !== "all") sp.set("genre", genre);
+  if (sort && sort !== "popularity.desc") sp.set("sort", sort);
+  if (page && page > 1) sp.set("page", String(page));
+  const qs = sp.toString();
+  return `/platform/${platformId}${qs ? `?${qs}` : ""}`;
+}
+
 export default function PlatformPageClient({
   platformId,
   currentMedia,
@@ -11,13 +22,18 @@ export default function PlatformPageClient({
   genres,
   sortOptions,
   platformName,
-  buildUrl,
 }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
 
   const go = (overrides = {}) => {
-    router.push(buildUrl(overrides));
+    const url = buildUrl(platformId, {
+      media: overrides.media ?? currentMedia,
+      genre: "genre" in overrides ? overrides.genre : currentGenre,
+      sort: overrides.sort ?? currentSort,
+      page: overrides.page ?? 1,
+    });
+    router.push(url);
   };
 
   const filteredGenres = search
@@ -26,9 +42,7 @@ export default function PlatformPageClient({
 
   return (
     <div className="platform-filter-bar-wrap">
-      {/* ── Top bar: tabs + sort + search ── */}
       <div className="platform-filter-bar">
-        {/* Media type tabs */}
         <div className="platform-media-tabs">
           <button
             type="button"
@@ -46,16 +60,13 @@ export default function PlatformPageClient({
           </button>
         </div>
 
-        {/* Platform label pill */}
         <div className="platform-filter-pill">
           <span>{platformName}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
 
-        {/* Sort label */}
         <div className="platform-sort-label">SORT</div>
 
-        {/* Sort dropdown */}
         <select
           className="platform-sort-select"
           value={currentSort}
@@ -67,7 +78,6 @@ export default function PlatformPageClient({
           ))}
         </select>
 
-        {/* Search */}
         <div className="platform-search-wrap">
           <svg className="platform-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -83,7 +93,6 @@ export default function PlatformPageClient({
         </div>
       </div>
 
-      {/* ── Genre chips ── */}
       <div className="platform-genre-wrap">
         <span className="platform-genre-label">GENRE</span>
         <div className="platform-genre-chips">
