@@ -171,26 +171,19 @@ export default function AppPage() {
                   </p>
 
                   <div className="download-action-group">
-                    <a href="/downloads/reelhouse-mobile.apk" download="reelhouse-mobile.apk" className="btn-device-action primary-download">
+                    <a
+                      href="/downloads/MovieFlix.apk"
+                      download="MovieFlix.apk"
+                      className="btn-device-action primary-download"
+                    >
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                       </svg>
                       <div className="btn-text-col">
-                        <span>DOWNLOAD FLUTTER ANDROID APK</span>
-                        <small>reelhouse-mobile.apk · Mobile Friendly Flutter UI (Android 7.0 - 15+)</small>
-                      </div>
-                    </a>
-                    <a href="/downloads/MovieFlix.apk" download="MovieFlix.apk" className="btn-device-action" style={{ marginTop: "10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7 10 12 15 17 10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                      </svg>
-                      <div className="btn-text-col">
-                        <span>DOWNLOAD LIGHTWEIGHT NATIVE APK</span>
-                        <small>MovieFlix.apk · v1.0.0 · 5.5 MB · Native WebView Engine</small>
+                        <span>DOWNLOAD ANDROID APP (.APK)</span>
+                        <small>MovieFlix.apk · v1.0.0 · 4.9 MB · Direct Install</small>
                       </div>
                     </a>
                   </div>
