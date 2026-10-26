@@ -44,12 +44,11 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://image.tmdb.org" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://vidbolt.pro" crossOrigin="anonymous" />
         
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
-        <link rel="dns-prefetch" href="https://apiplayer.ru" />
-        <link rel="dns-prefetch" href="https://player.autoembed.cc" />
-        <link rel="dns-prefetch" href="https://vidsrc.me" />
-        <link rel="dns-prefetch" href="https://vidsrc.to" />
+        <link rel="dns-prefetch" href="https://vidbolt.pro" />
+        <link rel="dns-prefetch" href="https://vidsrc.cc" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
 
         <link

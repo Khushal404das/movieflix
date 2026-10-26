@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { film } from "@/lib/archive";
+import { film, poster } from "@/lib/archive";
 import WatchlistButton from "@/components/WatchlistButton";
+import CinemaPlayer from "@/components/CinemaPlayer";
 
 export async function generateMetadata({ params }) {
   const f = await film(params.id);
@@ -22,18 +23,26 @@ export default async function Player({ params }) {
           <div className="player-topbar">
             <div className="player-badge">
               <span className="live-dot" />
-              <b>Archive Classic Stream</b>
+              <b>{f.title}</b>
               <span className="res-badge">Public Domain</span>
             </div>
           </div>
+
           <div className="player-screen-container">
-            <iframe
-              className="streaming-iframe"
-              src={`https://archive.org/embed/${encodeURIComponent(f.id)}`}
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowFullScreen
-              title={f.title}
-            />
+            {f.src ? (
+              <CinemaPlayer
+                src={f.src}
+                title={f.title}
+                poster={poster(f.id)}
+                mimeType="mp4"
+              />
+            ) : (
+              <div className="player-buffering-overlay">
+                <div className="stream-spinner" />
+                <span className="buffering-text">No playable file found for this title.</span>
+                <span className="buffering-subtext">Try another public-domain classic.</span>
+              </div>
+            )}
           </div>
         </div>
 
