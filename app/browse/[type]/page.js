@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDiscover, getGenreList } from "@/lib/tmdb";
-import { TmdbCard } from "@/components/Card";
+import InfinitePlatformGrid from "@/components/InfinitePlatformGrid";
 
 export async function generateMetadata({ params }) {
   const isTv = params.type === "tv";
@@ -68,38 +68,17 @@ export default async function Browse({ params, searchParams }) {
         </div>
       </div>
 
-      {/* Media Grid */}
-      {items.length > 0 ? (
-        <div className="media-grid">
-          {items.map((x) => (
-            <TmdbCard key={(x.type || type) + x.id} item={x} />
-          ))}
-        </div>
-      ) : (
-        <div className="empty-state-box">
-          <p>No titles found for this category.</p>
-          <Link href={`/browse/${type}`} className="btn-primary">View All {type === "tv" ? "Series" : "Movies"}</Link>
-        </div>
-      )}
-
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="pagination-bar">
-          {page > 1 && (
-            <Link className="page-btn ghost" href={buildUrl(page - 1, genre)}>
-              &larr; Previous Page
-            </Link>
-          )}
-          <span className="page-indicator">
-            Page {page} of {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link className="page-btn primary" href={buildUrl(page + 1, genre)}>
-              Next Page &rarr;
-            </Link>
-          )}
-        </div>
-      )}
+      {/* Infinite Scroll Media Grid */}
+      <InfinitePlatformGrid
+        initialItems={items}
+        initialPage={page}
+        totalPages={totalPages}
+        providerId=""
+        mediaType={type}
+        genre={genre}
+        sort="popularity.desc"
+        platformId=""
+      />
     </main>
   );
 }

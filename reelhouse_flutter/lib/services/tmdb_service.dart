@@ -25,18 +25,23 @@ class TmdbService {
         .toList();
   }
 
-  // ── Discover ──────────────────────────────────────────────────────────────
+  // ── Discover with OTT Platform Support ─────────────────────────────────────
   static Future<Map<String, dynamic>> discover({
     String type = 'movie',
     String genre = '',
     int page = 1,
     String sort = 'popularity.desc',
+    String ott = '',
   }) async {
     final params = <String, String>{
       'page': '$page',
       'sort_by': sort,
     };
     if (genre.isNotEmpty && genre != 'all') params['with_genres'] = genre;
+    if (ott.isNotEmpty && ott != 'all') {
+      params['with_watch_providers'] = ott;
+      params['watch_region'] = 'US';
+    }
     final d = await _get('/discover/$type', params);
     final items = (d['results'] as List)
         .map((e) => MediaItem.fromJson(e as Map<String, dynamic>, type: type))

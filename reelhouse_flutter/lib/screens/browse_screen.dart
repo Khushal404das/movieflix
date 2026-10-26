@@ -14,6 +14,9 @@ class BrowseScreen extends StatefulWidget {
 class _BrowseScreenState extends State<BrowseScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tab;
+  final ScrollController _scrollController = ScrollController();
+
+  String _selectedOtt = 'all';
   String _selectedGenre = '';
   String _sort = 'popularity.desc';
   List<Genre> _movieGenres = [];
@@ -22,11 +25,26 @@ class _BrowseScreenState extends State<BrowseScreen>
   int _page = 1;
   int _totalPages = 1;
   bool _loading = true;
+  bool _loadingMore = false;
+
+  final _ottPlatforms = const [
+    ('all', '🌟 All Platforms'),
+    ('8', 'Netflix'),
+    ('337', 'Disney+'),
+    ('9', 'Prime Video'),
+    ('350', 'Apple TV+'),
+    ('283', 'Crunchyroll (Anime)'),
+    ('1899', 'Max'),
+    ('2303', 'Paramount+'),
+    ('15', 'Hulu'),
+    ('34', 'MGM+'),
+    ('387', 'Peacock'),
+  ];
 
   final _sorts = const [
-    ('popularity.desc',            'Most Popular'),
-    ('vote_average.desc',          'Highest Rated'),
-    ('primary_release_date.desc',  'Newest'),
+    ('popularity.desc',           'Most Popular'),
+    ('vote_average.desc',         'Highest Rated'),
+    ('primary_release_date.desc', 'Newest'),
   ];
 
   @override
@@ -34,13 +52,15 @@ class _BrowseScreenState extends State<BrowseScreen>
     super.initState();
     _tab = TabController(length: 2, vsync: this);
     _tab.addListener(_onTabChange);
+    _scrollController.addListener(_onScroll);
     _loadGenres();
-    _load();
+    _load(reset: true);
   }
 
   @override
   void dispose() {
     _tab.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -48,8 +68,24 @@ class _BrowseScreenState extends State<BrowseScreen>
 
   void _onTabChange() {
     if (_tab.indexIsChanging) {
-      setState(() { _selectedGenre = ''; _page = 1; });
-      _load();
+      setState(() {
+        _selectedGenre = '';
+        _page = 1;
+      });
+      _load(reset: true);
+    }
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final currentScroll = _scrollController.position.pixels;
+      // Pre-fetch next page 350px before reaching bottom
+      if (maxScroll - currentScroll <= 350) {
+        if (!_loading && !_loadingMore && _page < _totalPages) {
+          _loadMore();
+        }
+      }
     }
   }
 
@@ -59,20 +95,64 @@ class _BrowseScreenState extends State<BrowseScreen>
     if (mounted) setState(() { _movieGenres = mg; _tvGenres = tg; });
   }
 
-  Future<void> _load() async {
-    setState(() => _loading = true);
+  Future<void> _load({bool reset = false}) async {
+    if (reset) {
+      setState(() {
+        _loading = true;
+        _page = 1;
+      });
+    }
     try {
       final res = await TmdbService.discover(
-        type: _type, genre: _selectedGenre, page: _page, sort: _sort);
+        type: _type,
+        genre: _selectedGenre,
+        page: 1,
+        sort: _sort,
+        ott: _selectedOtt == 'all' ? '' : _selectedOtt,
+      );
       if (mounted) {
         setState(() {
           _items = res['results'] as List<MediaItem>;
           _totalPages = res['total_pages'] as int;
+          _page = 1;
           _loading = false;
         });
       }
     } catch (_) {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _loadMore() async {
+    if (_loadingMore || _page >= _totalPages) return;
+    setState(() => _loadingMore = true);
+    final nextPage = _page + 1;
+
+    try {
+      final res = await TmdbService.discover(
+        type: _type,
+        genre: _selectedGenre,
+        page: nextPage,
+        sort: _sort,
+        ott: _selectedOtt == 'all' ? '' : _selectedOtt,
+      );
+      final newItems = res['results'] as List<MediaItem>;
+      if (mounted) {
+        setState(() {
+          _page = nextPage;
+          _totalPages = res['total_pages'] as int;
+          // Deduplicate by ID
+          final existingIds = _items.map((i) => '${i.mediaType}-${i.id}').toSet();
+          for (final item in newItems) {
+            if (!existingIds.contains('${item.mediaType}-${item.id}')) {
+              _items.add(item);
+            }
+          }
+          _loadingMore = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loadingMore = false);
     }
   }
 
@@ -84,7 +164,7 @@ class _BrowseScreenState extends State<BrowseScreen>
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.surface,
-        title: const Text('Browse',
+        title: const Text('Browse Catalog',
             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
         bottom: TabBar(
           controller: _tab,
@@ -99,7 +179,10 @@ class _BrowseScreenState extends State<BrowseScreen>
           PopupMenuButton<String>(
             icon: const Icon(Icons.sort_rounded, color: AppTheme.textSecondary),
             color: AppTheme.surface,
-            onSelected: (v) { setState(() { _sort = v; _page = 1; }); _load(); },
+            onSelected: (v) {
+              setState(() { _sort = v; });
+              _load(reset: true);
+            },
             itemBuilder: (_) => _sorts
                 .map((s) => PopupMenuItem(
                       value: s.$1,
@@ -115,113 +198,174 @@ class _BrowseScreenState extends State<BrowseScreen>
       ),
       body: Column(
         children: [
-          // Genre chips
+          // ── OTT Platforms Selector Row ──
+          Container(
+            height: 48,
+            color: const Color(0xFF141414),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              children: _ottPlatforms.map((p) => _FilterPill(
+                label: p.$2,
+                selected: _selectedOtt == p.$1,
+                accentColor: AppTheme.primary,
+                onTap: () {
+                  if (_selectedOtt != p.$1) {
+                    setState(() => _selectedOtt = p.$1);
+                    _load(reset: true);
+                  }
+                },
+              )).toList(),
+            ),
+          ),
+
+          // ── Genre Chips Row ──
           if (genres.isNotEmpty)
             SizedBox(
-              height: 48,
+              height: 44,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 children: [
-                  _GenreChip(label: 'All', selected: _selectedGenre.isEmpty,
-                      onTap: () { setState(() { _selectedGenre = ''; _page = 1; }); _load(); }),
-                  ...genres.map((g) => _GenreChip(
+                  _FilterPill(
+                    label: 'All Genres',
+                    selected: _selectedGenre.isEmpty,
+                    onTap: () {
+                      if (_selectedGenre.isNotEmpty) {
+                        setState(() => _selectedGenre = '');
+                        _load(reset: true);
+                      }
+                    },
+                  ),
+                  ...genres.map((g) => _FilterPill(
                     label: g.name,
                     selected: _selectedGenre == g.id.toString(),
                     onTap: () {
-                      setState(() { _selectedGenre = g.id.toString(); _page = 1; });
-                      _load();
+                      setState(() => _selectedGenre = g.id.toString());
+                      _load(reset: true);
                     },
                   )),
                 ],
               ),
             ),
 
-          // Grid
+          // ── Infinite Scroll Grid ──
           Expanded(
             child: _loading
                 ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
                 : RefreshIndicator(
                     color: AppTheme.primary,
                     backgroundColor: AppTheme.surface,
-                    onRefresh: _load,
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(10),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                        childAspectRatio: 0.55,
-                      ),
-                      itemCount: _items.length,
-                      itemBuilder: (ctx, i) => MediaCard(
-                        item: _items[i],
-                        onTap: () => Navigator.push(ctx,
-                            MaterialPageRoute(builder: (_) =>
-                                DetailScreen(item: _items[i]))),
-                      ),
+                    onRefresh: () => _load(reset: true),
+                    child: CustomScrollView(
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.all(10),
+                          sliver: SliverGrid(
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              childAspectRatio: 0.55,
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, i) => MediaCard(
+                                item: _items[i],
+                                onTap: () => Navigator.push(
+                                  ctx,
+                                  MaterialPageRoute(
+                                    builder: (_) => DetailScreen(item: _items[i]),
+                                  ),
+                                ),
+                              ),
+                              childCount: _items.length,
+                            ),
+                          ),
+                        ),
+
+                        // Bottom Spinner on Infinite Scroll
+                        if (_loadingMore)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 24),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 32,
+                                  height: 32,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        // Reached End Indicator
+                        if (!_loadingMore && _page >= _totalPages && _items.isNotEmpty)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 24),
+                              child: Center(
+                                child: Text(
+                                  "You've reached the end",
+                                  style: TextStyle(
+                                    color: AppTheme.textMuted,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
           ),
-
-          // Pagination
-          if (_totalPages > 1)
-            Container(
-              color: AppTheme.surface,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: _page > 1
-                        ? () { setState(() => _page--); _load(); }
-                        : null,
-                    child: const Text('← Prev',
-                        style: TextStyle(color: AppTheme.primary)),
-                  ),
-                  Text('$_page / $_totalPages',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-                  TextButton(
-                    onPressed: _page < _totalPages
-                        ? () { setState(() => _page++); _load(); }
-                        : null,
-                    child: const Text('Next →',
-                        style: TextStyle(color: AppTheme.primary)),
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
     );
   }
 }
 
-class _GenreChip extends StatelessWidget {
+class _FilterPill extends StatelessWidget {
   final String label;
   final bool selected;
+  final Color? accentColor;
   final VoidCallback onTap;
-  const _GenreChip({required this.label, required this.selected, required this.onTap});
+  const _FilterPill({
+    required this.label,
+    required this.selected,
+    this.accentColor,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = accentColor ?? AppTheme.primary;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primary : AppTheme.card,
-          borderRadius: BorderRadius.circular(20),
+          color: selected ? activeColor : const Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(
-              color: selected ? AppTheme.primary : AppTheme.divider),
+            color: selected ? activeColor : Colors.white12,
+          ),
         ),
-        child: Text(label,
+        child: Center(
+          child: Text(
+            label,
             style: TextStyle(
-                color: selected ? Colors.white : AppTheme.textSecondary,
-                fontSize: 12,
-                fontWeight:
-                    selected ? FontWeight.w700 : FontWeight.w400)),
+              color: selected ? Colors.white : AppTheme.textSecondary,
+              fontSize: 12,
+              fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+            ),
+          ),
+        ),
       ),
     );
   }

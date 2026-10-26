@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDiscover, getGenreList } from "@/lib/tmdb";
-import { TmdbCard } from "@/components/Card";
 import PlatformPageClient from "./PlatformPageClient";
+import InfinitePlatformGrid from "@/components/InfinitePlatformGrid";
 
 // TMDB watch provider IDs & brand info
 const PLATFORM_MAP = {
@@ -62,18 +62,6 @@ export default async function PlatformPage({ params, searchParams }) {
     { value: "primary_release_date.asc",  label: "Oldest first" },
   ];
 
-
-  // Server-side URL builder (only used for SSR pagination links)
-  const makePageUrl = (p) => {
-    const sp = new URLSearchParams();
-    if (mediaType !== "movie") sp.set("media", mediaType);
-    if (genre && genre !== "all") sp.set("genre", genre);
-    if (sort !== "popularity.desc") sp.set("sort", sort);
-    if (p > 1) sp.set("page", String(p));
-    const qs = sp.toString();
-    return `/platform/${params.id}${qs ? `?${qs}` : ""}`;
-  };
-
   return (
     <main className="platform-page">
       {/* ── Header ── */}
@@ -118,32 +106,17 @@ export default async function PlatformPage({ params, searchParams }) {
         platformName={platform.name}
       />
 
-      {/* ── Grid ── */}
-      {items.length > 0 ? (
-        <div className="media-grid platform-grid">
-          {items.map((x) => (
-            <TmdbCard key={(x.type || mediaType) + x.id} item={x} />
-          ))}
-        </div>
-      ) : (
-        <div className="empty-state-box">
-          <p>No titles found for this filter.</p>
-          <Link href={`/platform/${params.id}`} className="btn-primary">Clear Filters</Link>
-        </div>
-      )}
-
-      {/* ── Pagination ── */}
-      {totalPages > 1 && (
-        <div className="pagination-bar">
-          {page > 1 && (
-            <Link className="page-btn ghost" href={makePageUrl(page - 1)}>← Previous</Link>
-          )}
-          <span className="page-indicator">Page {page} of {totalPages}</span>
-          {page < totalPages && (
-            <Link className="page-btn primary" href={makePageUrl(page + 1)}>Next →</Link>
-          )}
-        </div>
-      )}
+      {/* ── Infinite Scroll Grid ── */}
+      <InfinitePlatformGrid
+        initialItems={items}
+        initialPage={page}
+        totalPages={totalPages}
+        providerId={platform.id}
+        mediaType={mediaType}
+        genre={genre}
+        sort={sort}
+        platformId={params.id}
+      />
     </main>
   );
 }
