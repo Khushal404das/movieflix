@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+
 export const dynamic = "force-dynamic";
 
 let cachedApkUrl = null;
@@ -6,8 +8,13 @@ let cacheExpiresAt = 0;
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const platform = (searchParams.get("platform") || "android").toLowerCase();
+    let platform = "android";
+    try {
+      const url = new URL(request.url, "http://localhost:3099");
+      platform = (url.searchParams.get("platform") || "android").toLowerCase();
+    } catch (e) {
+      console.warn("URL parse fallback:", e);
+    }
     const isIos = platform === "ios" || platform === "ipa" || platform === "apple";
     const targetAssetName = isIos ? "MovieFlix.ipa" : "MovieFlix.apk";
     const now = Date.now();
@@ -16,13 +23,7 @@ export async function GET(request) {
     if (now < cacheExpiresAt) {
       const cached = isIos ? cachedIpaUrl : cachedApkUrl;
       if (cached) {
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: cached,
-            "Cache-Control": "no-cache",
-          },
-        });
+        return NextResponse.redirect(cached, 302);
       }
     }
 
@@ -36,6 +37,7 @@ export async function GET(request) {
           Accept: "application/vnd.github.v3+json",
           "User-Agent": "MovieFlix-App/1.0",
         },
+        cache: "no-store",
       });
       if (relRes.ok) {
         const releaseData = await relRes.json();
@@ -48,15 +50,11 @@ export async function GET(request) {
       console.warn("Dynamic asset resolution fallback:", e.message);
     }
 
+    // Direct asset URL fallback for v1.0.1
     if (!assetUrl) {
-      const fallbackUrl = `https://github.com/Khushal404das/movieflix/releases/download/v1.0.1/${targetAssetName}`;
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: fallbackUrl,
-          "Cache-Control": "no-cache",
-        },
-      });
+      assetUrl = isIos
+        ? "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682794186"
+        : "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682735526";
     }
 
     const assetRes = await fetch(assetUrl, {
@@ -66,6 +64,7 @@ export async function GET(request) {
         "User-Agent": "MovieFlix-App/1.0",
       },
       redirect: "manual",
+      cache: "no-store",
     });
 
     const downloadLocation = assetRes.headers.get("location");
@@ -77,22 +76,13 @@ export async function GET(request) {
       }
       cacheExpiresAt = now + 15 * 60 * 1000;
 
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: downloadLocation,
-          "Cache-Control": "no-cache",
-        },
-      });
+      return NextResponse.redirect(downloadLocation, 302);
     }
 
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: `https://github.com/Khushal404das/movieflix/releases/download/v1.0.1/${targetAssetName}`,
-        "Cache-Control": "no-cache",
-      },
-    });
+    return new Response(
+      `Asset download link temporarily unavailable (${assetRes.status}). Please try again shortly.`,
+      { status: 502, headers: { "Content-Type": "text/plain" } }
+    );
   } catch (err) {
     console.error("Download route exception:", err);
     return new Response("Download error: " + err.message, { status: 500 });
