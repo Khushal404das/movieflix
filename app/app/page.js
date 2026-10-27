@@ -211,43 +211,61 @@ export default function AppPage() {
                     Install MovieFlix on iPhone & iPad (iOS 15+)
                   </h3>
                   <p className="detail-instruction-sub">
-                    Install MovieFlix directly on your iPhone or iPad as a standalone full-screen app with zero browser bars, offline caching, and native Vidbolt player support.
+                    Get MovieFlix on your Apple device: download the standalone native <strong>MovieFlix.ipa</strong> package for sideloading (AltStore, Sideloadly, TrollStore, Scarlet), or add the zero-install <strong>Home Screen App</strong> directly via Safari!
                   </p>
 
                   <div className="download-action-group">
-                    <Link href="/home" className="btn-device-action primary-download">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <a
+                      href="/api/download?platform=ios"
+                      download="MovieFlix.ipa"
+                      className="btn-device-action primary-download"
+                    >
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.66 1.39-.56.65-.96 1.71-.83 2.74 1.05.08 2.05-.53 2.57-1.26z"/>
                       </svg>
                       <div className="btn-text-col">
-                        <span>OPEN ON IPHONE & IPAD</span>
-                        <small>Instant Install via Safari · iOS 15, 16, 17 & 18 Compatible</small>
+                        <span>DOWNLOAD IOS APP (.IPA)</span>
+                        <small>MovieFlix.ipa · v1.0.1 · Sideload with AltStore / TrollStore / Scarlet</small>
+                      </div>
+                    </a>
+
+                    <Link href="/home" className="btn-device-action" style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "14px",
+                      padding: "14px 24px",
+                      background: "rgba(255, 255, 255, 0.08)",
+                      border: "1px solid rgba(255, 255, 255, 0.2)",
+                      borderRadius: "10px",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      transition: "all 0.2s ease"
+                    }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>OPEN INSTANT WEB APP (SAFARI PWA)</span>
+                        <small>Add to Home Screen · Zero Installation · Full-screen Cinema Mode</small>
                       </div>
                     </Link>
                   </div>
 
                   <div className="step-list">
                     <div className="step-item">
-                      <span className="step-num">1</span>
-                      <span>Open <strong>MovieFlix</strong> in <strong>Safari</strong> on your iPhone or iPad.</span>
+                      <span className="step-num">A</span>
+                      <span><strong>Method 1 (Native IPA):</strong> Download <strong>MovieFlix.ipa</strong> above and sideload using <strong>AltStore</strong>, <strong>TrollStore</strong>, <strong>Scarlet</strong>, or <strong>Sideloadly</strong> on your iPhone or iPad.</span>
                     </div>
                     <div className="step-item">
-                      <span className="step-num">2</span>
-                      <span>Tap the <strong>Share</strong> button (the square with an arrow pointing up <span style={{ fontSize: "15px" }}>⎋</span>) at the bottom toolbar.</span>
-                    </div>
-                    <div className="step-item">
-                      <span className="step-num">3</span>
-                      <span>Scroll down and tap <strong>Add to Home Screen</strong>, then tap <strong>Add</strong> in the top-right corner.</span>
-                    </div>
-                    <div className="step-item">
-                      <span className="step-num">4</span>
-                      <span>Launch MovieFlix from your home screen — enjoy pure full-screen cinema with no browser bars!</span>
+                      <span className="step-num">B</span>
+                      <span><strong>Method 2 (Instant Safari App):</strong> Open MovieFlix in Safari &rarr; Tap <strong>Share</strong> (square with up arrow <span style={{ fontSize: "15px" }}>⎋</span>) &rarr; Tap <strong>Add to Home Screen</strong> &rarr; Tap <strong>Add</strong>. Launch from your home screen with zero browser bars!</span>
                     </div>
                   </div>
 
                   <div className="detail-notice-box info" style={{ marginTop: "16px" }}>
                     <span className="notice-icon">📱</span>
-                    <span>For developers: Xcode native project is ready in the repository under <code>MovieFlix ios/</code> (Bundle ID: <code>com.movieflix.app</code>).</span>
+                    <span>For developers: Xcode native iOS project configured in repo under <code>reelhouse_flutter/ios/</code> (Bundle ID: <code>com.movieflix.app</code>).</span>
                   </div>
                 </>
               )}
