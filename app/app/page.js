@@ -172,7 +172,7 @@ export default function AppPage() {
 
                   <div className="download-action-group">
                     <a
-                      href="/downloads/MovieFlix.apk"
+                      href="/api/download"
                       download="MovieFlix.apk"
                       className="btn-device-action primary-download"
                     >
