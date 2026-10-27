@@ -18,17 +18,35 @@ export async function GET() {
     }
 
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "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";
-    const assetRes = await fetch(
-      "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/681529812",
-      {
+    // Resolve asset dynamically from release v1.0.1
+    let assetUrl = "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682565132";
+    try {
+      const relRes = await fetch("https://api.github.com/repos/Khushal404das/movieflix/releases/tags/v1.0.1", {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: "application/octet-stream",
+          Accept: "application/vnd.github.v3+json",
           "User-Agent": "MovieFlix-App/1.0",
         },
-        redirect: "manual",
+      });
+      if (relRes.ok) {
+        const releaseData = await relRes.json();
+        const asset = releaseData.assets?.find((a) => a.name === "MovieFlix.apk");
+        if (asset?.url) {
+          assetUrl = asset.url;
+        }
       }
-    );
+    } catch (e) {
+      console.warn("Dynamic asset resolution fallback:", e.message);
+    }
+
+    const assetRes = await fetch(assetUrl, {
+      headers: {
+        Authorization: `token ${GITHUB_TOKEN}`,
+        Accept: "application/octet-stream",
+        "User-Agent": "MovieFlix-App/1.0",
+      },
+      redirect: "manual",
+    });
 
     const downloadLocation = assetRes.headers.get("location");
     if (downloadLocation) {

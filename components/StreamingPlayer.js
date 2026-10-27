@@ -113,7 +113,9 @@ export default function StreamingPlayer({
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
   const [isTheater, setIsTheater] = useState(false);
-  const [isLightsOff, setIsLightsOff] = useState(false);
+  const [isLightsOff, setIsLightsOff] = useState(() => {
+    return searchParams.get("cinema") === "1" || searchParams.get("player") === "1";
+  });
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [serverIndex, setServerIndex] = useState(0);
