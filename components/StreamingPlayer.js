@@ -113,9 +113,10 @@ export default function StreamingPlayer({
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
   const [isTheater, setIsTheater] = useState(false);
-  const [isLightsOff, setIsLightsOff] = useState(() => {
-    return searchParams.get("cinema") === "1" || searchParams.get("player") === "1";
-  });
+  const isAppCinema = Boolean(
+    searchParams.get("cinema") === "1" || searchParams.get("player") === "1" || searchParams.get("app") === "1"
+  );
+  const [isLightsOff, setIsLightsOff] = useState(() => isAppCinema);
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
   const [serverIndex, setServerIndex] = useState(0);
@@ -446,6 +447,15 @@ export default function StreamingPlayer({
 
   // Cinema Lights Off handler
   useEffect(() => {
+    if (isAppCinema) {
+      document.body.classList.add("app-cinema-mode");
+      document.body.classList.add("lights-off-active");
+      return () => {
+        document.body.classList.remove("app-cinema-mode");
+        document.body.classList.remove("lights-off-active");
+      };
+    }
+
     if (isLightsOff) {
       document.body.classList.add("lights-off-active");
       if (playerRef.current) {
@@ -475,7 +485,7 @@ export default function StreamingPlayer({
     } else {
       document.body.classList.remove("lights-off-active");
     }
-  }, [isLightsOff]);
+  }, [isLightsOff, isAppCinema]);
 
   useEffect(() => {
     return () => {
@@ -520,7 +530,7 @@ export default function StreamingPlayer({
   return (
     <>
       {/* Cinema Lights Off Overlay */}
-      {isLightsOff && (
+      {isLightsOff && !isAppCinema && (
         <>
           <div
             className="lights-backdrop"

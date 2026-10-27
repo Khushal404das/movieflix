@@ -49,9 +49,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
       shortName: 'MovieFlix Web',
       getUrl: (type, id, s, e) {
         if (type == 'tv') {
-          return 'https://movieflix.movie-flix.workers.dev/tv/$id?season=$s&episode=$e&cinema=1';
+          return 'https://movieflix.movie-flix.workers.dev/tv/$id?season=$s&episode=$e&cinema=1&app=1';
         }
-        return 'https://movieflix.movie-flix.workers.dev/movie/$id?cinema=1';
+        return 'https://movieflix.movie-flix.workers.dev/movie/$id?cinema=1&app=1';
       },
     ),
     PlayerServer(
@@ -165,6 +165,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.black)
+      ..enableZoom(false)
       ..setUserAgent(
         'Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Mobile Safari/537.36',
       )
@@ -184,6 +185,22 @@ class _PlayerScreenState extends State<PlayerScreen> {
             }
           },
           onPageFinished: (url) {
+            _controller.runJavaScript('''
+              (function() {
+                try {
+                  document.body.classList.add("app-cinema-mode");
+                  document.body.style.overflow = "hidden";
+                  document.body.style.position = "fixed";
+                  document.body.style.width = "100vw";
+                  document.body.style.height = "100vh";
+                  document.documentElement.style.overflow = "hidden";
+                  const btn = document.querySelector(".floating-lights-on-btn");
+                  if (btn) btn.remove();
+                  const backdrop = document.querySelector(".lights-backdrop");
+                  if (backdrop) backdrop.remove();
+                } catch(e) {}
+              })();
+            ''');
             if (mounted) {
               setState(() {
                 _isLoading = false;

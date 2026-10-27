@@ -61,53 +61,54 @@ class _HomeScreenState extends State<HomeScreen> {
       onRefresh: _load,
       child: CustomScrollView(
         slivers: [
-          // Logo AppBar
+          // Logo AppBar (properly inset below mobile status bar)
           SliverAppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppTheme.background,
             floating: true,
             snap: true,
+            pinned: false,
             elevation: 0,
-            expandedHeight: 60,
-            flexibleSpace: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  Image.asset(
+            automaticallyImplyLeading: false,
+            title: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
                     'assets/images/logo.png',
-                    height: 40,
-                    width: 40,
+                    height: 36,
+                    width: 36,
                     fit: BoxFit.contain,
                   ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'MovieFlix',
+                ),
+                const SizedBox(width: 10),
+                const Text(
+                  'MovieFlix',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5)),
+                  ),
+                  child: const Text(
+                    'LIVE',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
+                      color: AppTheme.primary,
+                      fontSize: 10,
                       fontWeight: FontWeight.w800,
-                      letterSpacing: 0.5,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primary.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5)),
-                    ),
-                    child: const Text(
-                      'LIVE',
-                      style: TextStyle(
-                        color: AppTheme.primary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
 
