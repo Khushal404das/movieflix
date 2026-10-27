@@ -183,7 +183,7 @@ export default function AppPage() {
                       </svg>
                       <div className="btn-text-col">
                         <span>DOWNLOAD ANDROID APP (.APK)</span>
-                        <small>MovieFlix.apk · v1.0.0 · 51 MB · Direct Install</small>
+                        <small>MovieFlix.apk · v1.0.1 · 53.5 MB · Direct Install</small>
                       </div>
                     </a>
                   </div>
