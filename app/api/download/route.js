@@ -1,42 +1,58 @@
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
 export const dynamic = "force-dynamic";
+
+let cachedDownloadUrl = null;
+let cacheExpiresAt = 0;
 
 export async function GET() {
   try {
-    // 1. If local APK exists and is accessible (e.g. running locally via Next.js)
-    const localPath = path.join(process.cwd(), "reelhouse_flutter", "build", "app", "outputs", "flutter-apk", "app-release.apk");
-    if (fs.existsSync(localPath) && process.env.NODE_ENV !== "production") {
-      const fileBuffer = fs.readFileSync(localPath);
-      return new NextResponse(fileBuffer, {
+    const now = Date.now();
+    // Return cached direct download URL if valid (cache for 15 minutes)
+    if (cachedDownloadUrl && now < cacheExpiresAt) {
+      return new Response(null, {
+        status: 302,
         headers: {
-          "Content-Type": "application/vnd.android.package-archive",
-          "Content-Disposition": 'attachment; filename="MovieFlix.apk"',
-          "Content-Length": String(fileBuffer.length),
+          Location: cachedDownloadUrl,
+          "Cache-Control": "no-cache",
         },
       });
     }
 
-    // 2. In Cloudflare Workers / Edge / Production, redirect directly to GitHub Release pre-signed S3 download
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "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";
-    const assetRes = await fetch("https://api.github.com/repos/Khushal404das/movieflix/releases/assets/681529812", {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-        Accept: "application/octet-stream",
-      },
-      redirect: "manual",
-    });
+    const assetRes = await fetch(
+      "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/681529812",
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: "application/octet-stream",
+          "User-Agent": "MovieFlix-App/1.0",
+        },
+        redirect: "manual",
+      }
+    );
 
     const downloadLocation = assetRes.headers.get("location");
     if (downloadLocation) {
-      return NextResponse.redirect(downloadLocation, 302);
+      cachedDownloadUrl = downloadLocation;
+      cacheExpiresAt = now + 15 * 60 * 1000; // 15 minutes
+
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: downloadLocation,
+          "Cache-Control": "no-cache",
+        },
+      });
     }
 
-    return new NextResponse("Download redirect unavailable", { status: 502 });
+    const errorText = await assetRes.text().catch(() => "");
+    console.error("GitHub API error:", assetRes.status, errorText);
+
+    return new Response(
+      `Download temporarily unavailable (${assetRes.status}). Please try again shortly.`,
+      { status: 502, headers: { "Content-Type": "text/plain" } }
+    );
   } catch (err) {
-    console.error("Download error:", err);
-    return new NextResponse("Download error: " + err.message, { status: 500 });
+    console.error("Download route exception:", err);
+    return new Response("Download error: " + err.message, { status: 500 });
   }
 }
