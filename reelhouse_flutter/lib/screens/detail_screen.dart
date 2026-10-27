@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'player_screen.dart';
 import '../models/media_item.dart';
 import '../services/tmdb_service.dart';
 import '../theme/app_theme.dart';
@@ -298,13 +299,12 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   void _openStream(BuildContext context) {
-    final id = widget.item.id;
-    final type = widget.item.mediaType;
-    final url = type == 'tv'
-        ? 'https://vidsrc.cc/v2/embed/tv/$id'
-        : 'https://vidsrc.cc/v2/embed/movie/$id';
-
-    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PlayerScreen(item: widget.item),
+      ),
+    );
   }
 
   void _openTrailer() {

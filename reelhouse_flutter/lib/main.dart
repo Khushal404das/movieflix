@@ -27,7 +27,7 @@ class ReelHouseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ReelHouse',
+      title: 'MovieFlix',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
       home: const MainShell(),

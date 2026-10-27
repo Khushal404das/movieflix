@@ -61,6 +61,56 @@ class _HomeScreenState extends State<HomeScreen> {
       onRefresh: _load,
       child: CustomScrollView(
         slivers: [
+          // Logo AppBar
+          SliverAppBar(
+            backgroundColor: Colors.transparent,
+            floating: true,
+            snap: true,
+            elevation: 0,
+            expandedHeight: 60,
+            flexibleSpace: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'MovieFlix',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5)),
+                    ),
+                    child: const Text(
+                      'LIVE',
+                      style: TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
           // Hero Banner
           if (hero != null)
             SliverToBoxAdapter(child: _HeroBanner(item: hero)),
