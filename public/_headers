@@ -1,6 +1,16 @@
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
 /downloads/*.apk
   Content-Type: application/vnd.android.package-archive
   Content-Disposition: attachment
   Cache-Control: public, max-age=86400
+
+/og-image.*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

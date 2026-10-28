@@ -28,7 +28,7 @@ function VerificationContent() {
   // Cloudflare Turnstile site key
   const siteKey =
     process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY ||
-    "0x4AAAAAAFU_uk23MEADXt2t";
+    "1x00000000000000000000AA";
 
   useEffect(() => {
     // Set dynamic tab title

@@ -14,6 +14,19 @@ import StudiosPlatformsRow from "@/components/StudiosPlatformsRow";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
+export const metadata = {
+  title: "Watch Online – Trending Movies, TV Series & Anime",
+  description: "Browse and stream trending HD movies, top TV shows, K-dramas, and dubbed anime on MovieFlix. Fast streaming with no subscription.",
+  alternates: {
+    canonical: "https://movieflix.stream/home",
+  },
+  openGraph: {
+    title: "Watch Online – Trending Movies, TV Series & Anime | MovieFlix",
+    description: "Browse and stream trending HD movies, top TV shows, K-dramas, and dubbed anime on MovieFlix.",
+    url: "https://movieflix.stream/home",
+  }
+};
+
 export default async function StreamingHome() {
   // Fetch real dynamic categories concurrently from TMDB
   const [

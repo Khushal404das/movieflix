@@ -153,11 +153,36 @@ export async function titleMeta(type, id) {
   const d = await getTitle(type, id);
   if (!d) return { title: "Stream Online – MovieFlix" };
   const t = norm(d, type);
+  const pageUrl = `https://movieflix.stream/${type}/${id}`;
+  const imgUrl = t.backdrop || t.poster || "https://movieflix.stream/og-image.jpg";
+  const desc = t.overview?.slice(0, 160) || `Watch ${t.title} (${t.year}) online free in full HD on MovieFlix. Fast streaming, no signup required.`;
+
   return {
     title: `Watch ${t.title} (${t.year}) Full HD – MovieFlix`,
-    description: t.overview?.slice(0, 160) || `Stream ${t.title} online for free in HD quality.`,
+    description: desc,
+    alternates: {
+      canonical: pageUrl,
+    },
     openGraph: {
-      images: t.backdrop ? [t.backdrop] : (t.poster ? [t.poster] : [])
+      title: `Watch ${t.title} (${t.year}) Full HD – MovieFlix`,
+      description: desc,
+      url: pageUrl,
+      siteName: "MovieFlix",
+      type: type === "tv" ? "video.tv_show" : "video.movie",
+      images: [
+        {
+          url: imgUrl,
+          width: 1200,
+          height: 630,
+          alt: `${t.title} Poster`,
+        }
+      ]
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Watch ${t.title} (${t.year}) Full HD – MovieFlix`,
+      description: desc,
+      images: [imgUrl],
     }
   };
 }

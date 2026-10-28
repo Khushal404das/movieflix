@@ -70,7 +70,7 @@ export default function AppPage() {
         {/* Hero Title Header */}
         <section className="landing-hero-section">
           <h1 className="landing-main-title">
-            Everything You <span className="highlight-love">Love</span> to Watch
+            Watch Movies & Series Free – Everything You <span className="highlight-love">Love</span>
           </h1>
           <p className="landing-subtitle">
             Unlimited Movies & TV Series on your Web browser, Android phone, or iOS device. Completely free forever.

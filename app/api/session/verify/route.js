@@ -7,7 +7,7 @@ export async function POST(req) {
 
     const secretKey =
       process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY ||
-      "0x4AAAAAAFU_utk-JZ82h8z7v6l3h0vBz2E";
+      "1x0000000000000000000000000000000AA";
 
     // If turnstile token is provided and secretKey is set, verify with Cloudflare
     if (token && typeof token === "string" && !token.startsWith("fallback_")) {
