@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import TurnstileWidget from "./TurnstileWidget";
 
@@ -15,6 +15,7 @@ const PRESET_AVATARS = [
 
 export default function AuthModal() {
   const router = useRouter();
+  const pathname = usePathname();
   const {
     isAuthModalOpen,
     authModalMode,
@@ -58,6 +59,13 @@ export default function AuthModal() {
     setSuccessMsg("");
     setTurnstileToken(null);
     setTurnstileReset((prev) => prev + 1);
+  };
+
+  const handleModalClose = () => {
+    closeAuthModal();
+    if (!user && pathname !== "/" && pathname !== "/download" && pathname !== "/app") {
+      router.push("/");
+    }
   };
 
   // Real server-side validation of Cloudflare Turnstile token
@@ -164,13 +172,13 @@ export default function AuthModal() {
   };
 
   return (
-    <div className="auth-backdrop" onClick={closeAuthModal}>
+    <div className="auth-backdrop" onClick={handleModalClose}>
       <div className="auth-modal-card" onClick={(e) => e.stopPropagation()}>
         {/* Close Button */}
         <button
           type="button"
           className="auth-close-btn"
-          onClick={closeAuthModal}
+          onClick={handleModalClose}
           aria-label="Close"
         >
           &times;

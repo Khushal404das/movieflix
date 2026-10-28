@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import MobileNav from "@/components/MobileNav";
 import AuthModal from "@/components/AuthModal";
@@ -12,20 +12,42 @@ import { useAuth } from "@/lib/AuthContext";
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isVerifyRoute = pathname?.startsWith("/verify");
   const { user, loading, openAuthModal } = useAuth();
-  const hasPromptedRef = useRef(false);
+  const hasPromptedInitialRef = useRef(false);
 
-  // First-time visit detection: prompt login if no active user session
+  const isPublicRoute =
+    pathname === "/" ||
+    pathname === "/app" ||
+    pathname === "/download" ||
+    isVerifyRoute;
+
+  // 1. Route Protection: Disallow unauthenticated visitors on /home and other content pages
   useEffect(() => {
     if (loading) return;
-    if (isVerifyRoute) return;
+    if (isPublicRoute) return;
 
     if (!user) {
       try {
         const stored = typeof window !== "undefined" ? localStorage.getItem("movieflix_user_session") : null;
-        if (!stored && !hasPromptedRef.current) {
-          hasPromptedRef.current = true;
+        if (!stored) {
+          router.replace("/");
+          openAuthModal("signin");
+        }
+      } catch (_) {}
+    }
+  }, [user, loading, pathname, isPublicRoute, router, openAuthModal]);
+
+  // 2. First-time visit auto-prompt on landing page
+  useEffect(() => {
+    if (loading || isVerifyRoute) return;
+
+    if (!user) {
+      try {
+        const stored = typeof window !== "undefined" ? localStorage.getItem("movieflix_user_session") : null;
+        if (!stored && !hasPromptedInitialRef.current) {
+          hasPromptedInitialRef.current = true;
           const timer = setTimeout(() => {
             openAuthModal("signin");
           }, 600);
@@ -34,6 +56,40 @@ export default function AppShell({ children }) {
       } catch (_) {}
     }
   }, [user, loading, isVerifyRoute, openAuthModal]);
+
+  // 3. Global Click Interception: If not logged in, clicking on ANY link, button, or card opens login directly
+  useEffect(() => {
+    if (loading || user) return;
+
+    // Check if session is already saved in localStorage
+    try {
+      const stored = localStorage.getItem("movieflix_user_session");
+      if (stored) return;
+    } catch (_) {}
+
+    const handleGlobalClick = (e) => {
+      // Allow interactions within the authentication modal itself
+      if (e.target.closest(".auth-backdrop") || e.target.closest(".auth-modal-card")) {
+        return;
+      }
+
+      // Allow direct APK download links
+      if (e.target.closest("a[download]") || e.target.closest('a[href*="/api/download"]')) {
+        return;
+      }
+
+      // Intercept any click and show login popup directly
+      e.preventDefault();
+      e.stopPropagation();
+      openAuthModal("signin");
+    };
+
+    // Use capture phase to intercept before React router or link navigations
+    document.addEventListener("click", handleGlobalClick, true);
+    return () => {
+      document.removeEventListener("click", handleGlobalClick, true);
+    };
+  }, [user, loading, openAuthModal]);
 
   if (isVerifyRoute) {
     return (
