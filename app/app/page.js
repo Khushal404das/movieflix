@@ -87,15 +87,30 @@ export default function AppPage() {
 
           {/* Main CTA Button */}
           <div className="landing-cta-box">
-            <Link href="/home" className="btn-landing-home">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-              </svg>
-              <span>LAUNCH WEB APP</span>
-            </Link>
-            <span className="cta-sub-notice">Instant High-Speed Streaming Online</span>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", marginBottom: "10px" }}>
+              <Link href="/home" className="btn-landing-home">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span>LAUNCH WEB APP</span>
+              </Link>
+              <a
+                href="/api/download"
+                download="MovieFlix.apk"
+                className="btn-landing-home"
+                style={{ background: "#22c55e", borderColor: "#16a34a", textDecoration: "none" }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>DOWNLOAD APK</span>
+              </a>
+            </div>
+            <span className="cta-sub-notice">Instant High-Speed Streaming • Android APK • iOS PWA</span>
             <a href="#pick-device" className="landing-scroll-link">
-              See details for Web, Android & iOS <span className="down-arrow">↓</span>
+              See installation details for Web, Android & iOS <span className="down-arrow">↓</span>
             </a>
           </div>
         </section>

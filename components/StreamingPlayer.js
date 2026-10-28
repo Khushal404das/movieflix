@@ -835,76 +835,7 @@ export default function StreamingPlayer({
           )}
         </div>
 
-        {/* Vidbolt Remote Control Bar (Interactive Host Console) */}
-        {isVidboltActive && (
-          <div className="vidbolt-remote-dock">
-            <div className="remote-controls-left">
-              <button
-                type="button"
-                className="remote-action-btn play-pause-btn"
-                onClick={handleTogglePlay}
-                title={isPlaying ? "Pause (Space)" : "Play (Space)"}
-              >
-                {isPlaying ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                )}
-                <span>{isPlaying ? "Pause" : "Play"}</span>
-              </button>
-
-              <button
-                type="button"
-                className="remote-action-btn"
-                onClick={() => handleSeekDelta(-10)}
-                title="Rewind 10 seconds (←)"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 17l-5-5 5-5M18 17l-5-5 5-5"/></svg>
-                <span>-10s</span>
-              </button>
-
-              <button
-                type="button"
-                className="remote-action-btn"
-                onClick={() => handleSeekDelta(10)}
-                title="Forward 10 seconds (→)"
-              >
-                <span>+10s</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>
-              </button>
-
-              {/* Time display */}
-              {(currentTime > 0 || duration > 0) && (
-                <div className="remote-time-badge">
-                  <span className="curr-time">{formatTime(currentTime)}</span>
-                  {duration > 0 && <span className="dur-time"> / {formatTime(duration)}</span>}
-                </div>
-              )}
-            </div>
-
-            <div className="remote-controls-right">
-              {/* Volume / Mute Button */}
-              <button
-                type="button"
-                className="remote-action-btn"
-                onClick={handleToggleMute}
-                title={isMuted ? "Unmute (M)" : "Mute (M)"}
-              >
-                {isMuted ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                )}
-                <span className="hide-xs">{isMuted ? "Muted" : "Audio"}</span>
-              </button>
-
-              {/* Multi-audio badge */}
-              <div className="remote-pill-tag">
-                <span>🔊 Multi-Audio & Subtitles Active</span>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Vidbolt Remote Control Bar removed */}
 
         {/* TV Series Quick Navigation Bar */}
         {type === "tv" && (

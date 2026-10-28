@@ -380,6 +380,9 @@ export default function Header() {
 
           <div className="mobile-nav-links">
             <Link href="/" className="mobile-link">Home</Link>
+            <Link href="/app" className="mobile-link highlight-download-link" onClick={() => setMobileMenuOpen(false)} style={{ color: "#22c55e", fontWeight: "600" }}>
+              📲 Download App (APK / iOS)
+            </Link>
             <Link href="/browse/tv" className="mobile-link">TV Shows</Link>
             <Link href="/browse/movie" className="mobile-link">Movies</Link>
             <Link href="/browse/tv?genre=16" className="mobile-link">⚡ Anime Series</Link>

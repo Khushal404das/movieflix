@@ -10,10 +10,11 @@ class TmdbService {
       [Map<String, String>? params]) async {
     final uri = Uri.parse('$_baseUrl$path').replace(queryParameters: {
       'api_key': _apiKey,
+      'language': 'en-US',
       ...?params,
     });
-    final res = await http.get(uri);
-    if (res.statusCode != 200) throw Exception('TMDB error ${res.statusCode}');
+    final res = await http.get(uri).timeout(const Duration(seconds: 15));
+    if (res.statusCode != 200) throw Exception('TMDB error \${res.statusCode}');
     return json.decode(res.body) as Map<String, dynamic>;
   }
 

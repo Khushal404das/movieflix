@@ -54,7 +54,7 @@ export async function GET(request) {
     if (!assetUrl) {
       assetUrl = isIos
         ? "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682794186"
-        : "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682735526";
+        : "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/684746398";
     }
 
     const assetRes = await fetch(assetUrl, {

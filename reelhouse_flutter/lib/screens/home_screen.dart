@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<MediaItem> _topRated   = [];
   List<MediaItem> _nowPlaying = [];
   bool _loading = true;
+  String? _error;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _load() async {
+    if (mounted) setState(() { _loading = true; _error = null; });
     try {
       final results = await Future.wait([
         TmdbService.getTrending(),
@@ -40,10 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
           _topRated   = results[2];
           _nowPlaying = results[3];
           _loading    = false;
+          _error      = null;
         });
       }
     } catch (e) {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) setState(() { _loading = false; _error = e.toString(); });
     }
   }
 
@@ -51,6 +54,44 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
+    }
+
+    // Show error with retry button if loading failed
+    if (_error != null && _trending.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.wifi_off_rounded, color: Colors.white38, size: 56),
+              const SizedBox(height: 16),
+              const Text(
+                'Could not load movies',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Check your internet connection and try again.',
+                style: TextStyle(color: Colors.white54, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: _load,
+                icon: const Icon(Icons.refresh_rounded, size: 18),
+                label: const Text('Retry', style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     final hero = _trending.isNotEmpty ? _trending.first : null;
@@ -117,20 +158,28 @@ class _HomeScreenState extends State<HomeScreen> {
             SliverToBoxAdapter(child: _HeroBanner(item: hero)),
 
           // Trending
-          const _SectionHeader(title: '🔥 Trending'),
-          _MediaRow(items: _trending.skip(1).take(12).toList()),
+          if (_trending.length > 1) ...[
+            const _SectionHeader(title: '🔥 Trending'),
+            _MediaRow(items: _trending.skip(1).take(12).toList()),
+          ],
 
           // Now Playing
-          const _SectionHeader(title: '🎬 Now Playing'),
-          _MediaRow(items: _nowPlaying.take(12).toList()),
+          if (_nowPlaying.isNotEmpty) ...[
+            const _SectionHeader(title: '🎬 Now Playing'),
+            _MediaRow(items: _nowPlaying.take(12).toList()),
+          ],
 
           // Popular
-          const _SectionHeader(title: '🌟 Popular Movies'),
-          _MediaRow(items: _popular.take(12).toList()),
+          if (_popular.isNotEmpty) ...[
+            const _SectionHeader(title: '🌟 Popular Movies'),
+            _MediaRow(items: _popular.take(12).toList()),
+          ],
 
           // Top Rated
-          const _SectionHeader(title: '⭐ Top Rated'),
-          _MediaRow(items: _topRated.take(12).toList()),
+          if (_topRated.isNotEmpty) ...[
+            const _SectionHeader(title: '⭐ Top Rated'),
+            _MediaRow(items: _topRated.take(12).toList()),
+          ],
 
           const SliverPadding(padding: EdgeInsets.only(bottom: 80)),
         ],
