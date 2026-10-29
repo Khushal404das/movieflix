@@ -61,9 +61,16 @@ export default function AuthModal() {
     setTurnstileReset((prev) => prev + 1);
   };
 
+  const isPlayerRoute = Boolean(
+    pathname &&
+      (pathname.startsWith("/movie/") ||
+        pathname.startsWith("/tv/") ||
+        pathname.startsWith("/classics/"))
+  );
+
   const handleModalClose = () => {
     closeAuthModal();
-    if (!user && pathname !== "/" && pathname !== "/download" && pathname !== "/app") {
+    if (!user && !isPlayerRoute && pathname !== "/" && pathname !== "/download" && pathname !== "/app") {
       router.push("/");
     }
   };

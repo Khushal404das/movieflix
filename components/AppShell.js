@@ -14,6 +14,12 @@ export default function AppShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const isVerifyRoute = pathname?.startsWith("/verify");
+  const isPlayerRoute = Boolean(
+    pathname &&
+      (pathname.startsWith("/movie/") ||
+        pathname.startsWith("/tv/") ||
+        pathname.startsWith("/classics/"))
+  );
   const { user, loading, openAuthModal } = useAuth();
   const hasPromptedInitialRef = useRef(false);
 
@@ -21,6 +27,7 @@ export default function AppShell({ children }) {
     pathname === "/" ||
     pathname === "/app" ||
     pathname === "/download" ||
+    isPlayerRoute ||
     isVerifyRoute;
 
   // 1. Route Protection: Disallow unauthenticated visitors on /home and other content pages
@@ -39,9 +46,9 @@ export default function AppShell({ children }) {
     }
   }, [user, loading, pathname, isPublicRoute, router, openAuthModal]);
 
-  // 2. First-time visit auto-prompt on landing page
+  // 2. First-time visit auto-prompt on landing page (never on player pages)
   useEffect(() => {
-    if (loading || isVerifyRoute) return;
+    if (loading || isVerifyRoute || isPlayerRoute) return;
 
     if (!user) {
       try {
@@ -55,11 +62,11 @@ export default function AppShell({ children }) {
         }
       } catch (_) {}
     }
-  }, [user, loading, isVerifyRoute, openAuthModal]);
+  }, [user, loading, isVerifyRoute, isPlayerRoute, openAuthModal]);
 
-  // 3. Global Click Interception: If not logged in, clicking on ANY link, button, or card opens login directly
+  // 3. Global Click Interception: Never intercept or ask users to login on the player page where movie is playing
   useEffect(() => {
-    if (loading || user) return;
+    if (loading || user || isPlayerRoute) return;
 
     // Check if session is already saved in localStorage
     try {
@@ -68,6 +75,20 @@ export default function AppShell({ children }) {
     } catch (_) {}
 
     const handleGlobalClick = (e) => {
+      // Never ask to login on the player page
+      if (isPlayerRoute) return;
+
+      // Allow interactions within player and movie detail components
+      if (
+        e.target.closest(".title-detail-view") ||
+        e.target.closest(".player-wrapper") ||
+        e.target.closest(".cinema-player-root") ||
+        e.target.closest(".player-screen-container") ||
+        e.target.closest(".streaming-player-container")
+      ) {
+        return;
+      }
+
       // Allow interactions within the authentication modal itself
       if (e.target.closest(".auth-backdrop") || e.target.closest(".auth-modal-card")) {
         return;
@@ -76,6 +97,21 @@ export default function AppShell({ children }) {
       // Allow direct APK download links
       if (e.target.closest("a[download]") || e.target.closest('a[href*="/api/download"]')) {
         return;
+      }
+
+      // Allow clicking direct movie/tv/classics links to watch without forcing login
+      const link = e.target.closest("a");
+      if (link && link.href) {
+        try {
+          const url = new URL(link.href, window.location.origin);
+          if (
+            url.pathname.startsWith("/movie/") ||
+            url.pathname.startsWith("/tv/") ||
+            url.pathname.startsWith("/classics/")
+          ) {
+            return;
+          }
+        } catch (_) {}
       }
 
       // Intercept any click and show login popup directly
@@ -89,7 +125,7 @@ export default function AppShell({ children }) {
     return () => {
       document.removeEventListener("click", handleGlobalClick, true);
     };
-  }, [user, loading, openAuthModal]);
+  }, [user, loading, isPlayerRoute, openAuthModal]);
 
   if (isVerifyRoute) {
     return (
