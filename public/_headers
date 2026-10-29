@@ -3,6 +3,7 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: browsing-topics=(), conversion-measurement=(), run-ad-auction=(), join-ad-interest-group=()
 
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable

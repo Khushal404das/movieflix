@@ -449,6 +449,21 @@ export default function StreamingPlayer({
     }
   };
 
+  // Anti-ad redirect and popup shield: block rogue popups & top-level redirects
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const originalOpen = window.open;
+    window.open = function (...args) {
+      console.warn("Blocked rogue ad popup window:", args[0]);
+      return null;
+    };
+
+    return () => {
+      window.open = originalOpen;
+    };
+  }, []);
+
 
 
   // Cinema Lights Off handler
@@ -760,6 +775,41 @@ export default function StreamingPlayer({
               </div>
             )}
 
+            {/* Direct Remote Controls (Ad-free) */}
+            {isVidboltActive && (
+              <>
+                <button
+                  type="button"
+                  className="tool-btn"
+                  onClick={handleTogglePlay}
+                  title={isPlaying ? "Pause Video" : "Play Video"}
+                  aria-label={isPlaying ? "Pause" : "Play"}
+                >
+                  {isPlaying ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  )}
+                  <span className="hide-xs">{isPlaying ? "Pause" : "Play"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="tool-btn"
+                  onClick={handleToggleMute}
+                  title={isMuted ? "Unmute Volume" : "Mute Volume"}
+                  aria-label={isMuted ? "Unmute" : "Mute"}
+                >
+                  {isMuted ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3 2.5-2.5-1-1L15.5 11l-2.5-2.5-1 1 2.5 2.5-2.5 2.5 1 1 2.5-2.5 2.5 2.5 1-1L16.5 12z"/></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+                  )}
+                  <span className="hide-xs">{isMuted ? "Unmute" : "Mute"}</span>
+                </button>
+              </>
+            )}
+
             {/* Toggle Lights Button */}
             <button
               type="button"
@@ -802,6 +852,7 @@ export default function StreamingPlayer({
               key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
               src={currentEmbedUrl}
               className="streaming-iframe"
+              sandbox="allow-forms allow-scripts allow-same-origin allow-presentation"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
               loading="eager"
