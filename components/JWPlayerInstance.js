@@ -347,7 +347,6 @@ export default function JWPlayerInstance({
             key={`cinema-movie-${id}-${season}-${episode}`}
             src={resolvedMovieStream}
             className="player-iframe"
-            sandbox="allow-forms allow-scripts allow-same-origin allow-presentation"
             allowFullScreen
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             title={`${title} - Cinema Player`}

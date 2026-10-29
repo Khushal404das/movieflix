@@ -852,7 +852,6 @@ export default function StreamingPlayer({
               key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
               src={currentEmbedUrl}
               className="streaming-iframe"
-              sandbox="allow-forms allow-scripts allow-same-origin allow-presentation"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
               allowFullScreen
               loading="eager"
