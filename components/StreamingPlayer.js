@@ -39,15 +39,15 @@ const SERVERS = [
     getUrl: (type, id, s, e, audio = "hindi") => {
       const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
       if (type === "anime-mal") {
-        return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+        return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
       }
       if (type === "anime" || type === "anilist") {
-        return `https://vidbolt.pro/anime/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+        return `https://vidbolt.pro/anime/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
       }
       if (type === "tv") {
-        return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+        return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
       }
-      return `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+      return `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
     },
   },
   {
@@ -323,9 +323,19 @@ export default function StreamingPlayer({
       if (!data || typeof data !== "object") return;
 
       switch (data.type) {
-        case "ready":
+        case "ready": {
           setIsPlayerReady(true);
+          // Auto-disable ads on player ready
+          const iframe = document.getElementById("vidbolt-player");
+          if (iframe?.contentWindow) {
+            setTimeout(() => {
+              iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
+              iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
+              iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
+            }, 500);
+          }
           break;
+        }
         case "play":
           setIsPlaying(true);
           break;
