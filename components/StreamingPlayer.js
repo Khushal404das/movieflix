@@ -449,42 +449,49 @@ export default function StreamingPlayer({
     }
   };
 
-  // Back navigation handler
-  const handleBack = useCallback(() => {
+  // Navigate directly to /home on back and close
+  const handleGoHome = useCallback(() => {
     if (typeof window !== "undefined") {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
       }
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        router.push("/home");
-      }
+      document.body.classList.remove("app-cinema-mode", "lights-off-active");
+      router.push("/home");
+      setTimeout(() => {
+        if (window.location.pathname !== "/home") {
+          window.location.href = "/home";
+        }
+      }, 50);
     }
   }, [router]);
 
-  // Close player handler (exits lights off / theater or goes back)
-  const handleClose = useCallback(() => {
-    if (typeof window !== "undefined") {
+  const handleBack = handleGoHome;
+  const handleClose = handleGoHome;
+
+  // Intercept mobile hardware/gesture back button to always navigate directly to /home
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.history.pushState({ playerPage: true }, "", window.location.href);
+
+    const handlePopState = () => {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
-        return;
       }
-      if (isLightsOff && !isAppCinema) {
-        setIsLightsOff(false);
-        return;
-      }
-      if (isTheater) {
-        setIsTheater(false);
-        return;
-      }
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        router.push("/home");
-      }
-    }
-  }, [isLightsOff, isAppCinema, isTheater, router]);
+      document.body.classList.remove("app-cinema-mode", "lights-off-active");
+      router.push("/home");
+      setTimeout(() => {
+        if (window.location.pathname !== "/home") {
+          window.location.href = "/home";
+        }
+      }, 50);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [router]);
 
   // Cinema Lights Off handler
   useEffect(() => {
@@ -616,13 +623,17 @@ export default function StreamingPlayer({
               type="button"
               className="player-back-nav-btn"
               onClick={handleBack}
-              aria-label="Back"
-              title="Back to previous page"
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                handleBack();
+              }}
+              aria-label="Home"
+              title="Return to Home"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
-              <span className="player-back-text">Back</span>
+              <span className="player-back-text">Home</span>
             </button>
             <div className="player-badge">
               <span className="live-dot" />
@@ -836,8 +847,12 @@ export default function StreamingPlayer({
               type="button"
               className="player-close-action-btn"
               onClick={handleClose}
-              aria-label="Close Player"
-              title="Close Player"
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              aria-label="Close"
+              title="Close to Home"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 6 6 18M6 6l12 12"/>
@@ -854,13 +869,17 @@ export default function StreamingPlayer({
               type="button"
               className="player-floating-btn player-floating-back"
               onClick={handleBack}
-              aria-label="Go Back"
-              title="Go Back"
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                handleBack();
+              }}
+              aria-label="Home"
+              title="Return to Home"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7"/>
               </svg>
-              <span className="floating-back-text">Back</span>
+              <span className="floating-back-text">Home</span>
             </button>
 
             <div className="player-floating-title">
@@ -872,8 +891,12 @@ export default function StreamingPlayer({
               type="button"
               className="player-floating-btn player-floating-close"
               onClick={handleClose}
-              aria-label="Close Player"
-              title="Close Player"
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              aria-label="Close"
+              title="Close to Home"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 6 6 18M6 6l12 12"/>
