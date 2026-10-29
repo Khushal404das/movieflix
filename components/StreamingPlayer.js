@@ -449,6 +449,43 @@ export default function StreamingPlayer({
     }
   };
 
+  // Back navigation handler
+  const handleBack = useCallback(() => {
+    if (typeof window !== "undefined") {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        router.push("/home");
+      }
+    }
+  }, [router]);
+
+  // Close player handler (exits lights off / theater or goes back)
+  const handleClose = useCallback(() => {
+    if (typeof window !== "undefined") {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+        return;
+      }
+      if (isLightsOff && !isAppCinema) {
+        setIsLightsOff(false);
+        return;
+      }
+      if (isTheater) {
+        setIsTheater(false);
+        return;
+      }
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        router.push("/home");
+      }
+    }
+  }, [isLightsOff, isAppCinema, isTheater, router]);
+
   // Cinema Lights Off handler
   useEffect(() => {
     if (isAppCinema) {
@@ -574,10 +611,24 @@ export default function StreamingPlayer({
 
         {/* Top Player Header Controls */}
         <div className="player-topbar">
-          <div className="player-badge">
-            <span className="live-dot" />
-            <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : title}</b>
-            <span className="res-badge">HD</span>
+          <div className="player-topbar-left">
+            <button
+              type="button"
+              className="player-back-nav-btn"
+              onClick={handleBack}
+              aria-label="Back"
+              title="Back to previous page"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span className="player-back-text">Back</span>
+            </button>
+            <div className="player-badge">
+              <span className="live-dot" />
+              <b>{type === "tv" ? `Season ${currentSeason} : Episode ${currentEpisode}` : title}</b>
+              <span className="res-badge">HD</span>
+            </div>
           </div>
 
           {/* Exact User Trigger Container: Playback Mode & Change Server Controls */}
@@ -779,11 +830,57 @@ export default function StreamingPlayer({
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="15" x="2" y="4" rx="2"/><path d="m9 10 3 2 3-2"/></svg>
               <span className="hide-xs">{isTheater ? "Normal" : "Theater"}</span>
             </button>
+
+            {/* Close Player Button */}
+            <button
+              type="button"
+              className="player-close-action-btn"
+              onClick={handleClose}
+              aria-label="Close Player"
+              title="Close Player"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Main Video Cinema Screen */}
         <div className="player-screen-container">
+          {/* Floating Back / Close Bar — on mobile app / cinema mode / fullscreen */}
+          <div className={`player-floating-header ${isAppCinema ? "is-app-cinema" : ""}`}>
+            <button
+              type="button"
+              className="player-floating-btn player-floating-back"
+              onClick={handleBack}
+              aria-label="Go Back"
+              title="Go Back"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span className="floating-back-text">Back</span>
+            </button>
+
+            <div className="player-floating-title">
+              <span className="floating-live-dot" />
+              <span className="floating-title-text">{type === "tv" ? `S${currentSeason} : E${currentEpisode} • ${title}` : title}</span>
+            </div>
+
+            <button
+              type="button"
+              className="player-floating-btn player-floating-close"
+              onClick={handleClose}
+              aria-label="Close Player"
+              title="Close Player"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6 6 18M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+
           {playbackMode === "cinema" ? (
             <CinemaPlayer
               key={`cinema-${type}-${id}-${currentSeason}-${currentEpisode}`}
@@ -792,6 +889,8 @@ export default function StreamingPlayer({
               poster={backdrop || poster}
               mimeType={stream ? stream.mimeType : undefined}
               subtitles={stream ? stream.subtitles : []}
+              onBack={handleBack}
+              onClose={handleClose}
             />
           ) : (
             <iframe

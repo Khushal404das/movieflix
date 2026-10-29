@@ -35,7 +35,9 @@ export default function CinemaPlayer({
   mimeType, // 'hls' | 'mp4' | undefined (auto from URL)
   subtitles = [], // [{ label, src, srclang, default }]
   onEnded,
-  autoPlay = false
+  autoPlay = false,
+  onBack,
+  onClose
 }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
@@ -324,6 +326,35 @@ export default function CinemaPlayer({
     else el.requestFullscreen?.().catch(() => {});
   }, []);
 
+  const handleBack = useCallback(() => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+    if (typeof window !== "undefined") {
+      if (document.fullscreenElement) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "/";
+      }
+    }
+  }, [onBack]);
+
+  const handleClose = useCallback(() => {
+    if (onClose) {
+      onClose();
+      return;
+    }
+    if (fullscreen) {
+      toggleFs();
+      return;
+    }
+    handleBack();
+  }, [onClose, fullscreen, toggleFs, handleBack]);
+
   const togglePip = useCallback(async () => {
     const v = videoRef.current;
     if (!v) return;
@@ -514,12 +545,45 @@ export default function CinemaPlayer({
           </button>
         )}
 
-        {/* top title bar (shown before first play) */}
-        {title && !started && (
-          <div className="cp-title-bar" data-control="title">
-            <span>{title}</span>
-          </div>
-        )}
+        {/* top control bar with back & close buttons */}
+        <div
+          className={`cp-topbar ${controlsVisible ? "is-visible" : ""}`}
+          data-control="topbar"
+          onMouseMove={wake}
+        >
+          <button
+            type="button"
+            className="cp-btn cp-back-btn"
+            data-control
+            onClick={handleBack}
+            aria-label="Back"
+            title="Go back"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span className="cp-back-label">Back</span>
+          </button>
+
+          {title && (
+            <div className="cp-top-title" data-control="title" title={title}>
+              <span>{title}</span>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="cp-btn cp-close-btn"
+            data-control
+            onClick={handleClose}
+            aria-label="Close"
+            title="Close player"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
 
         {/* error state */}
         {error && (
