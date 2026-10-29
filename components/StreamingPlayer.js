@@ -188,7 +188,11 @@ export default function StreamingPlayer({
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
-    return () => document.removeEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
   }, [showAudioMenu]);
 
   // Verify session validity before streaming
@@ -476,11 +480,13 @@ export default function StreamingPlayer({
 
       window.addEventListener("keydown", handleKeyDown);
       document.addEventListener("mousedown", handleDocumentClick);
+      document.addEventListener("touchstart", handleDocumentClick, { passive: true });
 
       return () => {
         document.body.classList.remove("lights-off-active");
         window.removeEventListener("keydown", handleKeyDown);
         document.removeEventListener("mousedown", handleDocumentClick);
+        document.removeEventListener("touchstart", handleDocumentClick);
       };
     } else {
       document.body.classList.remove("lights-off-active");

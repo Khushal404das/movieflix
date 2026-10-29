@@ -1435,8 +1435,18 @@ html:has(body.app-cinema-mode) {
   height: 100vh !important;
   margin: 0 !important;
   padding: 0 !important;
-  touch-action: none !important;
+  touch-action: pan-x pan-y !important;
   background: #000000 !important;
+}
+
+/* Allow full touch interaction inside the player container */
+body.app-cinema-mode .player-screen-container,
+body.app-cinema-mode .player-screen-container iframe,
+body.app-cinema-mode .player-screen-container .cp-screen,
+body.app-cinema-mode .player-screen-container .cp-stage {
+  touch-action: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  pointer-events: auto !important;
 }
 
 body.app-cinema-mode .netflix-header,
@@ -1724,6 +1734,9 @@ body.lights-off-active .player-section-wrapper {
   font-size: 13px;
   font-weight: 600;
   transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 40px;
 }
 
 .tool-btn:hover, .tool-btn.active {
@@ -1883,6 +1896,10 @@ body.lights-off-active .player-section-wrapper {
   font-size: 13px;
   font-weight: 600;
   transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 44px;
+  min-width: 80px;
 }
 
 .ep-nav-btn:hover:not(:disabled) {
@@ -1965,6 +1982,8 @@ body.lights-off-active .player-section-wrapper {
   padding: 14px;
   text-align: left;
   transition: var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .episode-card:hover {
@@ -7624,6 +7643,8 @@ body.lights-off-active .player-section-wrapper {
   align-items: center;
   cursor: pointer;
   margin-bottom: 6px;
+  touch-action: none; /* prevent scroll while scrubbing on mobile */
+  -webkit-tap-highlight-color: transparent;
 }
 .cp-seek-track {
   position: relative;
@@ -7663,6 +7684,13 @@ body.lights-off-active .player-section-wrapper {
   box-shadow: 0 0 8px rgba(229, 9, 20, 0.7);
 }
 .cp-seek:hover .cp-seek-thumb { transform: translateY(-50%) scale(1); }
+.cp-seek:active .cp-seek-thumb { transform: translateY(-50%) scale(1.2); }
+@media (pointer: coarse) {
+  /* Always show thumb on touch screens so it's easy to grab */
+  .cp-seek-thumb { transform: translateY(-50%) scale(1) !important; width: 20px; height: 20px; margin-left: -10px; }
+  .cp-seek { height: 32px; } /* taller touch target */
+  .cp-seek-track { height: 5px; }
+}
 .cp-seek-tooltip {
   position: absolute;
   bottom: 100%;
@@ -7694,18 +7722,20 @@ body.lights-off-active .player-section-wrapper {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: none;
   background: transparent;
   color: #fff;
   cursor: pointer;
   border-radius: 6px;
   transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.cp-btn.cp-sm { width: 36px; height: 36px; }
+.cp-btn.cp-sm { width: 40px; height: 40px; }
 .cp-btn:hover { background: rgba(255, 255, 255, 0.16); }
-.cp-btn:active { transform: scale(0.94); }
+.cp-btn:active { transform: scale(0.94); background: rgba(255, 255, 255, 0.16); }
 .cp-btn.is-active { color: var(--netflix-red); }
 
 /* volume */
@@ -8286,8 +8316,8 @@ body.lights-off-active .player-section-wrapper {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   color: #ffffff;
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   font-size: 14px;
   cursor: pointer;
@@ -8295,6 +8325,8 @@ body.lights-off-active .player-section-wrapper {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .sheet-close-btn:hover {
@@ -8318,12 +8350,15 @@ body.lights-off-active .player-section-wrapper {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--text-muted);
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 40px;
 }
 
 .sheet-tab-chip:hover {
@@ -8354,7 +8389,7 @@ body.lights-off-active .player-section-wrapper {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid transparent;
   color: #e0e0e0;
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
@@ -8362,6 +8397,9 @@ body.lights-off-active .player-section-wrapper {
   text-align: left;
   transition: all 0.15s ease;
   width: 100%;
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .sheet-option-row:hover {

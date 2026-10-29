@@ -377,14 +377,21 @@ export default function CinemaPlayer({
     return rect.width ? x / rect.width : 0;
   }, []);
 
+  // Extract clientX from either a mouse or touch event
+  const clientXFromEvent = useCallback((e) => {
+    if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+    if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientX;
+    return e.clientX;
+  }, []);
+
   const onBarDown = useCallback((e) => {
     dragRef.current = true;
     setShowControls(true);
     cancelHide();
-    const f = fracFromEvent(e.clientX);
+    const f = fracFromEvent(clientXFromEvent(e));
     seekTo(f * (duration || 0));
     const onMove = (ev) => {
-      const ff = fracFromEvent(ev.clientX);
+      const ff = fracFromEvent(clientXFromEvent(ev));
       seekTo(ff * (duration || 0));
     };
     const onUp = () => {
@@ -392,10 +399,22 @@ export default function CinemaPlayer({
       if (playing) armHide();
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("touchmove", onMove);
+      document.removeEventListener("touchend", onUp);
+      document.removeEventListener("touchcancel", onUp);
     };
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
-  }, [fracFromEvent, seekTo, duration, playing, armHide, cancelHide]);
+    document.addEventListener("touchmove", onMove, { passive: false });
+    document.addEventListener("touchend", onUp);
+    document.addEventListener("touchcancel", onUp);
+  }, [fracFromEvent, clientXFromEvent, seekTo, duration, playing, armHide, cancelHide]);
+
+  const onBarTouchStart = useCallback((e) => {
+    // Prevent page scroll while scrubbing
+    e.preventDefault();
+    onBarDown(e);
+  }, [onBarDown]);
 
   const onBarHover = useCallback((e) => {
     const f = fracFromEvent(e.clientX);
@@ -443,6 +462,13 @@ export default function CinemaPlayer({
       onDoubleClick={(e) => {
         if (e.target.closest("[data-control]")) return;
         toggleFs();
+      }}
+      onTouchEnd={(e) => {
+        // Ensure tap-to-play works on mobile (touch events don't always fire click)
+        if (e.cancelable) e.preventDefault();
+        if (e.target.closest("[data-control]")) return;
+        // Single tap: wake controls; double-tap handled via click
+        wake();
       }}
     >
       <div className="cp-stage" ref={containerRef}>
@@ -518,6 +544,7 @@ export default function CinemaPlayer({
             onMouseDown={onBarDown}
             onMouseMove={onBarHover}
             onMouseLeave={onBarLeave}
+            onTouchStart={onBarTouchStart}
             role="slider"
             aria-label="Seek"
             aria-valuemin={0}
