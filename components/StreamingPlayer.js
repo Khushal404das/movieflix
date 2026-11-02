@@ -7,17 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 // In-memory client cache for episodes across seasons
 const episodeMemoryCache = new Map();
 
-// Helper to format seconds into MM:SS or HH:MM:SS
-const formatTime = (t) => {
-  if (!Number.isFinite(t) || t < 0) t = 0;
-  const s = Math.floor(t % 60);
-  const m = Math.floor((t / 60) % 60);
-  const h = Math.floor(t / 3600);
-  const pad = (n) => String(n).padStart(2, "0");
-  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
-};
-
-// Supported audio track preferences
+// Supported audio track preferences for Direct (VidBolt) mode
 const AUDIO_TRACKS = [
   { code: "hindi", label: "Hindi (हिन्दी)", flag: "🇮🇳" },
   { code: "en", label: "English", flag: "🇺🇸" },
@@ -28,23 +18,119 @@ const AUDIO_TRACKS = [
   { code: "fr", label: "French", flag: "🇫🇷" }
 ];
 
-// Single flagship player: VidBolt Pro with Multi-Audio, Subs & Integrated Servers
-const VIDBOLT_PLAYER = {
-  name: "VidBolt",
+// Direct Mode Player: VidBolt Pro (Flagship ad-free server with multi-audio & subtitles)
+const DIRECT_SERVER = {
+  id: "vidbolt",
+  name: "Bolt",
+  domain: "https://vidbolt.pro",
   getUrl: (type, id, s, e, audio = "hindi") => {
     const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
     if (type === "anime-mal") {
-      return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+      return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
     }
     if (type === "anime" || type === "anilist") {
-      return `https://vidbolt.pro/anime/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+      return `https://vidbolt.pro/anime/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
     }
     if (type === "tv") {
-      return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
+      return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
     }
-    return `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
-  },
+    return `https://vidbolt.pro/movie/${id}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
+  }
 };
+
+// Embed Mode Players: All 11 Multi-Servers from Nippleflix
+const EMBED_SERVERS = [
+  {
+    id: "vidcore",
+    name: "Orion",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidcore.net/tv/${id}/${s}/${e}?theme=E50914`
+        : `https://vidcore.net/movie/${id}?theme=E50914`,
+  },
+  {
+    id: "vidrift",
+    name: "VidRift",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://embed.vidrift.in/tv/${id}/${s}/${e}`
+        : `https://embed.vidrift.in/movie/${id}`,
+  },
+  {
+    id: "screenscape",
+    name: "Hindi",
+    getUrl: (type, id, s, e) => {
+      const q = new URLSearchParams({ tmdb: String(id), type: type === "tv" ? "tv" : "movie", lan: "hindi" });
+      if (type === "tv") { q.set("s", s); q.set("e", e); }
+      return `https://nxsha.screenscape.me/embed?${q.toString()}`;
+    },
+  },
+  {
+    id: "cinezo",
+    name: "Cinezo",
+    getUrl: (type, id, s, e) => {
+      const q = new URLSearchParams({ autoplay: "true", poster: "true", primarycolor: "E50914", secondarycolor: "0a0a12", iconcolor: "ffffff" }).toString();
+      return type === "tv" ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?${q}` : `https://player.cinezo.live/embed/movie/${id}?${q}`;
+    },
+  },
+  {
+    id: "hindi-new",
+    name: "Hindi New",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://embed.reelsdownload.online/player/${id}/${s}/${e}?key=k_885c7f4e1997d1d9c4e42aff`
+        : `https://embed.reelsdownload.online/player/${id}?key=k_885c7f4e1997d1d9c4e42aff`,
+  },
+  {
+    id: "flix",
+    name: "Flix",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://www.viduki.net/4/tv/${id}/${s}/${e}?color=E50914`
+        : `https://www.viduki.net/4/movie/${id}?color=E50914`,
+  },
+  {
+    id: "filmu",
+    name: "Fast",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://embed.filmu.in/tv/${id}/${s}/${e}?color=e50914`
+        : `https://embed.filmu.in/movie/${id}?color=e50914`,
+  },
+  {
+    id: "nflix",
+    name: "Nflix",
+    getUrl: (type, id, s, e) => {
+      const q = new URLSearchParams({ color: "e50914", brand: "MovieFlix" }).toString();
+      return type === "tv" ? `https://nflixmovies.app/embed/tv/${id}/${s}/${e}?${q}` : `https://nflixmovies.app/embed/movie/${id}?${q}`;
+    },
+  },
+  {
+    id: "vidup",
+    name: "Premium",
+    getUrl: (type, id, s, e) =>
+      type === "tv"
+        ? `https://vidup.to/tv/${id}/${s}/${e}?theme=E50914`
+        : `https://vidup.to/movie/${id}?theme=E50914`,
+  },
+  {
+    id: "videasy",
+    name: "Mega",
+    getUrl: (type, id, s, e) => {
+      const q = new URLSearchParams({ color: "E50914" });
+      if (type === "tv") { q.set("nextEpisode", "true"); q.set("autoplayNextEpisode", "true"); }
+      return type === "tv" ? `https://player.videasy.to/tv/${id}/${s}/${e}?${q.toString()}` : `https://player.videasy.to/movie/${id}?${q.toString()}`;
+    },
+  },
+  {
+    id: "vidfast",
+    name: "Alpha",
+    getUrl: (type, id, s, e) => {
+      const q = "autoNext=true&nextButton=false&title=true&poster=true&autoPlay=true";
+      return type === "tv" ? `https://vidfast.vc/tv/${id}/${s}/${e}?${q}` : `https://vidfast.vc/movie/${id}?${q}`;
+    },
+  },
+];
 
 export default function StreamingPlayer({
   type = "movie",
@@ -61,6 +147,9 @@ export default function StreamingPlayer({
   const searchParams = useSearchParams();
   const playerRef = useRef(null);
   const iframeRef = useRef(null);
+  const playbackModeRef = useRef(null);
+  const serverMenuRef = useRef(null);
+  const audioMenuRef = useRef(null);
 
   const [currentSeason, setCurrentSeason] = useState(Number(searchParams.get("season")) || initialSeason);
   const [currentEpisode, setCurrentEpisode] = useState(Number(searchParams.get("episode")) || initialEpisode);
@@ -72,6 +161,24 @@ export default function StreamingPlayer({
   const [episodesList, setEpisodesList] = useState(episodesData);
   const [isLoadingEpisodes, setIsLoadingEpisodes] = useState(false);
 
+  // Playback Mode: "direct" | "embed"
+  const [playbackMode, setPlaybackMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("rh-playback-mode") || "direct";
+    }
+    return "direct";
+  });
+  const [playbackModeOpen, setPlaybackModeOpen] = useState(false);
+
+  // Selected server for Embed mode (default "vidcore" Orion)
+  const [selectedServer, setSelectedServer] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("rh-selected-server") || "vidcore";
+    }
+    return "vidcore";
+  });
+  const [serverMenuOpen, setServerMenuOpen] = useState(false);
+
   // Preferred audio track
   const [preferredAudio, setPreferredAudio] = useState(() => {
     if (typeof window !== "undefined") {
@@ -79,6 +186,7 @@ export default function StreamingPlayer({
     }
     return "hindi";
   });
+  const [showAudioMenu, setShowAudioMenu] = useState(false);
 
   // Player live telemetry & remote control state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -87,7 +195,6 @@ export default function StreamingPlayer({
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
-  const [showAudioMenu, setShowAudioMenu] = useState(false);
 
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
@@ -122,6 +229,24 @@ export default function StreamingPlayer({
     });
   };
 
+  // Switch playback mode helper
+  const handlePlaybackModeSelect = (mode) => {
+    setPlaybackMode(mode);
+    setPlaybackModeOpen(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("rh-playback-mode", mode);
+    }
+  };
+
+  // Switch server helper
+  const handleServerSelect = (srvId) => {
+    setSelectedServer(srvId);
+    setServerMenuOpen(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("rh-selected-server", srvId);
+    }
+  };
+
   // Mobile Bottom Sheet state (triggered by Vidbolt 'mobile-panel' event)
   const [bottomSheet, setBottomSheet] = useState({
     isOpen: false,
@@ -138,10 +263,16 @@ export default function StreamingPlayer({
     }
   }, []);
 
-  // Close audio dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (showAudioMenu && !e.target.closest(".audio-selector-wrapper")) {
+      if (playbackModeRef.current && !playbackModeRef.current.contains(e.target)) {
+        setPlaybackModeOpen(false);
+      }
+      if (serverMenuRef.current && !serverMenuRef.current.contains(e.target)) {
+        setServerMenuOpen(false);
+      }
+      if (audioMenuRef.current && !audioMenuRef.current.contains(e.target)) {
         setShowAudioMenu(false);
       }
     };
@@ -151,7 +282,7 @@ export default function StreamingPlayer({
       document.removeEventListener("mousedown", handleOutsideClick);
       document.removeEventListener("touchstart", handleOutsideClick);
     };
-  }, [showAudioMenu]);
+  }, []);
 
   // Verify session validity before streaming
   useEffect(() => {
@@ -209,14 +340,14 @@ export default function StreamingPlayer({
     return () => { isMounted = false; };
   }, [type, id, currentSeason, initialSeason, episodesData]);
 
-  // Reset playback telemetry when title/season/episode changes
+  // Reset playback telemetry when title/season/episode or mode/server changes
   useEffect(() => {
     setCurrentTime(0);
     setDuration(0);
     setIsPlaying(false);
     setIsPlayerReady(false);
     setNextEpCountdown(null);
-  }, [id, currentSeason, currentEpisode]);
+  }, [id, currentSeason, currentEpisode, playbackMode, selectedServer]);
 
   // TV Episode navigation helpers
   const currentEpIndex = episodesList.findIndex((ep) => ep.episode_number === currentEpisode);
@@ -283,7 +414,6 @@ export default function StreamingPlayer({
       switch (data.type) {
         case "ready": {
           setIsPlayerReady(true);
-          // Auto-disable ads on player ready
           const iframe = document.getElementById("vidbolt-player");
           if (iframe?.contentWindow) {
             setTimeout(() => {
@@ -515,16 +645,16 @@ export default function StreamingPlayer({
   useEffect(() => {
     const handleHotkeys = (e) => {
       if (["INPUT", "TEXTAREA", "SELECT"].includes(e.target?.tagName)) return;
-      if (e.key === " ") {
+      if (e.key === " " && playbackMode === "direct") {
         e.preventDefault();
         handleTogglePlay();
-      } else if (e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft" && playbackMode === "direct") {
         e.preventDefault();
         handleSeekDelta(-10);
-      } else if (e.key === "ArrowRight") {
+      } else if (e.key === "ArrowRight" && playbackMode === "direct") {
         e.preventDefault();
         handleSeekDelta(10);
-      } else if (e.key.toLowerCase() === "m") {
+      } else if (e.key.toLowerCase() === "m" && playbackMode === "direct") {
         e.preventDefault();
         handleToggleMute();
       } else if (e.key.toLowerCase() === "t") {
@@ -538,12 +668,18 @@ export default function StreamingPlayer({
 
     window.addEventListener("keydown", handleHotkeys);
     return () => window.removeEventListener("keydown", handleHotkeys);
-  }, [isPlaying, isMuted, volume, currentTime, duration]);
+  }, [playbackMode, isPlaying, isMuted, volume, currentTime, duration]);
 
-  // Compute embed URL for VidBolt
+  // Compute embed URL for currently active mode and server
   const currentEmbedUrl = useMemo(() => {
-    return VIDBOLT_PLAYER.getUrl(type, id, currentSeason, currentEpisode, preferredAudio);
-  }, [type, id, currentSeason, currentEpisode, preferredAudio]);
+    if (playbackMode === "direct") {
+      return DIRECT_SERVER.getUrl(type, id, currentSeason, currentEpisode, preferredAudio);
+    }
+    const srv = EMBED_SERVERS.find((s) => s.id === selectedServer) || EMBED_SERVERS[0];
+    return srv.getUrl(type, id, currentSeason, currentEpisode);
+  }, [playbackMode, selectedServer, type, id, currentSeason, currentEpisode, preferredAudio]);
+
+  const activeServerName = EMBED_SERVERS.find((s) => s.id === selectedServer)?.name || "Orion";
 
   return (
     <>
@@ -592,81 +728,264 @@ export default function StreamingPlayer({
             <span className="res-badge">HD</span>
           </div>
 
-          {/* Clean VidBolt Player Badge */}
-          <div className="flex min-w-0 items-center">
-            <div className="inline-flex h-8 items-center gap-1.5 rounded-full border border-red-500/30 bg-red-500/10 px-3 text-xs font-semibold text-red-400">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-              </svg>
-              <span>VidBolt Player</span>
+          {/* Exact Playback Mode & Server Selection Container (matches Nippleflix) */}
+          <div className="flex min-w-0 justify-start sm:justify-center">
+            <div className="pointer-events-auto flex min-w-0 items-center">
+              <div className="flex shrink-0 items-center gap-2 sm:min-w-0 sm:flex-1 sm:justify-start">
+                
+                {/* 1. Playback Mode Trigger & Dropdown */}
+                <div className="relative inline-flex w-auto max-w-full shrink-0" ref={playbackModeRef}>
+                  <button
+                    type="button"
+                    id="watch-playback-mode-trigger"
+                    aria-label="Playback mode"
+                    aria-haspopup="listbox"
+                    aria-expanded={playbackModeOpen}
+                    onClick={() => {
+                      setPlaybackModeOpen(!playbackModeOpen);
+                      setServerMenuOpen(false);
+                      setShowAudioMenu(false);
+                    }}
+                    className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
+                  >
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
+                        {playbackMode === "direct" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                            <path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"></path>
+                            <path d="M12 17v4"></path>
+                            <path d="M8 21h8"></path>
+                            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                            <path d="M2 12h20"></path>
+                          </svg>
+                        )}
+                      </span>
+                      <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
+                        {playbackMode === "direct" ? "Direct" : "Embed"}
+                      </span>
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 shrink-0 text-white/55 transition-transform duration-200 ${playbackModeOpen ? "rotate-180" : ""}`}>
+                      <path d="m6 9 6 6 6-6"></path>
+                    </svg>
+                  </button>
+
+                  {/* Playback Mode Dropdown Menu */}
+                  {playbackModeOpen && (
+                    <div className="absolute left-0 top-full mt-2 z-[200] min-w-[210px] overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-2.5 pb-1.5 pt-1">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/55">PLAYBACK MODE</p>
+                      </div>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={playbackMode === "direct"}
+                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${playbackMode === "direct" ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
+                        onClick={() => handlePlaybackModeSelect("direct")}
+                      >
+                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${playbackMode === "direct" ? "bg-white text-black" : "bg-white/[0.06] text-white/70"}`}>
+                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+                          </svg>
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="truncate text-sm font-semibold text-white">Direct</span>
+                        </span>
+                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${playbackMode === "direct" ? "border-white" : "border-white/25"}`}>
+                          {playbackMode === "direct" && <span className="h-2 w-2 rounded-full bg-white" />}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={playbackMode === "embed"}
+                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${playbackMode === "embed" ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
+                        onClick={() => handlePlaybackModeSelect("embed")}
+                      >
+                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${playbackMode === "embed" ? "bg-white text-black" : "bg-white/[0.06] text-white/70"}`}>
+                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                            <path d="M2 12h20"></path>
+                          </svg>
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="truncate text-sm font-semibold text-white">Embed</span>
+                        </span>
+                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${playbackMode === "embed" ? "border-white" : "border-white/25"}`}>
+                          {playbackMode === "embed" && <span className="h-2 w-2 rounded-full bg-white" />}
+                        </span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Direct Mode -> Bolt Badge Indicator */}
+                {playbackMode === "direct" && (
+                  <span className="inline-flex h-9 shrink-0 items-center rounded-full border border-white/10 bg-white/[0.06] px-3 text-xs font-semibold text-white/80">
+                    Bolt
+                  </span>
+                )}
+
+                {/* Embed Mode -> Change Server Trigger & Dropdown */}
+                {playbackMode === "embed" && (
+                  <div className="relative inline-flex w-auto max-w-full shrink-0" ref={serverMenuRef}>
+                    <button
+                      type="button"
+                      id="watch-server-trigger"
+                      aria-label="Change server"
+                      aria-haspopup="listbox"
+                      aria-expanded={serverMenuOpen}
+                      onClick={() => {
+                        setServerMenuOpen(!serverMenuOpen);
+                        setPlaybackModeOpen(false);
+                        setShowAudioMenu(false);
+                      }}
+                      className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
+                    >
+                      <span className="flex min-w-0 items-center gap-1.5">
+                        <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
+                            <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+                            <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+                            <line x1="6" x2="6.01" y1="6" y2="6"></line>
+                            <line x1="6" x2="6.01" y1="18" y2="18"></line>
+                          </svg>
+                        </span>
+                        <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
+                          {activeServerName}
+                        </span>
+                      </span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 shrink-0 text-white/55 transition-transform duration-200 ${serverMenuOpen ? "rotate-180" : ""}`}>
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+
+                    {/* Change Server Dropdown Menu with all 11 servers */}
+                    {serverMenuOpen && (
+                      <div className="absolute left-0 top-full mt-2 z-[200] max-h-[360px] min-w-[210px] overflow-y-auto rounded-2xl border border-white/10 bg-[#141414] p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-150">
+                        <div className="px-2.5 pb-1.5 pt-1">
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/55">CHANGE SERVER</p>
+                        </div>
+                        {EMBED_SERVERS.map((srv) => {
+                          const isSelected = selectedServer === srv.id;
+                          return (
+                            <button
+                              key={srv.id}
+                              type="button"
+                              role="option"
+                              aria-selected={isSelected}
+                              className={`flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${isSelected ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
+                              onClick={() => handleServerSelect(srv.id)}
+                            >
+                              <span className="truncate text-sm font-medium text-white/85">
+                                {srv.name}
+                              </span>
+                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${isSelected ? "border-white" : "border-white/25"}`}>
+                                {isSelected && <span className="h-2 w-2 rounded-full bg-white" />}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+              </div>
             </div>
           </div>
 
           <div className="player-actions">
-            {/* Preferred Audio Selector Dropdown */}
-            <div className="audio-selector-wrapper">
-              <button
-                type="button"
-                className={`audio-trigger-btn ${showAudioMenu ? "active" : ""}`}
-                onClick={() => setShowAudioMenu(!showAudioMenu)}
-                title="Choose Audio Dub Track"
-              >
-                <span className="audio-icon">🎧</span>
-                <span className="audio-curr-label">
-                  {AUDIO_TRACKS.find((a) => a.code === preferredAudio)?.label || "Multi-Audio"}
-                </span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
-              </button>
+            {/* Direct Mode -> Quality & Server & Audio Switchers */}
+            {playbackMode === "direct" && (
+              <>
+                <button
+                  type="button"
+                  className="tool-btn"
+                  onClick={() => handlePlaybackModeSelect("embed")}
+                  title="Switch to Alternate Embed Servers"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  <span className="hide-xs text-xs">Quality & Server</span>
+                  <span className="text-[10px] text-white/50">Auto</span>
+                </button>
 
-              {showAudioMenu && (
-                <div className="audio-dropdown-menu">
-                  <div className="audio-menu-header">Select Preferred Audio:</div>
-                  {AUDIO_TRACKS.map((lang) => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      className={`audio-option-item ${preferredAudio === lang.code ? "selected" : ""}`}
-                      onClick={() => handleSelectAudio(lang.code)}
-                    >
-                      <span className="lang-flag">{lang.flag}</span>
-                      <span className="lang-name">{lang.label}</span>
-                      {preferredAudio === lang.code && <span className="check-dot">✓</span>}
-                    </button>
-                  ))}
+                {/* Audio Dub Selector */}
+                <div className="audio-selector-wrapper" ref={audioMenuRef}>
+                  <button
+                    type="button"
+                    className={`audio-trigger-btn ${showAudioMenu ? "active" : ""}`}
+                    onClick={() => {
+                      setShowAudioMenu(!showAudioMenu);
+                      setPlaybackModeOpen(false);
+                      setServerMenuOpen(false);
+                    }}
+                    title="Audio & Subtitles"
+                  >
+                    <span className="text-xs font-bold">CC</span>
+                    <span className="audio-curr-label text-xs">
+                      {AUDIO_TRACKS.find((a) => a.code === preferredAudio)?.label || "Audio & Subtitles"}
+                    </span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+
+                  {showAudioMenu && (
+                    <div className="audio-dropdown-menu">
+                      <div className="audio-menu-header">Audio & Subtitles:</div>
+                      {AUDIO_TRACKS.map((lang) => (
+                        <button
+                          key={lang.code}
+                          type="button"
+                          className={`audio-option-item ${preferredAudio === lang.code ? "selected" : ""}`}
+                          onClick={() => handleSelectAudio(lang.code)}
+                        >
+                          <span className="lang-flag">{lang.flag}</span>
+                          <span className="lang-name">{lang.label}</span>
+                          {preferredAudio === lang.code && <span className="check-dot">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* Direct Remote Controls */}
-            <button
-              type="button"
-              className="tool-btn"
-              onClick={handleTogglePlay}
-              title={isPlaying ? "Pause Video" : "Play Video"}
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              )}
-              <span className="hide-xs">{isPlaying ? "Pause" : "Play"}</span>
-            </button>
+                {/* Direct Remote Controls */}
+                <button
+                  type="button"
+                  className="tool-btn"
+                  onClick={handleTogglePlay}
+                  title={isPlaying ? "Pause Video" : "Play Video"}
+                  aria-label={isPlaying ? "Pause" : "Play"}
+                >
+                  {isPlaying ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                  )}
+                  <span className="hide-xs">{isPlaying ? "Pause" : "Play"}</span>
+                </button>
 
-            <button
-              type="button"
-              className="tool-btn"
-              onClick={handleToggleMute}
-              title={isMuted ? "Unmute Volume" : "Mute Volume"}
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3 2.5-2.5-1-1L15.5 11l-2.5-2.5-1 1 2.5 2.5-2.5 2.5 1 1 2.5-2.5 2.5 2.5 1-1L16.5 12z"/></svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
-              )}
-              <span className="hide-xs">{isMuted ? "Unmute" : "Mute"}</span>
-            </button>
+                <button
+                  type="button"
+                  className="tool-btn"
+                  onClick={handleToggleMute}
+                  title={isMuted ? "Unmute Volume" : "Mute Volume"}
+                  aria-label={isMuted ? "Unmute" : "Mute"}
+                >
+                  {isMuted ? (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3 2.5-2.5-1-1L15.5 11l-2.5-2.5-1 1 2.5 2.5-2.5 2.5 1 1 2.5-2.5 2.5 2.5 1-1L16.5 12z"/></svg>
+                  ) : (
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+                  )}
+                  <span className="hide-xs">{isMuted ? "Unmute" : "Mute"}</span>
+                </button>
+              </>
+            )}
 
             {/* Toggle Lights Button */}
             <button
@@ -690,7 +1009,7 @@ export default function StreamingPlayer({
               <span className="hide-xs">{isTheater ? "Normal" : "Theater"}</span>
             </button>
 
-            {/* Ads Off/On Switch on player page */}
+            {/* Hidden Ads Off/On Switch on player page */}
             <button
               type="button"
               role="switch"
@@ -721,10 +1040,10 @@ export default function StreamingPlayer({
           <iframe
             id="vidbolt-player"
             ref={iframeRef}
-            key={`${type}-${id}-${currentSeason}-${currentEpisode}-${preferredAudio}`}
+            key={`${playbackMode}-${selectedServer}-${type}-${id}-${currentSeason}-${currentEpisode}-${preferredAudio}`}
             src={currentEmbedUrl}
             className="streaming-iframe"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             loading="eager"
             referrerPolicy="no-referrer"
