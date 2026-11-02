@@ -9220,21 +9220,6 @@ body.lights-off-active .player-section-wrapper {
   border-radius: 2px;
 }
 
-/* Ad Shield Play Overlay & Security Shield */
-.ad-shield-play-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(2px);
-  z-index: 10;
-  cursor: pointer;
-  transition: opacity 0.2s ease, background 0.2s ease;
-}
 
 .ad-shield-play-overlay:hover {
   background: rgba(0, 0, 0, 0.3);

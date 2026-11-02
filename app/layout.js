@@ -174,11 +174,6 @@ export default function RootLayout({ children }) {
       <head>
         {/* Google AdSense Verification & Auto Ads */}
         <meta name="google-adsense-account" content="ca-pub-2554738343060277" />
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2554738343060277"
-          crossOrigin="anonymous"
-        />
         {/* Fallback explicit tags for WhatsApp, Telegram, Facebook scrapers */}
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:type" content="website" />

@@ -146,28 +146,34 @@ export default function StreamingPlayer({
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
 
-  // AdBlock Shield state (default true: AdBlock ON / Ads OFF)
-  const [adBlockEnabled, setAdBlockEnabled] = useState(() => {
+  // Ads state (default false: Ads OFF)
+  const [adsEnabled, setAdsEnabled] = useState(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("rh-adblock-enabled");
-      return saved !== null ? saved === "true" : true;
+      const saved = localStorage.getItem("rh-ads-enabled");
+      return saved === "true";
     }
-    return true;
+    return false;
   });
 
-  const handleToggleAdBlock = () => {
-    setAdBlockEnabled((prev) => {
+  useEffect(() => {
+    const handleSync = (e) => {
+      if (e.detail && typeof e.detail.enabled === "boolean") {
+        setAdsEnabled(e.detail.enabled);
+      }
+    };
+    window.addEventListener("rh-ads-toggle", handleSync);
+    return () => window.removeEventListener("rh-ads-toggle", handleSync);
+  }, []);
+
+  const handleToggleAds = () => {
+    setAdsEnabled((prev) => {
       const next = !prev;
       if (typeof window !== "undefined") {
-        localStorage.setItem("rh-adblock-enabled", String(next));
+        localStorage.setItem("rh-ads-enabled", String(next));
+        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
       }
       return next;
     });
-  };
-
-  const handleOverlayStartPlay = () => {
-    setIsPlaying(true);
-    sendVidboltCommand("play");
   };
 
   // Mobile Bottom Sheet state (triggered by Vidbolt 'mobile-panel' event)
@@ -489,11 +495,11 @@ export default function StreamingPlayer({
 
     let allowNavigation = false;
 
-    // Prevent top-level redirect hijack from iframe ad networks
+    // Prevent top-level redirect hijack from iframe ad networks when ads are OFF
     const handleBeforeUnload = (e) => {
-      if (adBlockEnabled && !allowNavigation) {
+      if (!adsEnabled && !allowNavigation) {
         e.preventDefault();
-        e.returnValue = "MovieFlix Ad Shield protected you from a redirected ad.";
+        e.returnValue = "MovieFlix protected you from an ad redirect.";
         return e.returnValue;
       }
     };
@@ -513,8 +519,8 @@ export default function StreamingPlayer({
 
     const originalOpen = window.open;
     window.open = function (...args) {
-      if (adBlockEnabled) {
-        console.warn("[AdShield] Blocked rogue ad popup window:", args[0]);
+      if (!adsEnabled) {
+        console.warn("[MovieFlix] Blocked rogue ad popup window:", args[0]);
         return null;
       }
       return originalOpen.apply(window, args);
@@ -525,7 +531,7 @@ export default function StreamingPlayer({
       document.removeEventListener("click", handleInternalClick, true);
       window.open = originalOpen;
     };
-  }, [adBlockEnabled]);
+  }, [adsEnabled]);
 
 
 
@@ -895,25 +901,25 @@ export default function StreamingPlayer({
               <span className="hide-xs">{isTheater ? "Normal" : "Theater"}</span>
             </button>
 
-            {/* Ads Toggle Switch (Ad Shield) */}
+            {/* Hidden Ads Off/On Switch on player page */}
             <button
               type="button"
               role="switch"
-              aria-checked={!adBlockEnabled}
-              aria-label={!adBlockEnabled ? "Ads on" : "Ads off"}
+              aria-checked={adsEnabled}
+              aria-label={adsEnabled ? "Ads on" : "Ads off"}
               className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
-              onClick={handleToggleAdBlock}
-              title={adBlockEnabled ? "Ad Shield Active (Ads Blocked). Click to enable Ads." : "Ads are ON. Click to enable Ad Shield."}
+              onClick={handleToggleAds}
+              title={adsEnabled ? "Ads on" : "Ads off"}
             >
               <span className="text-[13px] font-medium leading-none text-white">Ads</span>
               <span
                 className={`relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
-                  !adBlockEnabled ? "bg-[#f3f0e8]" : "bg-[#2c2c2c]"
+                  adsEnabled ? "bg-[#f3f0e8]" : "bg-zinc-600"
                 }`}
               >
                 <span
                   className={`absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
-                    !adBlockEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-[#e50914]"
+                    adsEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
                   }`}
                 />
               </span>
@@ -933,37 +939,18 @@ export default function StreamingPlayer({
               subtitles={stream ? stream.subtitles : []}
             />
           ) : (
-            <>
-              <iframe
-                id="vidbolt-player"
-                ref={iframeRef}
-                key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
-                src={currentEmbedUrl}
-                className="streaming-iframe"
-                sandbox={adBlockEnabled && !isVidboltActive ? "allow-forms allow-scripts allow-same-origin allow-presentation" : undefined}
-                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-                allowFullScreen
-                loading="eager"
-                referrerPolicy="no-referrer"
-                title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
-              />
-
-              {/* Ad-Free Click Guard Overlay for Vidbolt */}
-              {isVidboltActive && adBlockEnabled && !isPlaying && (
-                <div
-                  className="ad-shield-play-overlay"
-                  onClick={handleOverlayStartPlay}
-                  title="Click to Play (Ad-Free)"
-                >
-                  <button type="button" className="ad-shield-big-play-btn" aria-label="Play Video Ad-Free">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </button>
-                  <span className="ad-shield-badge">🛡️ Ad Shield Active • Click to Play</span>
-                </div>
-              )}
-            </>
+            <iframe
+              id="vidbolt-player"
+              ref={iframeRef}
+              key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
+              src={currentEmbedUrl}
+              className="streaming-iframe"
+              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+              allowFullScreen
+              loading="eager"
+              referrerPolicy="no-referrer"
+              title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
+            />
           )}
 
           {/* Auto Next Episode Countdown Overlay Toast */}

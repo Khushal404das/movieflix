@@ -18,6 +18,35 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   
+  const isPlayerPage = Boolean(
+    pathname && (
+      pathname.startsWith("/movie/") ||
+      pathname.startsWith("/tv/") ||
+      pathname.startsWith("/classics/")
+    )
+  );
+  const [adsEnabled, setAdsEnabled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("rh-ads-enabled");
+      if (saved !== null) {
+        setAdsEnabled(saved === "true");
+      }
+    }
+  }, []);
+
+  const toggleAds = () => {
+    setAdsEnabled((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("rh-ads-enabled", String(next));
+        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
+      }
+      return next;
+    });
+  };
+  
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const profileDropdownRef = useRef(null);
@@ -236,6 +265,32 @@ export default function Header() {
               </div>
             )}
           </div>
+
+          {/* Hidden Ads Off/On Switch on player page only */}
+          {isPlayerPage && (
+            <button
+              type="button"
+              role="switch"
+              aria-checked={adsEnabled}
+              aria-label={adsEnabled ? "Ads on" : "Ads off"}
+              className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
+              onClick={toggleAds}
+              title={adsEnabled ? "Ads on" : "Ads off"}
+            >
+              <span className="text-[13px] font-medium leading-none text-white">Ads</span>
+              <span
+                className={`relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
+                  adsEnabled ? "bg-[#f3f0e8]" : "bg-zinc-600"
+                }`}
+              >
+                <span
+                  className={`absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
+                    adsEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
+                  }`}
+                />
+              </span>
+            </button>
+          )}
 
           {/* Notifications Icon */}
           <button type="button" className="netflix-icon-btn" aria-label="Notifications">
