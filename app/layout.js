@@ -108,6 +108,7 @@ export const metadata = {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "google-adsense-account": "ca-pub-2554738343060277",
   },
 };
 
@@ -171,6 +172,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Google AdSense Verification & Auto Ads */}
+        <meta name="google-adsense-account" content="ca-pub-2554738343060277" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2554738343060277"
+          crossOrigin="anonymous"
+        />
         {/* Fallback explicit tags for WhatsApp, Telegram, Facebook scrapers */}
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:type" content="website" />
@@ -214,6 +222,10 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://vidbolt.pro" />
         <link rel="dns-prefetch" href="https://vidsrc.cc" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
 
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap"
