@@ -146,6 +146,30 @@ export default function StreamingPlayer({
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
 
+  // AdBlock Shield state (default true: AdBlock ON / Ads OFF)
+  const [adBlockEnabled, setAdBlockEnabled] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("rh-adblock-enabled");
+      return saved !== null ? saved === "true" : true;
+    }
+    return true;
+  });
+
+  const handleToggleAdBlock = () => {
+    setAdBlockEnabled((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("rh-adblock-enabled", String(next));
+      }
+      return next;
+    });
+  };
+
+  const handleOverlayStartPlay = () => {
+    setIsPlaying(true);
+    sendVidboltCommand("play");
+  };
+
   // Mobile Bottom Sheet state (triggered by Vidbolt 'mobile-panel' event)
   const [bottomSheet, setBottomSheet] = useState({
     isOpen: false,
@@ -463,16 +487,45 @@ export default function StreamingPlayer({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    let allowNavigation = false;
+
+    // Prevent top-level redirect hijack from iframe ad networks
+    const handleBeforeUnload = (e) => {
+      if (adBlockEnabled && !allowNavigation) {
+        e.preventDefault();
+        e.returnValue = "MovieFlix Ad Shield protected you from a redirected ad.";
+        return e.returnValue;
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Allow legitimate clicks on MovieFlix links
+    const handleInternalClick = (e) => {
+      const link = e.target.closest("a, button");
+      if (link) {
+        allowNavigation = true;
+        setTimeout(() => {
+          allowNavigation = false;
+        }, 1500);
+      }
+    };
+    document.addEventListener("click", handleInternalClick, true);
+
     const originalOpen = window.open;
     window.open = function (...args) {
-      console.warn("Blocked rogue ad popup window:", args[0]);
-      return null;
+      if (adBlockEnabled) {
+        console.warn("[AdShield] Blocked rogue ad popup window:", args[0]);
+        return null;
+      }
+      return originalOpen.apply(window, args);
     };
 
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("click", handleInternalClick, true);
       window.open = originalOpen;
     };
-  }, []);
+  }, [adBlockEnabled]);
 
 
 
@@ -841,6 +894,30 @@ export default function StreamingPlayer({
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="20" height="15" x="2" y="4" rx="2"/><path d="m9 10 3 2 3-2"/></svg>
               <span className="hide-xs">{isTheater ? "Normal" : "Theater"}</span>
             </button>
+
+            {/* Ads Toggle Switch (Ad Shield) */}
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!adBlockEnabled}
+              aria-label={!adBlockEnabled ? "Ads on" : "Ads off"}
+              className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
+              onClick={handleToggleAdBlock}
+              title={adBlockEnabled ? "Ad Shield Active (Ads Blocked). Click to enable Ads." : "Ads are ON. Click to enable Ad Shield."}
+            >
+              <span className="text-[13px] font-medium leading-none text-white">Ads</span>
+              <span
+                className={`relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
+                  !adBlockEnabled ? "bg-[#f3f0e8]" : "bg-[#2c2c2c]"
+                }`}
+              >
+                <span
+                  className={`absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
+                    !adBlockEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-[#e50914]"
+                  }`}
+                />
+              </span>
+            </button>
           </div>
         </div>
 
@@ -856,18 +933,37 @@ export default function StreamingPlayer({
               subtitles={stream ? stream.subtitles : []}
             />
           ) : (
-            <iframe
-              id="vidbolt-player"
-              ref={iframeRef}
-              key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
-              src={currentEmbedUrl}
-              className="streaming-iframe"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-              allowFullScreen
-              loading="eager"
-              referrerPolicy="no-referrer"
-              title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
-            />
+            <>
+              <iframe
+                id="vidbolt-player"
+                ref={iframeRef}
+                key={`${type}-${id}-${currentSeason}-${currentEpisode}-srv${serverIndex}-${preferredAudio}`}
+                src={currentEmbedUrl}
+                className="streaming-iframe"
+                sandbox={adBlockEnabled && !isVidboltActive ? "allow-forms allow-scripts allow-same-origin allow-presentation" : undefined}
+                allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+                allowFullScreen
+                loading="eager"
+                referrerPolicy="no-referrer"
+                title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
+              />
+
+              {/* Ad-Free Click Guard Overlay for Vidbolt */}
+              {isVidboltActive && adBlockEnabled && !isPlaying && (
+                <div
+                  className="ad-shield-play-overlay"
+                  onClick={handleOverlayStartPlay}
+                  title="Click to Play (Ad-Free)"
+                >
+                  <button type="button" className="ad-shield-big-play-btn" aria-label="Play Video Ad-Free">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </button>
+                  <span className="ad-shield-badge">🛡️ Ad Shield Active • Click to Play</span>
+                </div>
+              )}
+            </>
           )}
 
           {/* Auto Next Episode Countdown Overlay Toast */}
