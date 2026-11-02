@@ -729,7 +729,6 @@ export default function StreamingPlayer({
             loading="eager"
             referrerPolicy="no-referrer"
             title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
-            sandbox={adsEnabled ? undefined : "allow-scripts allow-same-origin allow-forms allow-presentation"}
           />
 
           {/* Auto Next Episode Countdown Overlay Toast */}
