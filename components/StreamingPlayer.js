@@ -39,15 +39,15 @@ const SERVERS = [
     getUrl: (type, id, s, e, audio = "hindi") => {
       const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
       if (type === "anime-mal") {
-        return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
+        return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
       }
       if (type === "anime" || type === "anilist") {
-        return `https://vidbolt.pro/anime/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
+        return `https://vidbolt.pro/anime/${id}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
       }
       if (type === "tv") {
-        return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
+        return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
       }
-      return `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false${audioParam}`;
+      return `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true${audioParam}`;
     },
   },
   {

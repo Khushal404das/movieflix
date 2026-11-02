@@ -34,8 +34,8 @@ export default function JWPlayerInstance({
   const resolvedMovieStream =
     movieStreamUrl ||
     (type === "tv"
-      ? `https://vidbolt.pro/tv/${id}/${season}/${episode}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false`
-      : `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true&ads=false`);
+      ? `https://vidbolt.pro/tv/${id}/${season}/${episode}?theme=e50914&autoPlay=true&mobileSheets=true`
+      : `https://vidbolt.pro/movie/${id}?theme=e50914&autoPlay=true&mobileSheets=true`);
 
   // State: "movie" (default - plays the real movie) or "hls" (JW Player direct .m3u8 engine)
   const [playerMode, setPlayerMode] = useState(customStreamUrl ? "hls" : "movie");
