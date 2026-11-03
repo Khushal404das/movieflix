@@ -514,6 +514,132 @@ export default function RootLayout({ children }) {
             })();`
           }}
         />
+        {/* AdGuard Scriptlets — JS-level ad technique neutralizers (production only) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){
+  // Only run on production
+  if(location.hostname==="localhost"||location.hostname==="127.0.0.1") return;
+  try {
+    // ── Scriptlet 1: abort-on-property-read ──────────────────────────────
+    // Kills scripts that check window properties before injecting ads
+    var ABORT_PROPS = [
+      "adsbygoogle","AdSense","googletag","pbjs","apntag","_mNAds",
+      "monetag","propellerAds","popunder","popad","trafficJunky",
+      "ExoLoader","exoJquery","reviveBanner","DoubleClick","googletag",
+      "adroll","criteo","taboola","outbrain","mgid","revcontent",
+    ];
+    ABORT_PROPS.forEach(function(prop){
+      try {
+        Object.defineProperty(window, prop, {
+          get: function(){ throw new ReferenceError("[AdGuard] Aborted: "+prop); },
+          set: function(){},
+          configurable: false
+        });
+      } catch(e){}
+    });
+
+    // ── Scriptlet 2: prevent-setTimeout (ad delay tricks) ────────────────
+    var _origSetTimeout = window.setTimeout;
+    window.setTimeout = function(fn, delay) {
+      try {
+        var src = (typeof fn === "function") ? fn.toString() : String(fn);
+        var blocked = ["popunder","window.open","adsbygoogle","googletag","monetag",
+                       "push-sdk","pushnotif","coinhive","cryptoloot"];
+        for(var i=0;i<blocked.length;i++){
+          if(src.indexOf(blocked[i])!==-1){
+            console.warn("[AdGuard] Blocked setTimeout ad:",blocked[i]);
+            return 0;
+          }
+        }
+      } catch(e){}
+      return _origSetTimeout.apply(this, arguments);
+    };
+
+    // ── Scriptlet 3: prevent-setInterval ─────────────────────────────────
+    var _origSetInterval = window.setInterval;
+    window.setInterval = function(fn, delay) {
+      try {
+        var src = (typeof fn === "function") ? fn.toString() : String(fn);
+        var blocked = ["popunder","window.open","adsbygoogle","monetag","coinhive"];
+        for(var i=0;i<blocked.length;i++){
+          if(src.indexOf(blocked[i])!==-1){
+            console.warn("[AdGuard] Blocked setInterval ad:",blocked[i]);
+            return 0;
+          }
+        }
+      } catch(e){}
+      return _origSetInterval.apply(this, arguments);
+    };
+
+    // ── Scriptlet 4: nowebrtc (prevents IP leak via WebRTC ads) ──────────
+    try {
+      var _origRTC = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+      if(_origRTC){
+        window.RTCPeerConnection = function(config){
+          if(config && config.iceServers){
+            config.iceServers = config.iceServers.filter(function(s){
+              var url = (s.urls||s.url||"").toString();
+              return url.indexOf("stun:")===0 && url.indexOf("google")===-1;
+            });
+          }
+          return new _origRTC(config);
+        };
+      }
+    } catch(e){}
+
+    // ── Scriptlet 5: set-cookie (block ad tracking cookies) ──────────────
+    var _cookieDesc = Object.getOwnPropertyDescriptor(Document.prototype,"cookie")||
+                      Object.getOwnPropertyDescriptor(HTMLDocument.prototype,"cookie");
+    if(_cookieDesc && _cookieDesc.set){
+      var _origCookieSet = _cookieDesc.set;
+      var BLOCKED_COOKIE_KEYS = ["__gads","__gpi","_ga","_gid","IDE","NID","DSID",
+                                  "ANID","AID","TAID","ad_session","adblock_test"];
+      Object.defineProperty(document,"cookie",{
+        get: _cookieDesc.get,
+        set: function(val){
+          var blocked = false;
+          for(var i=0;i<BLOCKED_COOKIE_KEYS.length;i++){
+            if(val.indexOf(BLOCKED_COOKIE_KEYS[i]+"=")===0){
+              blocked=true; break;
+            }
+          }
+          if(!blocked) _origCookieSet.call(document,val);
+        },
+        configurable: true
+      });
+    }
+
+    // ── Scriptlet 6: MutationObserver — remove injected ad iframes ────────
+    var _observer = new MutationObserver(function(mutations){
+      mutations.forEach(function(m){
+        m.addedNodes.forEach(function(node){
+          if(!node || node.nodeType!==1) return;
+          var tag = node.tagName&&node.tagName.toLowerCase();
+          if(tag==="iframe"||tag==="script"){
+            var src = node.src||node.getAttribute("src")||"";
+            var adPatterns = [
+              "doubleclick","googlesyndication","adsterra","propellerads",
+              "monetag","exoclick","popcash","popads","trafficjunky",
+              "amuyontraiked","push-sdk","coinhive","adnium"
+            ];
+            for(var i=0;i<adPatterns.length;i++){
+              if(src.indexOf(adPatterns[i])!==-1){
+                node.remove();
+                console.warn("[AdGuard] Removed injected ad node:",src);
+                return;
+              }
+            }
+          }
+        });
+      });
+    });
+    _observer.observe(document.documentElement,{childList:true,subtree:true});
+
+  } catch(e){}
+})();`
+          }}
+        />
         {/* Cloudflare Turnstile & CDN Preconnect */}
         <link rel="preconnect" href="https://challenges.cloudflare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
