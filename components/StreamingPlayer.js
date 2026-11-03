@@ -202,6 +202,12 @@ export default function StreamingPlayer({
   const [adsOff, setAdsOff] = useState(true);
 
   useEffect(() => {
+    // On localhost/dev, ads are always ON (not blocked) for testing
+    if (typeof window !== "undefined" &&
+        (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+      setAdsOff(false);
+      return;
+    }
     try {
       const s = sessionStorage.getItem("nippleflix_ads_disabled");
       const m = sessionStorage.getItem("movieflix_ads_disabled");

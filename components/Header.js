@@ -21,6 +21,12 @@ export default function Header() {
   const [adsOff, setAdsOff] = useState(true);
 
   useEffect(() => {
+    // On localhost/dev, always default ads to ON (not blocked) for testing
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      setAdsOff(false);
+      window.__ADS_DISABLED__ = false;
+      return;
+    }
     // Mount-time sync: check storage to avoid SSR desync
     try {
       const s = sessionStorage.getItem("nippleflix_ads_disabled");

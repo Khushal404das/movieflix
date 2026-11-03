@@ -200,8 +200,8 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
         />
 
-        {/* AdGuard Popup Blocker & Scriptlet Engine (Official Open Source) */}
-        <script src="/adguard-popupblocker.js" />
+        {/* AdGuard Popup Blocker & Scriptlet Engine — production only */}
+        <script dangerouslySetInnerHTML={{ __html: `if(location.hostname!=="localhost"&&location.hostname!=="127.0.0.1"){var s=document.createElement("script");s.src="/adguard-popupblocker.js";document.head.appendChild(s);}` }} />
 
         {/* Favicon & Web App Icons */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
@@ -213,6 +213,8 @@ export default function RootLayout({ children }) {
         <script
           dangerouslySetInnerHTML={{
             __html: `(function () {
+              // Only activate ad blocker on production (not localhost/dev)
+              if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") return;
               try {
                 function isAdsDisabled() {
                   try {
