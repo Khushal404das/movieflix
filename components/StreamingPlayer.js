@@ -876,91 +876,7 @@ export default function StreamingPlayer({
           </div>
 
           <div className="player-actions">
-            {/* Direct Mode -> Quality & Server & Audio Switchers */}
-            {playbackMode === "direct" && (
-              <>
-                <button
-                  type="button"
-                  className="tool-btn"
-                  onClick={() => handlePlaybackModeSelect("embed")}
-                  title="Switch to Alternate Embed Servers"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  <span className="hide-xs text-xs">Quality & Server</span>
-                  <span className="text-[10px] text-white/50">Auto</span>
-                </button>
-
-                {/* Audio Dub Selector */}
-                <div className="audio-selector-wrapper" ref={audioMenuRef}>
-                  <button
-                    type="button"
-                    className={`audio-trigger-btn ${showAudioMenu ? "active" : ""}`}
-                    onClick={() => {
-                      setShowAudioMenu(!showAudioMenu);
-                      setPlaybackModeOpen(false);
-                      setServerMenuOpen(false);
-                    }}
-                    title="Audio & Subtitles"
-                  >
-                    <span className="text-xs font-bold">CC</span>
-                    <span className="audio-curr-label text-xs">
-                      {AUDIO_TRACKS.find((a) => a.code === preferredAudio)?.label || "Audio & Subtitles"}
-                    </span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6"/></svg>
-                  </button>
-
-                  {showAudioMenu && (
-                    <div className="audio-dropdown-menu">
-                      <div className="audio-menu-header">Audio & Subtitles:</div>
-                      {AUDIO_TRACKS.map((lang) => (
-                        <button
-                          key={lang.code}
-                          type="button"
-                          className={`audio-option-item ${preferredAudio === lang.code ? "selected" : ""}`}
-                          onClick={() => handleSelectAudio(lang.code)}
-                        >
-                          <span className="lang-flag">{lang.flag}</span>
-                          <span className="lang-name">{lang.label}</span>
-                          {preferredAudio === lang.code && <span className="check-dot">✓</span>}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Direct Remote Controls */}
-                <button
-                  type="button"
-                  className="tool-btn"
-                  onClick={handleTogglePlay}
-                  title={isPlaying ? "Pause Video" : "Play Video"}
-                  aria-label={isPlaying ? "Pause" : "Play"}
-                >
-                  {isPlaying ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  )}
-                  <span className="hide-xs">{isPlaying ? "Pause" : "Play"}</span>
-                </button>
-
-                <button
-                  type="button"
-                  className="tool-btn"
-                  onClick={handleToggleMute}
-                  title={isMuted ? "Unmute Volume" : "Mute Volume"}
-                  aria-label={isMuted ? "Unmute" : "Mute"}
-                >
-                  {isMuted ? (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3 2.5-2.5-1-1L15.5 11l-2.5-2.5-1 1 2.5 2.5-2.5 2.5 1 1 2.5-2.5 2.5 2.5 1-1L16.5 12z"/></svg>
-                  ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
-                  )}
-                  <span className="hide-xs">{isMuted ? "Unmute" : "Mute"}</span>
-                </button>
-              </>
-            )}
-
+            {/* Quality, Audio, Play, Mute controls hidden - VidBolt handles playback internally */}
             {/* Toggle Lights Button */}
             <button
               type="button"
@@ -983,29 +899,7 @@ export default function StreamingPlayer({
               <span className="hide-xs">{isTheater ? "Normal" : "Theater"}</span>
             </button>
 
-            {/* Hidden Ads Off/On Switch on player page */}
-            <button
-              type="button"
-              role="switch"
-              aria-checked={adsEnabled}
-              aria-label={adsEnabled ? "Ads on" : "Ads off"}
-              className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
-              onClick={handleToggleAds}
-              title={adsEnabled ? "Ads on" : "Ads off"}
-            >
-              <span className="text-[13px] font-medium leading-none text-white">Ads</span>
-              <span
-                className={`relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
-                  adsEnabled ? "bg-[#f3f0e8]" : "bg-zinc-600"
-                }`}
-              >
-                <span
-                  className={`absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
-                    adsEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
-                  }`}
-                />
-              </span>
-            </button>
+            {/* Ads toggle hidden */}
           </div>
         </div>
 
