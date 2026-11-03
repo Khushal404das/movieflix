@@ -1664,11 +1664,19 @@ body.lights-off-active .player-section-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 18px;
-  background: #181818;
-  border-bottom: 1px solid #282828;
+  padding: 10px 18px;
+  background: #141414;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
+  position: relative;
+  z-index: 50;
+}
+
+@media (min-width: 768px) {
+  .player-topbar {
+    flex-wrap: nowrap;
+  }
 }
 
 .player-badge {
@@ -8437,167 +8445,242 @@ body.lights-off-active .player-section-wrapper {
 }
 
 /* ==========================================================================
-   Exact Watch Controls & Triggers (Playback Mode & Change Server)
+   Nippleflix-Style Watch Controls (Playback Mode & Server Dropdowns)
    ========================================================================== */
 
-.flex { display: flex; }
-.min-w-0 { min-width: 0; }
-.justify-start { justify-content: flex-start; }
-.items-center { align-items: center; }
-.shrink-0 { flex-shrink: 0; }
-.gap-1\.5 { gap: 6px; }
-.gap-2 { gap: 8px; }
-.relative { position: relative; }
-.inline-flex { display: inline-flex; }
-.w-auto { width: auto; }
-.max-w-full { max-width: 100%; }
-.pointer-events-auto { pointer-events: auto; }
-.rounded-full { border-radius: 9999px; }
-.cursor-pointer { cursor: pointer; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.h-9 { height: 36px; }
-.h-3\.5 { height: 14px; }
-.w-3\.5 { width: 14px; }
-.h-3 { height: 12px; }
-.w-3 { width: 12px; }
-.px-3 { padding-left: 12px; padding-right: 12px; }
-.text-xs { font-size: 12px; }
-.font-semibold { font-weight: 600; }
-.text-white { color: #ffffff; }
-.text-left { text-align: left; }
-.bg-\[\#141414\] { background-color: #141414; }
-.border-white\/10 { border-color: rgba(255, 255, 255, 0.1); border-style: solid; border-width: 1px; }
-.hover\:bg-\[\#222\]:hover { background-color: #222222; }
-.text-white\/50 { color: rgba(255, 255, 255, 0.5); }
-.text-white\/55 { color: rgba(255, 255, 255, 0.55); }
-.duration-200 { transition-duration: 200ms; }
-.transition-transform { transition-property: transform; }
-.max-w-\[5\.5rem\] { max-width: 5.5rem; }
-
-@media (min-width: 640px) {
-  .sm\:justify-center { justify-content: center; }
-  .sm\:justify-start { justify-content: flex-start; }
-  .sm\:min-w-0 { min-width: 0; }
-  .sm\:flex-1 { flex: 1 1 0%; }
-  .sm\:text-sm { font-size: 14px; }
-  .sm\:max-w-\[7rem\] { max-width: 7rem; }
+.np-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-#watch-playback-mode-trigger,
-#watch-server-trigger {
-  user-select: none;
+.np-dropdown-container {
   position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
-#watch-playback-mode-trigger:focus-visible,
-#watch-server-trigger:focus-visible {
+/* Pill Trigger Button */
+.np-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 13px;
+  border-radius: 9999px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+  white-space: nowrap;
+  text-align: left;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-#watch-playback-mode-trigger[aria-expanded="true"] svg.lucide-chevron-down,
-#watch-server-trigger[aria-expanded="true"] svg.lucide-chevron-down {
-  transform: rotate(180deg);
+.np-pill-btn:hover {
+  background: #202020;
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* Dropdown listbox menu popup */
-.watch-dropdown-listbox {
+.np-pill-btn:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.np-pill-btn.open {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.np-pill-text {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Static Pill Badge (e.g. Bolt) */
+.np-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 600;
+  user-select: none;
+  letter-spacing: 0.01em;
+}
+
+/* Dropdown Menu Popup Card */
+.np-dropdown-menu {
   position: absolute;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   left: 0;
-  z-index: 100;
+  z-index: 1000;
   min-width: 220px;
-  background: rgba(18, 18, 18, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
+  width: 230px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
   padding: 6px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  list-style: none;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  animation: watchMenuFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: npDropdownFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes watchMenuFadeIn {
-  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes npDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.watch-dropdown-header {
+/* Server List Scrollable Container */
+.np-dropdown-menu.servers-list {
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.np-dropdown-menu.servers-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.np-dropdown-menu.servers-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.np-dropdown-menu.servers-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+}
+
+.np-dropdown-menu.servers-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* Section Title inside Dropdown */
+.np-dropdown-title {
   font-size: 10px;
-  font-weight: 800;
-  color: var(--text-dim);
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 6px 10px 4px;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 3px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 8px 10px 6px;
+  margin: 0;
+  user-select: none;
 }
 
-.watch-dropdown-option {
+/* Individual Dropdown Item */
+.np-dropdown-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #d6d6d6;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
-  transition: all 0.15s ease;
-  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: left;
+  outline: none;
+  font-family: inherit;
+  gap: 12px;
 }
 
-.watch-dropdown-option:hover {
+.np-dropdown-option:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.np-dropdown-option.selected {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
 }
 
-.watch-dropdown-option.active {
-  background: rgba(229, 9, 20, 0.18);
-  color: #ff4d4d;
-  font-weight: 700;
-}
-
-.watch-dropdown-option .option-text-group {
+.np-dropdown-option-left {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: left;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
 }
 
-.watch-dropdown-option .option-title {
-  font-size: 13px;
+/* Mode Icon Box (Direct / Embed) */
+.np-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.15s ease;
+}
+
+.np-icon-box.active {
+  background: #ffffff;
+  color: #000000;
+}
+
+.np-option-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.np-dropdown-option.selected .np-option-name {
   font-weight: 600;
+  color: #ffffff;
 }
 
-.watch-dropdown-option .option-desc {
-  font-size: 11px;
-  color: var(--text-dim);
+/* Radio Button Circle on the Right */
+.np-radio-outer {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
 }
 
-.watch-dropdown-option .option-badge {
-  font-size: 9px;
-  font-weight: 800;
-  background: rgba(229, 9, 20, 0.25);
-  color: #ff5252;
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: auto;
-  margin-right: 8px;
+.np-radio-outer.checked {
+  border-color: #ffffff;
 }
 
-.watch-dropdown-option .option-check {
-  color: var(--netflix-red, #e50914);
-  font-weight: 800;
-  font-size: 14px;
-  margin-left: 6px;
+.np-radio-inner {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
 }
+
 
 /* ═══════════════════════════════════════════════════
    STUDIOS & PLATFORMS ROW

@@ -703,179 +703,188 @@ export default function StreamingPlayer({
           </div>
 
           {/* Exact Playback Mode & Server Selection Container (matches Nippleflix) */}
-          <div className="flex min-w-0 justify-start sm:justify-center">
-            <div className="pointer-events-auto flex min-w-0 items-center">
-              <div className="flex shrink-0 items-center gap-2 sm:min-w-0 sm:flex-1 sm:justify-start">
-                
-                {/* 1. Playback Mode Trigger & Dropdown */}
-                <div className="relative inline-flex w-auto max-w-full shrink-0" ref={playbackModeRef}>
+          <div className="np-controls-group">
+            {/* 1. Playback Mode Trigger & Dropdown */}
+            <div className="np-dropdown-container" ref={playbackModeRef}>
+              <button
+                type="button"
+                id="watch-playback-mode-trigger"
+                aria-label="Playback mode"
+                aria-haspopup="listbox"
+                aria-expanded={playbackModeOpen}
+                onClick={() => {
+                  setPlaybackModeOpen(!playbackModeOpen);
+                  setServerMenuOpen(false);
+                  setShowAudioMenu(false);
+                }}
+                className={`np-pill-btn ${playbackModeOpen ? "open" : ""}`}
+              >
+                {playbackMode === "direct" ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.7 }}>
+                    <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                    <path d="M2 12h20"></path>
+                  </svg>
+                )}
+                <span>{playbackMode === "direct" ? "Direct" : "Embed"}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{
+                    opacity: 0.55,
+                    transform: playbackModeOpen ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.2s ease"
+                  }}
+                >
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+
+              {/* Playback Mode Dropdown Menu */}
+              {playbackModeOpen && (
+                <div className="np-dropdown-menu">
+                  <p className="np-dropdown-title">PLAYBACK MODE</p>
+                  
+                  {/* Direct Option */}
                   <button
                     type="button"
-                    id="watch-playback-mode-trigger"
-                    aria-label="Playback mode"
-                    aria-haspopup="listbox"
-                    aria-expanded={playbackModeOpen}
-                    onClick={() => {
-                      setPlaybackModeOpen(!playbackModeOpen);
-                      setServerMenuOpen(false);
-                      setShowAudioMenu(false);
-                    }}
-                    className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
+                    role="option"
+                    aria-selected={playbackMode === "direct"}
+                    className={`np-dropdown-option ${playbackMode === "direct" ? "selected" : ""}`}
+                    onClick={() => handlePlaybackModeSelect("direct")}
                   >
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
-                        {playbackMode === "direct" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-                            <path d="M15.033 9.44a.647.647 0 0 1 0 1.12l-4.065 2.352a.645.645 0 0 1-.968-.56V7.648a.645.645 0 0 1 .967-.56z"></path>
-                            <path d="M12 17v4"></path>
-                            <path d="M8 21h8"></path>
-                            <rect x="2" y="3" width="20" height="14" rx="2"></rect>
-                          </svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                            <path d="M2 12h20"></path>
-                          </svg>
-                        )}
-                      </span>
-                      <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
-                        {playbackMode === "direct" ? "Direct" : "Embed"}
-                      </span>
-                    </span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 shrink-0 text-white/55 transition-transform duration-200 ${playbackModeOpen ? "rotate-180" : ""}`}>
-                      <path d="m6 9 6 6 6-6"></path>
-                    </svg>
+                    <div className="np-dropdown-option-left">
+                      <div className={`np-icon-box ${playbackMode === "direct" ? "active" : ""}`}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
+                        </svg>
+                      </div>
+                      <span className="np-option-name">Direct</span>
+                    </div>
+                    <div className={`np-radio-outer ${playbackMode === "direct" ? "checked" : ""}`}>
+                      {playbackMode === "direct" && <div className="np-radio-inner" />}
+                    </div>
                   </button>
 
-                  {/* Playback Mode Dropdown Menu */}
-                  {playbackModeOpen && (
-                    <div className="absolute left-0 top-full mt-2 z-[200] min-w-[210px] overflow-hidden rounded-2xl border border-white/10 bg-[#141414] p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-150">
-                      <div className="px-2.5 pb-1.5 pt-1">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/55">PLAYBACK MODE</p>
+                  {/* Embed Option */}
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={playbackMode === "embed"}
+                    className={`np-dropdown-option ${playbackMode === "embed" ? "selected" : ""}`}
+                    onClick={() => handlePlaybackModeSelect("embed")}
+                  >
+                    <div className="np-dropdown-option-left">
+                      <div className={`np-icon-box ${playbackMode === "embed" ? "active" : ""}`}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                          <path d="M2 12h20"></path>
+                        </svg>
                       </div>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={playbackMode === "direct"}
-                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${playbackMode === "direct" ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
-                        onClick={() => handlePlaybackModeSelect("direct")}
-                      >
-                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${playbackMode === "direct" ? "bg-white text-black" : "bg-white/[0.06] text-white/70"}`}>
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>
-                          </svg>
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="truncate text-sm font-semibold text-white">Direct</span>
-                        </span>
-                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${playbackMode === "direct" ? "border-white" : "border-white/25"}`}>
-                          {playbackMode === "direct" && <span className="h-2 w-2 rounded-full bg-white" />}
-                        </span>
-                      </button>
-
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={playbackMode === "embed"}
-                        className={`flex w-full cursor-pointer items-center gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${playbackMode === "embed" ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
-                        onClick={() => handlePlaybackModeSelect("embed")}
-                      >
-                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${playbackMode === "embed" ? "bg-white text-black" : "bg-white/[0.06] text-white/70"}`}>
-                          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
-                            <path d="M2 12h20"></path>
-                          </svg>
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="truncate text-sm font-semibold text-white">Embed</span>
-                        </span>
-                        <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${playbackMode === "embed" ? "border-white" : "border-white/25"}`}>
-                          {playbackMode === "embed" && <span className="h-2 w-2 rounded-full bg-white" />}
-                        </span>
-                      </button>
+                      <span className="np-option-name">Embed</span>
                     </div>
-                  )}
+                    <div className={`np-radio-outer ${playbackMode === "embed" ? "checked" : ""}`}>
+                      {playbackMode === "embed" && <div className="np-radio-inner" />}
+                    </div>
+                  </button>
                 </div>
+              )}
+            </div>
 
-                {/* Direct Mode -> Bolt Badge Indicator */}
-                {playbackMode === "direct" && (
-                  <span className="inline-flex h-9 shrink-0 items-center rounded-full border border-white/10 bg-white/[0.06] px-3 text-xs font-semibold text-white/80">
-                    Bolt
+            {/* Direct Mode -> Bolt Badge Indicator */}
+            {playbackMode === "direct" && (
+              <span className="np-pill-badge">
+                Bolt
+              </span>
+            )}
+
+            {/* Embed Mode -> Change Server Trigger & Dropdown */}
+            {playbackMode === "embed" && (
+              <div className="np-dropdown-container" ref={serverMenuRef}>
+                <button
+                  type="button"
+                  id="watch-server-trigger"
+                  aria-label="Change server"
+                  aria-haspopup="listbox"
+                  aria-expanded={serverMenuOpen}
+                  onClick={() => {
+                    setServerMenuOpen(!serverMenuOpen);
+                    setPlaybackModeOpen(false);
+                    setShowAudioMenu(false);
+                  }}
+                  className={`np-pill-btn ${serverMenuOpen ? "open" : ""}`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}>
+                    <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+                    <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+                    <line x1="6" x2="6.01" y1="6" y2="6"></line>
+                    <line x1="6" x2="6.01" y1="18" y2="18"></line>
+                  </svg>
+                  <span className="np-pill-text">
+                    {activeServerName}
                   </span>
-                )}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{
+                      opacity: 0.55,
+                      transform: serverMenuOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 0.2s ease"
+                    }}
+                  >
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </button>
 
-                {/* Embed Mode -> Change Server Trigger & Dropdown */}
-                {playbackMode === "embed" && (
-                  <div className="relative inline-flex w-auto max-w-full shrink-0" ref={serverMenuRef}>
-                    <button
-                      type="button"
-                      id="watch-server-trigger"
-                      aria-label="Change server"
-                      aria-haspopup="listbox"
-                      aria-expanded={serverMenuOpen}
-                      onClick={() => {
-                        setServerMenuOpen(!serverMenuOpen);
-                        setPlaybackModeOpen(false);
-                        setShowAudioMenu(false);
-                      }}
-                      className="inline-flex h-9 max-w-full cursor-pointer items-center gap-1.5 rounded-full px-3 text-left text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 sm:text-sm border border-white/10 bg-[#141414] text-white hover:bg-[#222]"
-                    >
-                      <span className="flex min-w-0 items-center gap-1.5">
-                        <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center text-white/50">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-                            <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
-                            <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
-                            <line x1="6" x2="6.01" y1="6" y2="6"></line>
-                            <line x1="6" x2="6.01" y1="18" y2="18"></line>
-                          </svg>
-                        </span>
-                        <span className="max-w-[5.5rem] truncate sm:max-w-[7rem]">
-                          {activeServerName}
-                        </span>
-                      </span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`h-3 w-3 shrink-0 text-white/55 transition-transform duration-200 ${serverMenuOpen ? "rotate-180" : ""}`}>
-                        <path d="m6 9 6 6 6-6"></path>
-                      </svg>
-                    </button>
-
-                    {/* Change Server Dropdown Menu with all 11 servers */}
-                    {serverMenuOpen && (
-                      <div className="absolute left-0 top-full mt-2 z-[200] max-h-[360px] min-w-[210px] overflow-y-auto rounded-2xl border border-white/10 bg-[#141414] p-1.5 shadow-[0_16px_48px_rgba(0,0,0,0.6)] animate-in fade-in zoom-in-95 duration-150">
-                        <div className="px-2.5 pb-1.5 pt-1">
-                          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/55">CHANGE SERVER</p>
-                        </div>
-                        {EMBED_SERVERS.map((srv) => {
-                          const isSelected = selectedServer === srv.id;
-                          return (
-                            <button
-                              key={srv.id}
-                              type="button"
-                              role="option"
-                              aria-selected={isSelected}
-                              className={`flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-2.5 py-2 text-left transition-colors ${isSelected ? "bg-white/[0.07]" : "hover:bg-white/[0.04]"}`}
-                              onClick={() => handleServerSelect(srv.id)}
-                            >
-                              <span className="truncate text-sm font-medium text-white/85">
-                                {srv.name}
-                              </span>
-                              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${isSelected ? "border-white" : "border-white/25"}`}>
-                                {isSelected && <span className="h-2 w-2 rounded-full bg-white" />}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
+                {/* Change Server Dropdown Menu with all 11 servers */}
+                {serverMenuOpen && (
+                  <div className="np-dropdown-menu servers-list">
+                    <p className="np-dropdown-title">CHANGE SERVER</p>
+                    {EMBED_SERVERS.map((srv) => {
+                      const isSelected = selectedServer === srv.id;
+                      return (
+                        <button
+                          key={srv.id}
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          className={`np-dropdown-option ${isSelected ? "selected" : ""}`}
+                          onClick={() => handleServerSelect(srv.id)}
+                        >
+                          <span className="np-option-name">{srv.name}</span>
+                          <div className={`np-radio-outer ${isSelected ? "checked" : ""}`}>
+                            {isSelected && <div className="np-radio-inner" />}
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
-
               </div>
-            </div>
+            )}
           </div>
 
           <div className="player-actions">
+            
             {/* Quality, Audio, Play, Mute controls hidden - VidBolt handles playback internally */}
             {/* Toggle Lights Button */}
             <button
