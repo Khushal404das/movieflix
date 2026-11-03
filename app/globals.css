@@ -8445,6 +8445,54 @@ body.lights-off-active .player-section-wrapper {
 }
 
 /* ==========================================================================
+   Nippleflix Nav Shell Capsule ([ 🔍 ⚙ | Ads ⭘ ])
+   ========================================================================== */
+
+.nav-shell {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 3px 5px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.nav-shell-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  padding: 0;
+  outline: none;
+}
+
+.nav-shell-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.nav-shell-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 4px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
    Nippleflix-Style Ads Switch Button
    ========================================================================== */
 

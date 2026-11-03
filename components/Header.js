@@ -212,114 +212,131 @@ export default function Header() {
 
         {/* Right Side: Expanding Search, Notifications, Avatar */}
         <div className="header-right">
-          {/* Expanding Search Bar */}
-          <div className={`netflix-search-box ${searchOpen || query ? "open" : ""}`} ref={searchContainerRef}>
+          {/* Nippleflix Unified Nav Shell ([ 🔍 ⚙ | Ads ⭘ ]) */}
+          <div className="nav-shell gap-0.5 !p-[3px] md:!p-1">
+            {/* Search Trigger / Link */}
             <button
               type="button"
-              className="search-toggle-btn"
+              className="nav-shell-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/[0.1] hover:text-white md:h-9 md:w-9"
               onClick={toggleSearch}
-              aria-label="Search titles"
+              aria-label="Search"
+              title="Search titles"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.3-4.3"/>
               </svg>
             </button>
 
-            <form onSubmit={handleSearchSubmit} className="search-form-slide">
-              <input
-                ref={searchInputRef}
-                type="search"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Titles, people, genres"
-                className="netflix-search-input"
-              />
-              {query && (
-                <button
-                  type="button"
-                  className="search-clear-btn"
-                  onClick={() => { setQuery(""); setSuggestions([]); }}
-                >
-                  ✕
-                </button>
-              )}
-            </form>
+            {/* Settings Trigger */}
+            <button
+              type="button"
+              className="nav-shell-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/[0.1] hover:text-white md:h-9 md:w-9"
+              aria-label="Settings"
+              title="Settings"
+              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
 
-            {/* Instant Search Dropdown Popup */}
-            {query.trim().length > 0 && (
-              <div className="netflix-search-results-popup">
-                {isLoading ? (
-                  <div className="search-popup-loading">
-                    <div className="spinner" />
-                    <span>Searching MovieFlix catalog...</span>
-                  </div>
-                ) : suggestions.length > 0 ? (
-                  <div className="search-popup-grid">
-                    {suggestions.slice(0, 6).map((item) => (
-                      <Link
-                        key={(item.type || "m") + item.id}
-                        href={`/${item.type || "movie"}/${item.id}`}
-                        className="popup-result-item"
-                        onClick={() => { setSearchOpen(false); setQuery(""); }}
-                      >
-                        <div className="popup-poster">
-                          {item.poster ? (
-                            <img src={item.poster} alt={item.title} />
-                          ) : (
-                            <div className="no-poster">🎬</div>
-                          )}
-                        </div>
-                        <div className="popup-info">
-                          <span className="popup-title">{item.title}</span>
-                          <span className="popup-meta">{item.year} • {item.rating ? `★ ${item.rating}` : (item.type === "tv" ? "Series" : "Movie")}</span>
-                        </div>
-                      </Link>
-                    ))}
-                    <button type="button" onClick={handleSearchSubmit} className="popup-see-all">
-                      See all results for &ldquo;{query}&rdquo; &rarr;
-                    </button>
-                  </div>
-                ) : (
-                  <div className="search-popup-empty">
-                    <span>No matching titles found</span>
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Divider */}
+            <span className="nav-shell-divider" aria-hidden="true" />
+
+            {/* Ads Toggle Button (Synced with player & sessionStorage, matching Nippleflix) */}
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!adsOff}
+              aria-label={adsOff ? "Ads off" : "Ads on"}
+              className="np-ads-switch-btn flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
+              onClick={toggleAds}
+              title={adsOff ? "Ads off (Click to enable ads)" : "Ads on (Click to disable ads)"}
+            >
+              <span className="np-ads-label text-[13px] font-medium leading-none text-white">Ads</span>
+              <span
+                className={`np-ads-track relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
+                  !adsOff ? "active bg-[#f3f0e8]" : "bg-zinc-600"
+                }`}
+              >
+                <span
+                  className={`np-ads-thumb absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
+                    !adsOff ? "active left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
+                  }`}
+                />
+              </span>
+            </button>
           </div>
 
+          {/* Slide-out Search Box when active */}
+          {searchOpen && (
+            <div className="netflix-search-box open" ref={searchContainerRef} style={{ position: "absolute", right: "200px", top: "12px", zIndex: 100 }}>
+              <form onSubmit={handleSearchSubmit} className="search-form-slide">
+                <input
+                  ref={searchInputRef}
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Titles, people, genres"
+                  className="netflix-search-input"
+                  autoFocus
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="search-clear-btn"
+                    onClick={() => { setQuery(""); setSuggestions([]); }}
+                  >
+                    ✕
+                  </button>
+                )}
+              </form>
 
-
-          {/* Ads Toggle Button (Synced with player & sessionStorage, matching Nippleflix) */}
-          <button
-            type="button"
-            role="switch"
-            aria-checked={!adsOff}
-            aria-label={adsOff ? "Ads off" : "Ads on"}
-            className="np-ads-switch-btn flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
-            onClick={toggleAds}
-            title={adsOff ? "Ads off" : "Ads on"}
-          >
-            <span className="np-ads-label text-[13px] font-medium leading-none text-white">Ads</span>
-            <span
-              className={`np-ads-track relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
-                !adsOff ? "active bg-[#f3f0e8]" : "bg-zinc-600"
-              }`}
-            >
-              <span
-                className={`np-ads-thumb absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
-                  !adsOff ? "active left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
-                }`}
-              />
-            </span>
-          </button>
-
-          {/* Notifications Icon */}
-          <button type="button" className="netflix-icon-btn" aria-label="Notifications">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-            <span className="notif-badge">1</span>
-          </button>
+              {/* Instant Search Dropdown Popup */}
+              {query.trim().length > 0 && (
+                <div className="netflix-search-results-popup">
+                  {isLoading ? (
+                    <div className="search-popup-loading">
+                      <div className="spinner" />
+                      <span>Searching MovieFlix catalog...</span>
+                    </div>
+                  ) : suggestions.length > 0 ? (
+                    <div className="search-popup-grid">
+                      {suggestions.slice(0, 6).map((item) => (
+                        <Link
+                          key={(item.type || "m") + item.id}
+                          href={`/${item.type || "movie"}/${item.id}`}
+                          className="popup-result-item"
+                          onClick={() => { setSearchOpen(false); setQuery(""); }}
+                        >
+                          <div className="popup-poster">
+                            {item.poster ? (
+                              <img src={item.poster} alt={item.title} />
+                            ) : (
+                              <div className="no-poster">🎬</div>
+                            )}
+                          </div>
+                          <div className="popup-info">
+                            <span className="popup-title">{item.title}</span>
+                            <span className="popup-meta">{item.year} • {item.rating ? `★ ${item.rating}` : (item.type === "tv" ? "Series" : "Movie")}</span>
+                          </div>
+                        </Link>
+                      ))}
+                      <button type="button" onClick={handleSearchSubmit} className="popup-see-all">
+                        See all results for &ldquo;{query}&rdquo; &rarr;
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="search-popup-empty">
+                      <span>No matching titles found</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* User Profile Avatar / Sign In */}
           {user ? (
