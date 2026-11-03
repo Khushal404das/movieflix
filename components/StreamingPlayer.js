@@ -18,26 +18,25 @@ const AUDIO_TRACKS = [
   { code: "fr", label: "French", flag: "🇫🇷" }
 ];
 
-// Direct Mode Player: VidBolt Pro (Flagship ad-free server with multi-audio & subtitles)
+// Direct Mode Player: VidBolt Pro (Served via Ad-Stripping Reverse-Proxy with multi-audio & subtitles)
 const DIRECT_SERVER = {
   id: "vidbolt",
   name: "Bolt",
-  domain: "https://vidbolt.pro",
+  domain: "/api/player/vidbolt",
   getUrl: (type, id, s, e, audio = "hindi") => {
-    const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
-    if (type === "anime-mal") {
-      return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    if (type === "anime" || type === "anilist") {
-      return `https://vidbolt.pro/anime/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    if (type === "tv") {
-      return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    return `https://vidbolt.pro/movie/${id}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-  }
+    const params = new URLSearchParams({
+      type,
+      id: String(id),
+      theme: "E50914",
+      autoPlay: "true",
+      mobileSheets: "true",
+    });
+    if (s) params.set("s", String(s));
+    if (e) params.set("e", String(e));
+    if (audio && audio !== "auto") params.set("audio", audio);
+    return `/api/player/vidbolt?${params.toString()}`;
+  },
 };
-
 // Embed Mode Players: All 11 Multi-Servers from Nippleflix
 const EMBED_SERVERS = [
   {
