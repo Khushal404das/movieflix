@@ -18,24 +18,24 @@ const AUDIO_TRACKS = [
   { code: "fr", label: "French", flag: "🇫🇷" }
 ];
 
-// Direct Mode Player: VidBolt Pro (Served via Ad-Stripping Reverse-Proxy with multi-audio & subtitles)
+// Direct Mode Player: VidBolt Pro (Flagship player with multi-audio & subtitles)
 const DIRECT_SERVER = {
   id: "vidbolt",
   name: "Bolt",
-  domain: "/api/player/vidbolt",
+  domain: "https://vidbolt.pro",
   getUrl: (type, id, s, e, audio = "hindi") => {
-    const params = new URLSearchParams({
-      type,
-      id: String(id),
-      theme: "E50914",
-      autoPlay: "true",
-      mobileSheets: "true",
-    });
-    if (s) params.set("s", String(s));
-    if (e) params.set("e", String(e));
-    if (audio && audio !== "auto") params.set("audio", audio);
-    return `/api/player/vidbolt?${params.toString()}`;
-  },
+    const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
+    if (type === "anime-mal") {
+      return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
+    }
+    if (type === "anime" || type === "anilist") {
+      return `https://vidbolt.pro/anime/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
+    }
+    if (type === "tv") {
+      return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
+    }
+    return `https://vidbolt.pro/movie/${id}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
+  }
 };
 // Embed Mode Players: All 11 Multi-Servers from Nippleflix
 const EMBED_SERVERS = [
@@ -548,46 +548,19 @@ export default function StreamingPlayer({
     }
   };
 
-  // Anti-ad redirect and popup shield: block rogue popups & top-level redirects
+  // Anti-ad popup shield: silently block window.open ad popups without any reload prompts
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    let allowNavigation = false;
-
-    // Prevent top-level redirect hijack from iframe ad networks when ads are OFF
-    const handleBeforeUnload = (e) => {
-      if (!adsEnabled && !allowNavigation) {
-        e.preventDefault();
-        e.returnValue = "MovieFlix protected you from an ad redirect.";
-        return e.returnValue;
-      }
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Allow legitimate clicks on MovieFlix links
-    const handleInternalClick = (e) => {
-      const link = e.target.closest("a, button");
-      if (link) {
-        allowNavigation = true;
-        setTimeout(() => {
-          allowNavigation = false;
-        }, 1500);
-      }
-    };
-    document.addEventListener("click", handleInternalClick, true);
 
     const originalOpen = window.open;
     window.open = function (...args) {
       if (!adsEnabled) {
-        console.warn("[MovieFlix] Blocked rogue ad popup window:", args[0]);
         return null;
       }
       return originalOpen.apply(window, args);
     };
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("click", handleInternalClick, true);
       window.open = originalOpen;
     };
   }, [adsEnabled]);
