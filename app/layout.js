@@ -200,6 +200,9 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebsite) }}
         />
 
+        {/* AdGuard Popup Blocker & Scriptlet Engine (Official Open Source) */}
+        <script src="/adguard-popupblocker.js" />
+
         {/* Favicon & Web App Icons */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
         <link rel="alternate icon" href="/favicon.ico?v=3" />
