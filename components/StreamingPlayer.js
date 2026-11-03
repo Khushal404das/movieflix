@@ -198,25 +198,29 @@ export default function StreamingPlayer({
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
 
-  // Ads state (synced with Nippleflix ad-blocking keys)
-  const [adsEnabled, setAdsEnabled] = useState(false);
+  // Ads state (synced with Nippleflix ad-blocking keys, default: true -> Ads OFF)
+  const [adsOff, setAdsOff] = useState(true);
 
   useEffect(() => {
     try {
-      const isOff =
-        sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
-        sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
-        localStorage.getItem("nippleflix_ads_disabled") === "true" ||
-        localStorage.getItem("movieflix_ads_disabled") === "true" ||
-        localStorage.getItem("rh-ads-enabled") === "true";
+      const s = sessionStorage.getItem("nippleflix_ads_disabled");
+      const m = sessionStorage.getItem("movieflix_ads_disabled");
+      const ls = localStorage.getItem("nippleflix_ads_disabled");
+      const lm = localStorage.getItem("movieflix_ads_disabled");
 
-      setAdsEnabled(isOff);
-      window.__ADS_DISABLED__ = isOff;
+      const isBlocked = (s === null && m === null && ls === null && lm === null)
+        ? true
+        : (s === "true" || m === "true" || ls === "true" || lm === "true");
+
+      setAdsOff(isBlocked);
+      window.__ADS_DISABLED__ = isBlocked;
     } catch (e) {}
 
     const handleSync = (e) => {
-      if (e.detail && typeof e.detail.enabled === "boolean") {
-        setAdsEnabled(e.detail.enabled);
+      if (e.detail && typeof e.detail.adsOff === "boolean") {
+        setAdsOff(e.detail.adsOff);
+      } else if (e.detail && typeof e.detail.enabled === "boolean") {
+        setAdsOff(!e.detail.enabled);
       }
     };
     window.addEventListener("rh-ads-toggle", handleSync);
@@ -224,19 +228,19 @@ export default function StreamingPlayer({
   }, []);
 
   const handleToggleAds = () => {
-    setAdsEnabled((prev) => {
-      const next = !prev;
+    setAdsOff((prev) => {
+      const nextAdsOff = !prev;
       if (typeof window !== "undefined") {
-        const valStr = String(next);
+        const valStr = String(nextAdsOff);
         sessionStorage.setItem("nippleflix_ads_disabled", valStr);
         sessionStorage.setItem("movieflix_ads_disabled", valStr);
         localStorage.setItem("nippleflix_ads_disabled", valStr);
         localStorage.setItem("movieflix_ads_disabled", valStr);
-        localStorage.setItem("rh-ads-enabled", valStr);
-        window.__ADS_DISABLED__ = next;
-        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
+        localStorage.setItem("rh-ads-enabled", String(!nextAdsOff));
+        window.__ADS_DISABLED__ = nextAdsOff;
+        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { adsOff: nextAdsOff, enabled: !nextAdsOff } }));
       }
-      return next;
+      return nextAdsOff;
     });
   };
 
@@ -564,16 +568,17 @@ export default function StreamingPlayer({
 
     const originalOpen = window.open;
     window.open = function (...args) {
-      if (!adsEnabled) {
+      if (adsOff) {
+        console.warn("[Player AdShield] Silently blocked ad popup:", args[0]);
         return null;
       }
-      return originalOpen.apply(window, args);
+      return originalOpen ? originalOpen.apply(window, args) : null;
     };
 
     return () => {
       window.open = originalOpen;
     };
-  }, [adsEnabled]);
+  }, [adsOff]);
 
   // Cinema Lights Off handler
   useEffect(() => {

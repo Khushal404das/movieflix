@@ -213,16 +213,35 @@ export default function RootLayout({ children }) {
               try {
                 function isAdsDisabled() {
                   try {
-                    return (
-                      sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
-                      sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
-                      localStorage.getItem("nippleflix_ads_disabled") === "true" ||
-                      localStorage.getItem("movieflix_ads_disabled") === "true"
-                    );
+                    var s = sessionStorage.getItem("nippleflix_ads_disabled");
+                    if (s !== null) return s === "true";
+                    var m = sessionStorage.getItem("movieflix_ads_disabled");
+                    if (m !== null) return m === "true";
+                    var ls = localStorage.getItem("nippleflix_ads_disabled");
+                    if (ls !== null) return ls === "true";
+                    var lm = localStorage.getItem("movieflix_ads_disabled");
+                    if (lm !== null) return lm === "true";
+                    return true; // Default: Ads are OFF!
                   } catch (e) {
-                    return false;
+                    return true;
                   }
                 }
+
+                // Default all keys to "true" (Ads OFF) on first visit
+                try {
+                  if (sessionStorage.getItem("nippleflix_ads_disabled") === null) {
+                    sessionStorage.setItem("nippleflix_ads_disabled", "true");
+                  }
+                  if (sessionStorage.getItem("movieflix_ads_disabled") === null) {
+                    sessionStorage.setItem("movieflix_ads_disabled", "true");
+                  }
+                  if (localStorage.getItem("nippleflix_ads_disabled") === null) {
+                    localStorage.setItem("nippleflix_ads_disabled", "true");
+                  }
+                  if (localStorage.getItem("movieflix_ads_disabled") === null) {
+                    localStorage.setItem("movieflix_ads_disabled", "true");
+                  }
+                } catch (e) {}
 
                 window.__ADS_DISABLED__ = isAdsDisabled();
 
@@ -305,7 +324,6 @@ export default function RootLayout({ children }) {
             })();`
           }}
         />
-
         {/* Cloudflare Turnstile & CDN Preconnect */}
         <link rel="preconnect" href="https://challenges.cloudflare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
