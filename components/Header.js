@@ -17,17 +17,22 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [adsEnabled, setAdsEnabled] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("rh-ads-enabled");
-      if (saved !== null) return saved === "true";
-      const dis = sessionStorage.getItem("movieflix_ads_disabled") || sessionStorage.getItem("nippleflix_ads_disabled");
-      if (dis !== null) return dis === "true";
-    }
-    return false;
-  });
+  const [adsEnabled, setAdsEnabled] = useState(false);
 
   useEffect(() => {
+    // Mount-time sync: check both sessionStorage and localStorage to avoid SSR desync
+    try {
+      const isOff =
+        sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
+        sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
+        localStorage.getItem("nippleflix_ads_disabled") === "true" ||
+        localStorage.getItem("movieflix_ads_disabled") === "true" ||
+        localStorage.getItem("rh-ads-enabled") === "true";
+
+      setAdsEnabled(isOff);
+      window.__ADS_DISABLED__ = isOff;
+    } catch (e) {}
+
     const handleSync = (e) => {
       if (e.detail && typeof e.detail.enabled === "boolean") {
         setAdsEnabled(e.detail.enabled);
@@ -41,9 +46,13 @@ export default function Header() {
     setAdsEnabled((prev) => {
       const next = !prev;
       if (typeof window !== "undefined") {
-        localStorage.setItem("rh-ads-enabled", String(next));
-        sessionStorage.setItem("movieflix_ads_disabled", String(next));
-        sessionStorage.setItem("nippleflix_ads_disabled", String(next));
+        const valStr = String(next);
+        sessionStorage.setItem("nippleflix_ads_disabled", valStr);
+        sessionStorage.setItem("movieflix_ads_disabled", valStr);
+        localStorage.setItem("nippleflix_ads_disabled", valStr);
+        localStorage.setItem("movieflix_ads_disabled", valStr);
+        localStorage.setItem("rh-ads-enabled", valStr);
+        window.__ADS_DISABLED__ = next;
         window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
       }
       return next;

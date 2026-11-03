@@ -206,17 +206,101 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
         <link rel="manifest" href="/manifest.json" />
 
-        {/* Ads suppression check matching Nippleflix session gate */}
+        {/* Complete AdBlock & Popunder suppression matching Nippleflix */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function () {
               try {
-                var adsOff = sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
-                             sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
-                             localStorage.getItem("rh-ads-enabled") === "false";
-                if (adsOff) {
-                  window.__ADS_DISABLED__ = true;
+                function isAdsDisabled() {
+                  try {
+                    return (
+                      sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
+                      sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
+                      localStorage.getItem("nippleflix_ads_disabled") === "true" ||
+                      localStorage.getItem("movieflix_ads_disabled") === "true"
+                    );
+                  } catch (e) {
+                    return false;
+                  }
                 }
+
+                window.__ADS_DISABLED__ = isAdsDisabled();
+
+                // 1. Intercept and block window.open popups & popunders when ads are disabled
+                var rawOpen = window.open;
+                window.open = function (url, target, features) {
+                  if (isAdsDisabled()) {
+                    console.warn("[AdBlocker] Blocked popup/popunder:", url);
+                    return null;
+                  }
+                  return rawOpen ? rawOpen.apply(this, arguments) : null;
+                };
+
+                // 2. Intercept document.createElement to block ad scripts (amuyontraiked, push-sdk, doubleclick, etc.)
+                var rawCreateElement = document.createElement;
+                document.createElement = function (tagName) {
+                  var el = rawCreateElement.apply(document, arguments);
+                  if (typeof tagName === "string" && tagName.toLowerCase() === "script") {
+                    var rawSetAttribute = el.setAttribute;
+                    el.setAttribute = function (name, val) {
+                      if (name === "src" && isAdsDisabled() && isAdUrl(val)) {
+                        console.warn("[AdBlocker] Blocked ad script:", val);
+                        return;
+                      }
+                      return rawSetAttribute.apply(this, arguments);
+                    };
+                    Object.defineProperty(el, "src", {
+                      set: function (val) {
+                        if (isAdsDisabled() && isAdUrl(val)) {
+                          console.warn("[AdBlocker] Blocked ad script:", val);
+                          return;
+                        }
+                        this.setAttribute("src", val);
+                      },
+                      get: function () {
+                        return this.getAttribute("src") || "";
+                      }
+                    });
+                  }
+                  return el;
+                };
+
+                function isAdUrl(url) {
+                  if (!url || typeof url !== "string") return false;
+                  var adDomains = [
+                    "amuyontraiked.com",
+                    "push-sdk.com",
+                    "googlesyndication.com",
+                    "doubleclick.net",
+                    "adsterra.com",
+                    "popcash.net",
+                    "propellerads.com",
+                    "alwingulla.com",
+                    "histats.com"
+                  ];
+                  for (var i = 0; i < adDomains.length; i++) {
+                    if (url.indexOf(adDomains[i]) !== -1) return true;
+                  }
+                  return false;
+                }
+
+                // 3. Block rogue popunder clicks
+                window.addEventListener("click", function (e) {
+                  if (!isAdsDisabled()) return;
+                  var target = e.target;
+                  while (target && target !== document.body) {
+                    if (target.tagName === "A" && target.target === "_blank") {
+                      var href = target.href || "";
+                      if (isAdUrl(href) || href.indexOf("javascript:") === 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.warn("[AdBlocker] Blocked ad link click:", href);
+                        return false;
+                      }
+                    }
+                    target = target.parentElement;
+                  }
+                }, true);
               } catch (e) {}
             })();`
           }}

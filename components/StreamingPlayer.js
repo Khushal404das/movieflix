@@ -198,16 +198,22 @@ export default function StreamingPlayer({
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
 
-  // Ads state (default false: Ads OFF)
-  const [adsEnabled, setAdsEnabled] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("rh-ads-enabled");
-      return saved === "true";
-    }
-    return false;
-  });
+  // Ads state (synced with Nippleflix ad-blocking keys)
+  const [adsEnabled, setAdsEnabled] = useState(false);
 
   useEffect(() => {
+    try {
+      const isOff =
+        sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
+        sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
+        localStorage.getItem("nippleflix_ads_disabled") === "true" ||
+        localStorage.getItem("movieflix_ads_disabled") === "true" ||
+        localStorage.getItem("rh-ads-enabled") === "true";
+
+      setAdsEnabled(isOff);
+      window.__ADS_DISABLED__ = isOff;
+    } catch (e) {}
+
     const handleSync = (e) => {
       if (e.detail && typeof e.detail.enabled === "boolean") {
         setAdsEnabled(e.detail.enabled);
@@ -221,9 +227,13 @@ export default function StreamingPlayer({
     setAdsEnabled((prev) => {
       const next = !prev;
       if (typeof window !== "undefined") {
-        localStorage.setItem("rh-ads-enabled", String(next));
-        sessionStorage.setItem("movieflix_ads_disabled", String(next));
-        sessionStorage.setItem("nippleflix_ads_disabled", String(next));
+        const valStr = String(next);
+        sessionStorage.setItem("nippleflix_ads_disabled", valStr);
+        sessionStorage.setItem("movieflix_ads_disabled", valStr);
+        localStorage.setItem("nippleflix_ads_disabled", valStr);
+        localStorage.setItem("movieflix_ads_disabled", valStr);
+        localStorage.setItem("rh-ads-enabled", valStr);
+        window.__ADS_DISABLED__ = next;
         window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
       }
       return next;
