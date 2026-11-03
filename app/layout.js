@@ -206,6 +206,22 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
         <link rel="manifest" href="/manifest.json" />
 
+        {/* Ads suppression check matching Nippleflix session gate */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+              try {
+                var adsOff = sessionStorage.getItem("nippleflix_ads_disabled") === "true" ||
+                             sessionStorage.getItem("movieflix_ads_disabled") === "true" ||
+                             localStorage.getItem("rh-ads-enabled") === "false";
+                if (adsOff) {
+                  window.__ADS_DISABLED__ = true;
+                }
+              } catch (e) {}
+            })();`
+          }}
+        />
+
         {/* Cloudflare Turnstile & CDN Preconnect */}
         <link rel="preconnect" href="https://challenges.cloudflare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

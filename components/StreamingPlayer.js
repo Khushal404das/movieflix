@@ -223,6 +223,8 @@ export default function StreamingPlayer({
       const next = !prev;
       if (typeof window !== "undefined") {
         localStorage.setItem("rh-ads-enabled", String(next));
+        sessionStorage.setItem("nippleflix_ads_disabled", String(!next));
+        sessionStorage.setItem("movieflix_ads_disabled", String(!next));
         window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
       }
       return next;
