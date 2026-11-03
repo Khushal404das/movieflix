@@ -441,6 +441,14 @@ export default function StreamingPlayer({
         }
         case "play":
           setIsPlaying(true);
+          if (adsOff) {
+            const iframe = document.getElementById("vidbolt-player");
+            if (iframe?.contentWindow) {
+              iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
+              iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
+              iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
+            }
+          }
           break;
         case "pause":
           setIsPlaying(false);
@@ -561,6 +569,41 @@ export default function StreamingPlayer({
       setIsMuted(true);
     }
   };
+
+  // AdGuard Player Focus & Anti-Popunder Shield (Blocks stealth popunders on player clicks)
+  useEffect(() => {
+    if (typeof window === "undefined" || !adsOff) return;
+
+    let lastPlayerClick = 0;
+    const container = playerRef.current;
+
+    const onPlayerClick = () => {
+      lastPlayerClick = Date.now();
+    };
+
+    if (container) {
+      container.addEventListener("pointerdown", onPlayerClick, true);
+      container.addEventListener("click", onPlayerClick, true);
+    }
+
+    const handleWindowBlur = () => {
+      // If window blurs right after a click on or near the player, a stealth popunder was triggered
+      if (Date.now() - lastPlayerClick < 1500) {
+        window.focus();
+        setTimeout(() => window.focus(), 80);
+      }
+    };
+
+    window.addEventListener("blur", handleWindowBlur);
+
+    return () => {
+      if (container) {
+        container.removeEventListener("pointerdown", onPlayerClick, true);
+        container.removeEventListener("click", onPlayerClick, true);
+      }
+      window.removeEventListener("blur", handleWindowBlur);
+    };
+  }, [adsOff]);
 
   // Anti-ad popup shield: silently block window.open ad popups without any reload prompts
   useEffect(() => {
