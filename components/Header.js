@@ -21,8 +21,8 @@ export default function Header() {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("rh-ads-enabled");
       if (saved !== null) return saved === "true";
-      const dis = sessionStorage.getItem("nippleflix_ads_disabled") || sessionStorage.getItem("movieflix_ads_disabled");
-      if (dis !== null) return dis !== "true";
+      const dis = sessionStorage.getItem("movieflix_ads_disabled") || sessionStorage.getItem("nippleflix_ads_disabled");
+      if (dis !== null) return dis === "true";
     }
     return false;
   });
@@ -42,8 +42,8 @@ export default function Header() {
       const next = !prev;
       if (typeof window !== "undefined") {
         localStorage.setItem("rh-ads-enabled", String(next));
-        sessionStorage.setItem("nippleflix_ads_disabled", String(!next));
-        sessionStorage.setItem("movieflix_ads_disabled", String(!next));
+        sessionStorage.setItem("movieflix_ads_disabled", String(next));
+        sessionStorage.setItem("nippleflix_ads_disabled", String(next));
         window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { enabled: next } }));
       }
       return next;
@@ -273,25 +273,25 @@ export default function Header() {
 
 
 
-          {/* Ads Toggle Button (Synced with player & sessionStorage) */}
+          {/* Ads Toggle Button (Synced with player & sessionStorage, matching Nippleflix) */}
           <button
             type="button"
             role="switch"
             aria-checked={adsEnabled}
             aria-label={adsEnabled ? "Ads on" : "Ads off"}
-            className="flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
+            className="np-ads-switch-btn flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
             onClick={toggleAds}
             title={adsEnabled ? "Ads on" : "Ads off"}
           >
-            <span className="text-[13px] font-medium leading-none text-white">Ads</span>
+            <span className="np-ads-label text-[13px] font-medium leading-none text-white">Ads</span>
             <span
-              className={`relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
-                adsEnabled ? "bg-[#f3f0e8]" : "bg-zinc-600"
+              className={`np-ads-track relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
+                adsEnabled ? "active bg-[#f3f0e8]" : "bg-zinc-600"
               }`}
             >
               <span
-                className={`absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
-                  adsEnabled ? "left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
+                className={`np-ads-thumb absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
+                  adsEnabled ? "active left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
                 }`}
               />
             </span>
