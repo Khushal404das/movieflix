@@ -25,6 +25,10 @@
     window.GM_getValue = function(key, defaultVal) {
       try {
         var v = localStorage.getItem('ag_pb_' + key);
+        if (key === 'allowed') {
+          var authAllowed = 'accounts.google.com,google.com,firebaseapp.com,movieflix-de922.firebaseapp.com,movieflix.stream,localhost';
+          return v ? v + ',' + authAllowed : authAllowed;
+        }
         return v !== null ? v : defaultVal;
       } catch (e) {
         return defaultVal;

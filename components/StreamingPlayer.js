@@ -605,14 +605,25 @@ export default function StreamingPlayer({
     };
   }, [adsOff]);
 
-  // Anti-ad popup shield: silently block window.open ad popups without any reload prompts
+  // Anti-ad popup shield: silently block rogue ad popups while preserving legitimate Auth popups
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    function isSafeUrl(url) {
+      if (!url || url === "" || url === "about:blank") return true;
+      const str = String(url).toLowerCase();
+      const safe = ["accounts.google.com", "firebaseapp.com", "apis.google.com", "google.com", "movieflix", "localhost"];
+      return safe.some(d => str.includes(d));
+    }
+
     const originalOpen = window.open;
     window.open = function (...args) {
+      const url = args[0];
+      if (isSafeUrl(url)) {
+        return originalOpen ? originalOpen.apply(window, args) : null;
+      }
       if (adsOff) {
-        console.warn("[Player AdShield] Silently blocked ad popup:", args[0]);
+        console.warn("[Player AdShield] Silently blocked ad popup:", url);
         return null;
       }
       return originalOpen ? originalOpen.apply(window, args) : null;

@@ -249,11 +249,40 @@ export default function RootLayout({ children }) {
 
                 window.__ADS_DISABLED__ = isAdsDisabled();
 
-                // 1. Intercept and block window.open popups & popunders when ads are disabled
+                function isAuthOrSafePopup(url) {
+                  // Allow blank popups (used by Firebase Auth / Google OAuth to initialize popup synchronously)
+                  if (!url || url === "" || url === "about:blank") return true;
+                  try {
+                    var str = String(url).toLowerCase();
+                    var safeAuthDomains = [
+                      "accounts.google.com",
+                      "google.com",
+                      "firebaseapp.com",
+                      "identitytoolkit.googleapis.com",
+                      "apis.google.com",
+                      "gstatic.com",
+                      "appleid.apple.com",
+                      "facebook.com",
+                      "github.com",
+                      "twitter.com",
+                      "movieflix",
+                      "localhost"
+                    ];
+                    for (var i = 0; i < safeAuthDomains.length; i++) {
+                      if (str.indexOf(safeAuthDomains[i]) !== -1) return true;
+                    }
+                  } catch(e) {}
+                  return false;
+                }
+
+                // 1. Intercept and block ad popups & popunders when ads are disabled, while preserving legitimate Auth popups
                 var rawOpen = window.open;
                 window.open = function (url, target, features) {
+                  if (isAuthOrSafePopup(url)) {
+                    return rawOpen ? rawOpen.apply(this, arguments) : null;
+                  }
                   if (isAdsDisabled()) {
-                    console.warn("[AdBlocker] Blocked popup/popunder:", url);
+                    console.warn("[AdBlocker] Blocked ad popup/popunder:", url);
                     return null;
                   }
                   return rawOpen ? rawOpen.apply(this, arguments) : null;
