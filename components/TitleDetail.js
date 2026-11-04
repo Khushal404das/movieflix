@@ -53,6 +53,7 @@ export default async function TitleDetail({ type = "movie", id, season = 1, epis
             type={type}
             id={id}
             title={t.title}
+            overview={t.overview}
             poster={t.poster}
             backdrop={t.backdrop}
             seasons={seasons}

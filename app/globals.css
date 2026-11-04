@@ -1886,67 +1886,88 @@ body.lights-off-active .player-section-wrapper {
   border-radius: 2px;
 }
 
-/* TV Episode Quick Navigation */
-.tv-quick-nav {
+/* ============================================================
+   TV Series Quick Navigation Bar — Top Pill Control
+   ============================================================ */
+.player-quick-nav-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-start;
+  padding: 14px 24px;
+  background: #110d0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.tv-quick-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #191410;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #2a221b;
 }
 
 .ep-nav-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: #252525;
-  border: 1px solid #383838;
-  color: #ffffff;
-  padding: 6px 12px;
-  border-radius: 4px;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: #a3988b;
+  padding: 6px 14px;
+  border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
-  transition: var(--transition-fast);
-  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  min-height: 34px;
   touch-action: manipulation;
-  min-height: 44px;
-  min-width: 80px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .ep-nav-btn:hover:not(:disabled) {
-  background: var(--netflix-red);
-  border-color: var(--netflix-red);
+  background: #251e17;
+  border-color: #3d3024;
+  color: #ffffff;
 }
 
 .ep-nav-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .current-ep-pill {
-  background: rgba(255, 255, 255, 0.15);
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 12px;
+  background: #120e0b;
+  border: 1px solid #2e241c;
+  color: #eae5de;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12.5px;
   font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 /* ============================================================
-   TV Series Episodes Drawer — Netflix / Modern Cinema Grid
+   TV Series Episodes Drawer — MovieFlix Reference Design
    ============================================================ */
 .episodes-drawer-container {
-  background: #0e0e0e;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0f0d0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   width: 100%;
   position: relative;
   z-index: 2;
 }
 
+/* Section Header: Select Season + Status Info */
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  background: #141414;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 24px;
+  background: #14100c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -1954,30 +1975,15 @@ body.lights-off-active .player-section-wrapper {
 .drawer-header-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
-.drawer-heading-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.drawer-section-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #e50914;
-}
-
-.drawer-heading {
-  font-family: var(--font-heading, inherit);
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin: 0;
-  letter-spacing: -0.3px;
+.select-season-label {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #9c9285;
+  letter-spacing: -0.2px;
 }
 
 .season-selector-inline {
@@ -1989,22 +1995,22 @@ body.lights-off-active .player-section-wrapper {
 .season-dropdown {
   appearance: none;
   -webkit-appearance: none;
-  background: #202020 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat calc(100% - 12px) center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  padding: 8px 36px 8px 14px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
+  background: #1c1713 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a89e90' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat calc(100% - 12px) center;
+  border: 1px solid #362c23;
+  color: #eae5de;
+  padding: 7px 34px 7px 14px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
   cursor: pointer;
   outline: none;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 .season-dropdown:hover {
-  background-color: #282828;
-  border-color: rgba(255, 255, 255, 0.4);
+  background-color: #241e18;
+  border-color: #4d3e31;
 }
 
 .season-dropdown:focus {
@@ -2012,264 +2018,272 @@ body.lights-off-active .player-section-wrapper {
   box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.25);
 }
 
-.ep-count-badge {
-  font-size: 13px;
-  font-weight: 600;
-  color: #a1a1aa;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 6px 14px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.drawer-header-right {
+  display: flex;
+  align-items: center;
 }
 
-/* Episodes Grid — Responsive across all device sizes */
+.drawer-playback-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #8c8275;
+  font-weight: 500;
+}
+
+.ep-count-text {
+  color: #8c8275;
+}
+
+.ep-info-sep {
+  opacity: 0.5;
+  color: #8c8275;
+}
+
+.ep-playback-feature {
+  color: #a3988b;
+  font-weight: 600;
+}
+
+/* Episodes Grid — 4 Columns on Desktop */
 .episodes-horizontal-strip {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 20px 24px 28px;
 }
 
-@media (min-width: 1400px) {
+@media (max-width: 1300px) {
   .episodes-horizontal-strip {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 960px) {
   .episodes-horizontal-strip {
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    padding: 20px;
-  }
-}
-
-@media (max-width: 640px) {
-  .episodes-horizontal-strip {
-    grid-template-columns: 1fr;
-    gap: 14px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding: 16px;
   }
   .drawer-header {
-    padding: 16px;
+    padding: 14px 16px;
+  }
+  .player-quick-nav-bar {
+    padding: 12px 16px;
   }
 }
 
-/* Episode Card */
+@media (max-width: 600px) {
+  .episodes-horizontal-strip {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+}
+
+/* Episode Card — Horizontal Layout */
 .ep-strip-card {
   display: flex;
-  flex-direction: column;
-  background: #161616;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  overflow: hidden;
+  flex-direction: row;
+  align-items: stretch;
+  background: #171411;
+  border: 1px solid #28211a;
+  border-radius: 8px;
+  padding: 10px;
+  gap: 12px;
   cursor: pointer;
   position: relative;
-  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.22s ease,
-              box-shadow 0.22s ease,
-              background-color 0.22s ease;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  min-height: 86px;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .ep-strip-card:hover {
-  transform: translateY(-4px);
-  background: #1e1e1e;
-  border-color: rgba(229, 9, 20, 0.55);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 18px rgba(229, 9, 20, 0.18);
+  background: #201a15;
+  border-color: #42362b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
 }
 
+/* Active Episode Card — Red Outline & Warm Red Glow */
 .ep-strip-card.current-ep {
-  border: 2px solid #e50914;
-  background: rgba(229, 9, 20, 0.08);
-  box-shadow: 0 0 24px rgba(229, 9, 20, 0.3);
+  border: 1px solid #e50914 !important;
+  background: #1d1312 !important;
+  box-shadow: 0 0 14px rgba(229, 9, 20, 0.25) !important;
 }
 
-.ep-strip-card.current-ep .ep-title {
-  color: #ff5252;
-}
-
-/* Thumbnail Area */
-.ep-still-thumb {
+/* Left Thumbnail Area */
+.ep-card-thumb-wrap {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #080808;
+  width: 98px;
+  height: 64px;
+  border-radius: 6px;
   overflow: hidden;
+  background: #201a14;
+  flex-shrink: 0;
+  align-self: center;
 }
 
-.ep-still-thumb img {
+.ep-card-thumb-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.35s ease;
+  transition: transform 0.25s ease;
 }
 
-.ep-strip-card:hover .ep-still-thumb img {
-  transform: scale(1.05);
+.ep-strip-card:hover .ep-card-thumb-img {
+  transform: scale(1.06);
 }
 
-.ep-thumb-fallback {
-  width: 100%;
-  height: 100%;
+/* Episode Thumbnail Badge: Number or Active Playing Indicator */
+.ep-thumb-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1c1c1c, #0d0d0d);
-  color: #71717a;
+  color: #eae5de;
+  font-size: 11px;
   font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.ep-thumb-badge.is-playing {
+  background: #e50914;
+  border-color: #ff3333;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.6);
+  padding: 0 6px;
+}
+
+.ep-playing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+}
+
+.ep-dot {
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: epDotPulse 1.2s infinite ease-in-out;
+}
+
+.ep-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ep-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes epDotPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 /* Play Hover Overlay */
-.ep-play-overlay {
+.ep-thumb-hover-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.18s ease;
+  z-index: 3;
 }
 
-.ep-strip-card:hover .ep-play-overlay {
+.ep-strip-card:hover .ep-thumb-hover-overlay {
   opacity: 1;
 }
 
-.ep-play-btn-circle {
-  width: 44px;
-  height: 44px;
+.ep-thumb-play-icon {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: #e50914;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(229, 9, 20, 0.6);
-  transform: scale(0.9);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  transform: scale(0.85);
+  transition: transform 0.18s ease;
 }
 
-.ep-strip-card:hover .ep-play-btn-circle {
+.ep-strip-card:hover .ep-thumb-play-icon {
   transform: scale(1);
 }
 
-/* Badges on Thumbnail */
-.ep-num-pill {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 4px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  z-index: 2;
+.ep-thumb-play-icon svg {
+  transform: translateX(1px);
 }
 
-.playing-indicator {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  background: #e50914;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 4px 8px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 2px 10px rgba(229, 9, 20, 0.6);
-  letter-spacing: 0.5px;
-  z-index: 2;
-}
-
-.live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ffffff;
-  animation: pulseDot 1.4s infinite alternate;
-}
-
-@keyframes pulseDot {
-  0% { opacity: 0.3; transform: scale(0.8); }
-  100% { opacity: 1; transform: scale(1.2); }
-}
-
-.ep-runtime-pill {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #d4d4d8;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 7px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 2;
-}
-
-/* Details Area */
-.ep-details {
-  padding: 14px 16px 16px;
+/* Right Episode Body */
+.ep-card-body {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  justify-content: center;
+  gap: 4px;
 }
 
-.ep-title-row {
+.ep-card-top-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 6px;
 }
 
-.ep-title {
-  font-size: 15px;
+.ep-card-title {
+  font-size: 13.5px;
   font-weight: 700;
-  color: #ffffff;
+  color: #eae5de;
   margin: 0;
-  line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.15s ease;
+  letter-spacing: -0.2px;
 }
 
-.ep-strip-card:hover .ep-title {
+.ep-strip-card.current-ep .ep-card-title {
   color: #ffffff;
 }
 
-.ep-rating-chip {
-  font-size: 11px;
-  font-weight: 700;
-  color: #fbbf24;
-  background: rgba(251, 191, 36, 0.12);
-  padding: 2px 6px;
-  border-radius: 4px;
-  white-space: nowrap;
+.ep-card-duration {
+  font-size: 12px;
+  font-weight: 500;
+  color: #7d7367;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
-.ep-overview {
-  font-size: 13px;
-  color: #a1a1aa;
-  line-height: 1.5;
+.ep-card-overview {
+  font-size: 11.5px;
+  color: #8c8276;
+  line-height: 1.45;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -2278,53 +2292,75 @@ body.lights-off-active .player-section-wrapper {
   text-overflow: ellipsis;
 }
 
-/* Skeleton Loading */
+/* Skeleton Loading — 4 Columns Horizontal */
 .episodes-loading-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 20px 24px 28px;
+}
+
+@media (max-width: 1300px) {
+  .episodes-loading-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .episodes-loading-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .episodes-loading-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ep-skeleton-card {
-  height: 250px;
-  border-radius: 12px;
-  background: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  overflow: hidden;
+  height: 84px;
+  border-radius: 8px;
+  background: #171411;
+  border: 1px solid #28211a;
+  padding: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 
 .ep-skel-thumb {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(90deg, #181818 25%, #222222 50%, #181818 75%);
+  width: 98px;
+  height: 64px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #1f1a14 25%, #2a231d 50%, #1f1a14 75%);
   background-size: 200% 100%;
   animation: epShimmer 1.5s infinite;
+  flex-shrink: 0;
 }
 
 .ep-skel-details {
-  padding: 14px 16px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .ep-skel-title {
-  height: 16px;
-  width: 70%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #181818 25%, #222222 50%, #181818 75%);
+  width: 60%;
+  height: 12px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #1f1a14 25%, #2a231d 50%, #1f1a14 75%);
   background-size: 200% 100%;
   animation: epShimmer 1.5s infinite;
 }
 
 .ep-skel-text {
-  height: 12px;
   width: 90%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #181818 25%, #222222 50%, #181818 75%);
+  height: 24px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #1f1a14 25%, #2a231d 50%, #1f1a14 75%);
   background-size: 200% 100%;
   animation: epShimmer 1.5s infinite;
 }
