@@ -65,6 +65,10 @@ export default function Header() {
         localStorage.setItem("rh-ads-enabled", String(!nextAdsOff));
         window.__ADS_DISABLED__ = nextAdsOff;
         window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { adsOff: nextAdsOff, enabled: !nextAdsOff } }));
+        window.dispatchEvent(new CustomEvent("nippleflixAdsPreferenceChanged", { detail: { adsDisabled: nextAdsOff } }));
+        window.setTimeout(() => {
+          window.location.reload();
+        }, 50);
       }
       return nextAdsOff;
     });

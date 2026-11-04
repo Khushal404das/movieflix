@@ -997,7 +997,7 @@ export default function StreamingPlayer({
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             loading="eager"
-            referrerPolicy="no-referrer"
+            {...(adsOff ? { sandbox: "allow-scripts allow-same-origin allow-presentation allow-forms" } : {})}
             title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
             onLoad={() => {
               if (adsOff) {
