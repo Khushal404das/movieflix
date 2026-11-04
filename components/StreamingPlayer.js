@@ -1088,20 +1088,30 @@ export default function StreamingPlayer({
         {type === "tv" && seasons.length > 0 && (
           <div className="episodes-drawer-container">
             <div className="drawer-header">
-              <div className="season-selector-inline">
-                <span className="drawer-label">Season:</span>
-                <select
-                  value={currentSeason}
-                  onChange={handleSeasonChange}
-                  className="season-dropdown"
-                  aria-label="Select Season"
-                >
-                  {seasons.map((s) => (
-                    <option key={s.season_number} value={s.season_number}>
-                      Season {s.season_number} {s.name && s.name !== `Season ${s.season_number}` ? `(${s.name})` : ""}
-                    </option>
-                  ))}
-                </select>
+              <div className="drawer-header-left">
+                <div className="drawer-heading-wrap">
+                  <span className="drawer-section-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                      <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
+                      <polyline points="17 2 12 7 7 2" />
+                    </svg>
+                  </span>
+                  <h3 className="drawer-heading">Episodes</h3>
+                </div>
+                <div className="season-selector-inline">
+                  <select
+                    value={currentSeason}
+                    onChange={handleSeasonChange}
+                    className="season-dropdown"
+                    aria-label="Select Season"
+                  >
+                    {seasons.map((s) => (
+                      <option key={s.season_number} value={s.season_number}>
+                        Season {s.season_number} {s.name && s.name !== `Season ${s.season_number}` ? `(${s.name})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <span className="ep-count-badge">
                 {episodesList.length} Episode{episodesList.length !== 1 ? "s" : ""}
@@ -1110,8 +1120,14 @@ export default function StreamingPlayer({
 
             {isLoadingEpisodes ? (
               <div className="episodes-loading-grid">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="ep-skeleton-card" />
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="ep-skeleton-card">
+                    <div className="ep-skel-thumb" />
+                    <div className="ep-skel-details">
+                      <div className="ep-skel-title" />
+                      <div className="ep-skel-text" />
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : (
@@ -1136,15 +1152,35 @@ export default function StreamingPlayer({
                             <span>S{currentSeason} : E{ep.episode_number}</span>
                           </div>
                         )}
-                        {isCurrent && <div className="playing-indicator">▶ PLAYING</div>}
+                        <div className="ep-play-overlay">
+                          <span className="ep-play-btn-circle">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                              <polygon points="6 3 20 12 6 21 6 3" />
+                            </svg>
+                          </span>
+                        </div>
                         <span className="ep-num-pill">EP {ep.episode_number}</span>
+                        {isCurrent && (
+                          <div className="playing-indicator">
+                            <span className="live-dot" />
+                            <span>PLAYING</span>
+                          </div>
+                        )}
+                        {ep.runtime && (
+                          <span className="ep-runtime-pill">{ep.runtime}m</span>
+                        )}
                       </div>
                       <div className="ep-details">
-                        <h4 className="ep-title" title={ep.name}>
-                          {ep.name || `Episode ${ep.episode_number}`}
-                        </h4>
+                        <div className="ep-title-row">
+                          <h4 className="ep-title" title={ep.name}>
+                            {ep.episode_number}. {ep.name || `Episode ${ep.episode_number}`}
+                          </h4>
+                          {ep.vote_average > 0 && (
+                            <span className="ep-rating-chip">★ {Number(ep.vote_average).toFixed(1)}</span>
+                          )}
+                        </div>
                         <p className="ep-overview">
-                          {ep.overview || "No synopsis available."}
+                          {ep.overview || "No synopsis available for this episode."}
                         </p>
                       </div>
                     </div>
