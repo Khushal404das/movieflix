@@ -202,12 +202,6 @@ export default function StreamingPlayer({
   const [adsOff, setAdsOff] = useState(true);
 
   useEffect(() => {
-    // On localhost/dev, ads are always ON (not blocked) for testing
-    if (typeof window !== "undefined" &&
-        (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-      setAdsOff(false);
-      return;
-    }
     try {
       const s = sessionStorage.getItem("nippleflix_ads_disabled");
       const m = sessionStorage.getItem("movieflix_ads_disabled");
@@ -629,6 +623,22 @@ export default function StreamingPlayer({
     };
   }, [adsOff]);
 
+  // Sync ad blocking command directly to Vidbolt iframe
+  useEffect(() => {
+    const iframe = iframeRef.current || document.getElementById("vidbolt-player");
+    if (iframe?.contentWindow) {
+      if (adsOff) {
+        iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
+        iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
+        iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
+      } else {
+        iframe.contentWindow.postMessage({ type: "enable-ads" }, "https://vidbolt.pro");
+        iframe.contentWindow.postMessage({ type: "set-ads", enabled: true }, "https://vidbolt.pro");
+        iframe.contentWindow.postMessage({ type: "ads", value: true }, "https://vidbolt.pro");
+      }
+    }
+  }, [adsOff]);
+
   // Cinema Lights Off handler
   useEffect(() => {
     if (isAppCinema) {
@@ -989,6 +999,16 @@ export default function StreamingPlayer({
             loading="eager"
             referrerPolicy="no-referrer"
             title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
+            onLoad={() => {
+              if (adsOff) {
+                const iframe = iframeRef.current || document.getElementById("vidbolt-player");
+                if (iframe?.contentWindow) {
+                  iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
+                  iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
+                  iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
+                }
+              }
+            }}
           />
 
           {/* Auto Next Episode Countdown Overlay Toast */}

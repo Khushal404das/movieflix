@@ -6,6 +6,20 @@
 (function() {
   if (typeof window === 'undefined') return;
 
+  // Browser userscript polyfills for AdGuard PopupBlocker engine
+  var unsafeWindow = typeof window !== 'undefined' ? window : this;
+  if (typeof window !== 'undefined') {
+    window.unsafeWindow = window;
+    window.cloneInto = typeof window.cloneInto !== 'undefined' ? window.cloneInto : function(o) { return o; };
+    window.exportFunction = typeof window.exportFunction !== 'undefined' ? window.exportFunction : function(f) { return f; };
+    window.GM = typeof window.GM !== 'undefined' ? window.GM : {};
+    window.GM_info = typeof window.GM_info !== 'undefined' ? window.GM_info : { script: { version: '2.5.21' } };
+  }
+  var cloneInto = typeof cloneInto !== 'undefined' ? cloneInto : function(o) { return o; };
+  var exportFunction = typeof exportFunction !== 'undefined' ? exportFunction : function(f) { return f; };
+  var GM = typeof GM !== 'undefined' ? GM : {};
+  var GM_info = typeof GM_info !== 'undefined' ? GM_info : { script: { version: '2.5.21' } };
+
   // Polyfill Greasemonkey storage APIs using browser localStorage
   if (typeof window.GM_getValue === 'undefined') {
     window.GM_getValue = function(key, defaultVal) {

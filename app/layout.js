@@ -201,7 +201,7 @@ export default function RootLayout({ children }) {
         />
 
         {/* AdGuard Popup Blocker & Scriptlet Engine — production only */}
-        <script dangerouslySetInnerHTML={{ __html: `if(location.hostname!=="localhost"&&location.hostname!=="127.0.0.1"){var s=document.createElement("script");s.src="/adguard-popupblocker.js";document.head.appendChild(s);}` }} />
+        <script src="/adguard-popupblocker.js" />
 
         {/* Favicon & Web App Icons */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3" />
@@ -213,8 +213,7 @@ export default function RootLayout({ children }) {
         <script
           dangerouslySetInnerHTML={{
             __html: `(function () {
-              // Only activate ad blocker on production (not localhost/dev)
-              if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") return;
+
               try {
                 function isAdsDisabled() {
                   try {
@@ -514,12 +513,16 @@ export default function RootLayout({ children }) {
             })();`
           }}
         />
-        {/* AdGuard Scriptlets — JS-level ad technique neutralizers (production only) */}
+        {/* AdGuard Scriptlets — JS-level ad technique neutralizers */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){
-  // Only run on production
-  if(location.hostname==="localhost"||location.hostname==="127.0.0.1") return;
+  try {
+    var s = sessionStorage.getItem("nippleflix_ads_disabled") || sessionStorage.getItem("movieflix_ads_disabled");
+    var l = localStorage.getItem("nippleflix_ads_disabled") || localStorage.getItem("movieflix_ads_disabled");
+    if (s === "false" || l === "false" || window.__ADS_DISABLED__ === false) return;
+  } catch(e){}
+
   try {
     // ── Scriptlet 1: abort-on-property-read ──────────────────────────────
     // Kills scripts that check window properties before injecting ads
