@@ -364,7 +364,6 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             loading="eager"
-            sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
             title={title ? decodeURIComponent(title) : "Cinema Player"}
           />
         ) : (
