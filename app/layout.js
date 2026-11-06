@@ -174,6 +174,11 @@ export default function RootLayout({ children }) {
       <head>
         {/* Google AdSense Verification & Auto Ads */}
         <meta name="google-adsense-account" content="ca-pub-2554738343060277" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2554738343060277"
+          crossOrigin="anonymous"
+        />
         {/* Fallback explicit tags for WhatsApp, Telegram, Facebook scrapers */}
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:type" content="website" />
@@ -257,6 +262,9 @@ export default function RootLayout({ children }) {
                     var safeAuthDomains = [
                       "accounts.google.com",
                       "google.com",
+                      "googleadservices.com",
+                      "googlesyndication.com",
+                      "doubleclick.net",
                       "firebaseapp.com",
                       "identitytoolkit.googleapis.com",
                       "apis.google.com",
@@ -357,18 +365,6 @@ export default function RootLayout({ children }) {
                     "pushprime.com",
                     "pushmonkey.com",
                     "cleverpush.com",
-                    // === Google Ads Ecosystem ===
-                    "googlesyndication.com",
-                    "doubleclick.net",
-                    "googleadservices.com",
-                    "pagead2.googlesyndication.com",
-                    "adservice.google.com",
-                    "ads.google.com",
-                    "googleads.g.doubleclick.net",
-                    "stats.g.doubleclick.net",
-                    "cm.g.doubleclick.net",
-                    "ad.doubleclick.net",
-                    "pubads.g.doubleclick.net",
                     // === Major Ad Networks ===
                     "adsterra.com",
                     "propellerads.com",
@@ -554,11 +550,11 @@ export default function RootLayout({ children }) {
 
   try {
     // ── Scriptlet 1: abort-on-property-read ──────────────────────────────
-    // Kills scripts that check window properties before injecting ads
+    // Kills scripts that check window properties before injecting rogue ads
     var ABORT_PROPS = [
-      "adsbygoogle","AdSense","googletag","pbjs","apntag","_mNAds",
+      "pbjs","apntag","_mNAds",
       "monetag","propellerAds","popunder","popad","trafficJunky",
-      "ExoLoader","exoJquery","reviveBanner","DoubleClick","googletag",
+      "ExoLoader","exoJquery","reviveBanner",
       "adroll","criteo","taboola","outbrain","mgid","revcontent",
     ];
     ABORT_PROPS.forEach(function(prop){
@@ -576,7 +572,7 @@ export default function RootLayout({ children }) {
     window.setTimeout = function(fn, delay) {
       try {
         var src = (typeof fn === "function") ? fn.toString() : String(fn);
-        var blocked = ["popunder","window.open","adsbygoogle","googletag","monetag",
+        var blocked = ["popunder","window.open","monetag",
                        "push-sdk","pushnotif","coinhive","cryptoloot"];
         for(var i=0;i<blocked.length;i++){
           if(src.indexOf(blocked[i])!==-1){
@@ -593,7 +589,7 @@ export default function RootLayout({ children }) {
     window.setInterval = function(fn, delay) {
       try {
         var src = (typeof fn === "function") ? fn.toString() : String(fn);
-        var blocked = ["popunder","window.open","adsbygoogle","monetag","coinhive"];
+        var blocked = ["popunder","window.open","monetag","coinhive"];
         for(var i=0;i<blocked.length;i++){
           if(src.indexOf(blocked[i])!==-1){
             console.warn("[AdGuard] Blocked setInterval ad:",blocked[i]);
@@ -620,13 +616,12 @@ export default function RootLayout({ children }) {
       }
     } catch(e){}
 
-    // ── Scriptlet 5: set-cookie (block ad tracking cookies) ──────────────
+    // ── Scriptlet 5: set-cookie (block rogue ad tracking cookies) ────────
     var _cookieDesc = Object.getOwnPropertyDescriptor(Document.prototype,"cookie")||
                       Object.getOwnPropertyDescriptor(HTMLDocument.prototype,"cookie");
     if(_cookieDesc && _cookieDesc.set){
       var _origCookieSet = _cookieDesc.set;
-      var BLOCKED_COOKIE_KEYS = ["__gads","__gpi","_ga","_gid","IDE","NID","DSID",
-                                  "ANID","AID","TAID","ad_session","adblock_test"];
+      var BLOCKED_COOKIE_KEYS = ["ad_session","adblock_test","coinhive","cryptoloot"];
       Object.defineProperty(document,"cookie",{
         get: _cookieDesc.get,
         set: function(val){
@@ -642,7 +637,7 @@ export default function RootLayout({ children }) {
       });
     }
 
-    // ── Scriptlet 6: MutationObserver — remove injected ad iframes ────────
+    // ── Scriptlet 6: MutationObserver — remove rogue injected ad iframes ───
     var _observer = new MutationObserver(function(mutations){
       mutations.forEach(function(m){
         m.addedNodes.forEach(function(node){
@@ -651,7 +646,7 @@ export default function RootLayout({ children }) {
           if(tag==="iframe"||tag==="script"){
             var src = node.src||node.getAttribute("src")||"";
             var adPatterns = [
-              "doubleclick","googlesyndication","adsterra","propellerads",
+              "adsterra","propellerads",
               "monetag","exoclick","popcash","popads","trafficjunky",
               "amuyontraiked","push-sdk","coinhive","adnium"
             ];
