@@ -349,6 +349,7 @@ export default function JWPlayerInstance({
             className="player-iframe"
             allowFullScreen
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"
             title={`${title} - Cinema Player`}
           />
         )}
