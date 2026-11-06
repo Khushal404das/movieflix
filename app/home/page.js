@@ -11,6 +11,7 @@ import NetflixBillboard from "@/components/NetflixBillboard";
 import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
 import StudiosPlatformsRow from "@/components/StudiosPlatformsRow";
+import AdBanner from "@/components/AdBanner";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
@@ -101,6 +102,9 @@ export default async function StreamingHome() {
           seeAllHref="/browse/tv"
         />
 
+        {/* Sponsored Mid-Page Banner */}
+        <AdBanner variant="display" className="my-6" />
+
         {/* Popular Anime Series */}
         {animeTitles?.length > 0 && (
           <NetflixRow
@@ -147,6 +151,8 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
+        {/* Sponsored Recommended Content Grid */}
+        <AdBanner variant="multiplex" className="mt-8 mb-4" />
 
       </div>
     </div>

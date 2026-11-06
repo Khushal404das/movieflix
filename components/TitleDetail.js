@@ -3,6 +3,7 @@ import { getTitle, getSeasonEpisodes, norm } from "@/lib/tmdb";
 import { TmdbCard } from "./Card";
 import WatchlistButton from "./WatchlistButton";
 import StreamingPlayer from "./StreamingPlayer";
+import AdBanner from "./AdBanner";
 
 export default async function TitleDetail({ type = "movie", id, season = 1, episode = 1 }) {
   const d = await getTitle(type, id);
@@ -62,6 +63,9 @@ export default async function TitleDetail({ type = "movie", id, season = 1, epis
             episodesData={eps?.episodes || []}
           />
         </section>
+
+        {/* Sponsored In-Article Ad Banner below player */}
+        <AdBanner variant="inArticle" className="my-4 max-w-5xl" />
 
         {/* Title Information & Metadata Section */}
         <section className="detail-info-card">
@@ -145,6 +149,9 @@ export default async function TitleDetail({ type = "movie", id, season = 1, epis
             </div>
           </section>
         )}
+
+        {/* Sponsored Recommended Content Grid */}
+        <AdBanner variant="multiplex" className="mt-8 mb-4 max-w-5xl" />
       </div>
     </div>
   );

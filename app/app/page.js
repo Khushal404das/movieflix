@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import AdBanner from "@/components/AdBanner";
 
 export default function AppPage() {
   const [selectedDevice, setSelectedDevice] = useState("web");
@@ -315,6 +316,9 @@ export default function AppPage() {
             </div>
           </div>
         </section>
+
+        {/* Sponsored Banner */}
+        <AdBanner variant="display" className="my-8" />
 
         {/* Watch Any Genre Cloud Card */}
         <section className="genre-cloud-section">
