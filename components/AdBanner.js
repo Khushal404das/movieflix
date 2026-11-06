@@ -47,6 +47,7 @@ export default function AdBanner({
   style = {},
 }) {
   const pushedRef = useRef(false);
+  const wrapperRef = useRef(null);
 
   const config = AD_CONFIGS[variant] || AD_CONFIGS.display;
   const slot = dataAdSlot || config.slot;
@@ -67,8 +68,41 @@ export default function AdBanner({
     }
   }, []);
 
+  // Poll for data-ad-status and hide wrapper when unfilled
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const ins = wrapperRef.current.querySelector("ins.adsbygoogle");
+    if (!ins) return;
+
+    const checkStatus = () => {
+      const status = ins.getAttribute("data-ad-status");
+      if (status === "unfilled") {
+        wrapperRef.current.style.display = "none";
+      } else if (status === "filled") {
+        wrapperRef.current.style.display = "";
+      }
+    };
+
+    // Check after short delay (AdSense sets status ~300–1000ms after push)
+    const t1 = setTimeout(checkStatus, 500);
+    const t2 = setTimeout(checkStatus, 1500);
+    const t3 = setTimeout(checkStatus, 3000);
+
+    // Also observe attribute changes
+    const observer = new MutationObserver(checkStatus);
+    observer.observe(ins, { attributes: true, attributeFilter: ["data-ad-status"] });
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <div
+      ref={wrapperRef}
       className={`ad-banner-slot ${className}`}
       style={{
         width: "100%",
@@ -76,12 +110,13 @@ export default function AdBanner({
         margin: "20px auto",
         textAlign: "center",
         overflow: "hidden",
+        background: "transparent",
         ...style,
       }}
     >
       <ins
         className="adsbygoogle"
-        style={{ width: "100%", ...config.style }}
+        style={{ width: "100%", background: "transparent", ...config.style }}
         data-ad-client="ca-pub-2554738343060277"
         data-ad-slot={slot}
         {...(format ? { "data-ad-format": format } : {})}

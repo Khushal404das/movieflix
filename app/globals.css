@@ -1,3 +1,21 @@
+/* ============================================================
+   Google AdSense — hide unfilled slots, force transparent bg
+   ============================================================ */
+ins.adsbygoogle {
+  background: transparent !important;
+}
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+}
+.ad-banner-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 :root {
   --bg-netflix: #141414;
   --bg-darker: #0b0b0b;
