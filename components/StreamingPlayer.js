@@ -199,52 +199,6 @@ export default function StreamingPlayer({
   // Next episode countdown banner when video ends
   const [nextEpCountdown, setNextEpCountdown] = useState(null);
 
-  // Ads state (synced with Nippleflix ad-blocking keys, default: true -> Ads OFF)
-  const [adsOff, setAdsOff] = useState(true);
-
-  useEffect(() => {
-    try {
-      const s = sessionStorage.getItem("nippleflix_ads_disabled");
-      const m = sessionStorage.getItem("movieflix_ads_disabled");
-      const ls = localStorage.getItem("nippleflix_ads_disabled");
-      const lm = localStorage.getItem("movieflix_ads_disabled");
-
-      const isBlocked = (s === null && m === null && ls === null && lm === null)
-        ? true
-        : (s === "true" || m === "true" || ls === "true" || lm === "true");
-
-      setAdsOff(isBlocked);
-      window.__ADS_DISABLED__ = isBlocked;
-    } catch (e) {}
-
-    const handleSync = (e) => {
-      if (e.detail && typeof e.detail.adsOff === "boolean") {
-        setAdsOff(e.detail.adsOff);
-      } else if (e.detail && typeof e.detail.enabled === "boolean") {
-        setAdsOff(!e.detail.enabled);
-      }
-    };
-    window.addEventListener("rh-ads-toggle", handleSync);
-    return () => window.removeEventListener("rh-ads-toggle", handleSync);
-  }, []);
-
-  const handleToggleAds = () => {
-    setAdsOff((prev) => {
-      const nextAdsOff = !prev;
-      if (typeof window !== "undefined") {
-        const valStr = String(nextAdsOff);
-        sessionStorage.setItem("nippleflix_ads_disabled", valStr);
-        sessionStorage.setItem("movieflix_ads_disabled", valStr);
-        localStorage.setItem("nippleflix_ads_disabled", valStr);
-        localStorage.setItem("movieflix_ads_disabled", valStr);
-        localStorage.setItem("rh-ads-enabled", String(!nextAdsOff));
-        window.__ADS_DISABLED__ = nextAdsOff;
-        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { adsOff: nextAdsOff, enabled: !nextAdsOff } }));
-      }
-      return nextAdsOff;
-    });
-  };
-
   // Switch playback mode helper
   const handlePlaybackModeSelect = (mode) => {
     setPlaybackMode(mode);
@@ -430,26 +384,10 @@ export default function StreamingPlayer({
       switch (data.type) {
         case "ready": {
           setIsPlayerReady(true);
-          const iframe = document.getElementById("vidbolt-player");
-          if (iframe?.contentWindow) {
-            setTimeout(() => {
-              iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
-              iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
-              iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
-            }, 500);
-          }
           break;
         }
         case "play":
           setIsPlaying(true);
-          if (adsOff) {
-            const iframe = document.getElementById("vidbolt-player");
-            if (iframe?.contentWindow) {
-              iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
-              iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
-              iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
-            }
-          }
           break;
         case "pause":
           setIsPlaying(false);
@@ -570,86 +508,6 @@ export default function StreamingPlayer({
       setIsMuted(true);
     }
   };
-
-  // AdGuard Player Focus & Anti-Popunder Shield (Blocks stealth popunders on player clicks)
-  useEffect(() => {
-    if (typeof window === "undefined" || !adsOff) return;
-
-    let lastPlayerClick = 0;
-    const container = playerRef.current;
-
-    const onPlayerClick = () => {
-      lastPlayerClick = Date.now();
-    };
-
-    if (container) {
-      container.addEventListener("pointerdown", onPlayerClick, true);
-      container.addEventListener("click", onPlayerClick, true);
-    }
-
-    const handleWindowBlur = () => {
-      // If window blurs right after a click on or near the player, a stealth popunder was triggered
-      if (Date.now() - lastPlayerClick < 1500) {
-        window.focus();
-        setTimeout(() => window.focus(), 80);
-      }
-    };
-
-    window.addEventListener("blur", handleWindowBlur);
-
-    return () => {
-      if (container) {
-        container.removeEventListener("pointerdown", onPlayerClick, true);
-        container.removeEventListener("click", onPlayerClick, true);
-      }
-      window.removeEventListener("blur", handleWindowBlur);
-    };
-  }, [adsOff]);
-
-  // Anti-ad popup shield: silently block rogue ad popups while preserving legitimate Auth popups
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    function isSafeUrl(url) {
-      if (!url || url === "" || url === "about:blank") return true;
-      const str = String(url).toLowerCase();
-      const safe = ["accounts.google.com", "firebaseapp.com", "apis.google.com", "google.com", "movieflix", "localhost"];
-      return safe.some(d => str.includes(d));
-    }
-
-    const originalOpen = window.open;
-    window.open = function (...args) {
-      const url = args[0];
-      if (isSafeUrl(url)) {
-        return originalOpen ? originalOpen.apply(window, args) : null;
-      }
-      if (adsOff) {
-        console.warn("[Player AdShield] Silently blocked ad popup:", url);
-        return null;
-      }
-      return originalOpen ? originalOpen.apply(window, args) : null;
-    };
-
-    return () => {
-      window.open = originalOpen;
-    };
-  }, [adsOff]);
-
-  // Sync ad blocking command directly to Vidbolt iframe
-  useEffect(() => {
-    const iframe = iframeRef.current || document.getElementById("vidbolt-player");
-    if (iframe?.contentWindow) {
-      if (adsOff) {
-        iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
-        iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
-        iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
-      } else {
-        iframe.contentWindow.postMessage({ type: "enable-ads" }, "https://vidbolt.pro");
-        iframe.contentWindow.postMessage({ type: "set-ads", enabled: true }, "https://vidbolt.pro");
-        iframe.contentWindow.postMessage({ type: "ads", value: true }, "https://vidbolt.pro");
-      }
-    }
-  }, [adsOff]);
 
   // Cinema Lights Off handler
   useEffect(() => {
@@ -1011,16 +869,6 @@ export default function StreamingPlayer({
             loading="eager"
             
             title={`${title}${type === "tv" ? ` S${currentSeason}E${currentEpisode}` : ""}`}
-            onLoad={() => {
-              if (adsOff) {
-                const iframe = iframeRef.current || document.getElementById("vidbolt-player");
-                if (iframe?.contentWindow) {
-                  iframe.contentWindow.postMessage({ type: "disable-ads" }, "https://vidbolt.pro");
-                  iframe.contentWindow.postMessage({ type: "set-ads", enabled: false }, "https://vidbolt.pro");
-                  iframe.contentWindow.postMessage({ type: "ads", value: false }, "https://vidbolt.pro");
-                }
-              }
-            }}
           />
 
           {/* Auto Next Episode Countdown Overlay Toast */}

@@ -17,62 +17,6 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  // adsOff is true when ads are disabled (Default: Ads OFF)
-  const [adsOff, setAdsOff] = useState(true);
-
-  useEffect(() => {
-    // Mount-time sync: check storage to avoid SSR desync (default: true -> Ads OFF / AdBlocker ACTIVE)
-    try {
-      const s = sessionStorage.getItem("nippleflix_ads_disabled");
-      const m = sessionStorage.getItem("movieflix_ads_disabled");
-      const ls = localStorage.getItem("nippleflix_ads_disabled");
-      const lm = localStorage.getItem("movieflix_ads_disabled");
-
-      // If explicitly "false", ads are ON. Otherwise default is true (Ads OFF).
-      const isBlocked = (s === null && m === null && ls === null && lm === null)
-        ? true
-        : (s === "true" || m === "true" || ls === "true" || lm === "true");
-
-      setAdsOff(isBlocked);
-      window.__ADS_DISABLED__ = isBlocked;
-
-      // Populate storage keys so inspection sees them immediately
-      const valStr = String(isBlocked);
-      sessionStorage.setItem("nippleflix_ads_disabled", valStr);
-      sessionStorage.setItem("movieflix_ads_disabled", valStr);
-      localStorage.setItem("nippleflix_ads_disabled", valStr);
-      localStorage.setItem("movieflix_ads_disabled", valStr);
-    } catch (e) {}
-
-    const handleSync = (e) => {
-      if (e.detail && typeof e.detail.adsOff === "boolean") {
-        setAdsOff(e.detail.adsOff);
-      }
-    };
-    window.addEventListener("rh-ads-toggle", handleSync);
-    return () => window.removeEventListener("rh-ads-toggle", handleSync);
-  }, []);
-
-  const toggleAds = () => {
-    setAdsOff((prev) => {
-      const nextAdsOff = !prev;
-      if (typeof window !== "undefined") {
-        const valStr = String(nextAdsOff);
-        sessionStorage.setItem("nippleflix_ads_disabled", valStr);
-        sessionStorage.setItem("movieflix_ads_disabled", valStr);
-        localStorage.setItem("nippleflix_ads_disabled", valStr);
-        localStorage.setItem("movieflix_ads_disabled", valStr);
-        localStorage.setItem("rh-ads-enabled", String(!nextAdsOff));
-        window.__ADS_DISABLED__ = nextAdsOff;
-        window.dispatchEvent(new CustomEvent("rh-ads-toggle", { detail: { adsOff: nextAdsOff, enabled: !nextAdsOff } }));
-        window.dispatchEvent(new CustomEvent("nippleflixAdsPreferenceChanged", { detail: { adsDisabled: nextAdsOff } }));
-        window.setTimeout(() => {
-          window.location.reload();
-        }, 50);
-      }
-      return nextAdsOff;
-    });
-  };
   
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
@@ -244,33 +188,6 @@ export default function Header() {
                 <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-            </button>
-
-            {/* Divider */}
-            <span className="nav-shell-divider" aria-hidden="true" />
-
-            {/* Ads Toggle Button (Synced with player & sessionStorage, matching Nippleflix) */}
-            <button
-              type="button"
-              role="switch"
-              aria-checked={!adsOff}
-              aria-label={adsOff ? "Ads off" : "Ads on"}
-              className="np-ads-switch-btn flex h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 md:h-9 transition-colors hover:bg-white/[0.08]"
-              onClick={toggleAds}
-              title={adsOff ? "Ads off (Click to enable ads)" : "Ads on (Click to disable ads)"}
-            >
-              <span className="np-ads-label text-[13px] font-medium leading-none text-white">Ads</span>
-              <span
-                className={`np-ads-track relative h-[22px] w-[44px] shrink-0 overflow-hidden rounded-full transition-colors ${
-                  !adsOff ? "active bg-[#f3f0e8]" : "bg-zinc-600"
-                }`}
-              >
-                <span
-                  className={`np-ads-thumb absolute top-[3px] z-[2] h-4 w-4 rounded-full shadow-[0_1px_2px_rgba(0,0,0,0.35)] transition-[left] duration-200 ${
-                    !adsOff ? "active left-[25px] bg-[#2c2c2c]" : "left-[3px] bg-white"
-                  }`}
-                />
-              </span>
             </button>
           </div>
 
