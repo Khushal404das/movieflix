@@ -195,92 +195,140 @@ img {
   gap: 20px;
 }
 
-/* Sliding Expandable Search Box */
-.netflix-search-box {
-  position: relative;
+/* Modern Streaming Search Bar & Integrated Nav Capsule */
+.search-pill-form {
   display: flex;
   align-items: center;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  height: 32px;
+  width: 270px;
+  padding: 0 10px;
+  gap: 8px;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-.search-toggle-btn {
-  color: #ffffff;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform var(--transition-fast);
+.search-pill-form:focus-within {
+  background: rgba(10, 10, 14, 0.95);
+  border-color: rgba(229, 9, 20, 0.7);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.18), inset 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.search-form-slide {
-  width: 0;
-  overflow: hidden;
-  transition: width 0.3s ease, border-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.85);
-  border: 1px solid transparent;
+.search-pill-icon {
+  color: rgba(255, 255, 255, 0.65);
+  flex-shrink: 0;
 }
 
-.netflix-search-box.open .search-form-slide {
-  width: 250px;
-  border-color: #ffffff;
-  padding: 4px 10px;
-  margin-left: 6px;
-}
-
-.netflix-search-input {
-  width: 100%;
+.search-pill-input {
+  flex: 1;
+  min-width: 0;
   background: transparent;
   border: none;
-  color: #ffffff;
-  font-size: 14px;
   outline: none;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-family: inherit;
 }
 
-.search-clear-btn {
-  color: var(--text-dim);
-  font-size: 13px;
-  padding: 2px;
+.search-pill-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
 }
 
-.search-clear-btn:hover {
+.search-pill-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-pill-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.search-pill-action-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
   color: #ffffff;
 }
 
-/* Search Dropdown Popup */
+/* Instant Search Results Dropdown Popup */
 .netflix-search-results-popup {
   position: absolute;
-  top: 48px;
+  top: calc(100% + 10px);
   right: 0;
-  width: 340px;
-  background: #181818;
-  border: 1px solid #333333;
-  border-radius: 6px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85);
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: rgba(18, 18, 22, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   z-index: 1001;
-  padding: 8px 0;
+  padding: 6px;
   overflow: hidden;
+  animation: searchDropdownFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes searchDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.search-popup-loading,
+.search-popup-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .popup-result-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
-  transition: background-color var(--transition-fast);
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+  text-decoration: none;
 }
 
 .popup-result-item:hover {
-  background: #252525;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .popup-poster {
-  width: 44px;
-  height: 60px;
-  border-radius: 3px;
+  width: 42px;
+  height: 58px;
+  border-radius: 6px;
   overflow: hidden;
   background: #111;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .popup-poster img {
@@ -296,7 +344,7 @@ img {
 
 .popup-title {
   display: block;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
   color: #ffffff;
   white-space: nowrap;
@@ -305,19 +353,33 @@ img {
 }
 
 .popup-meta {
+  display: block;
   font-size: 12px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 3px;
 }
 
 .popup-see-all {
-  display: block;
   width: 100%;
-  text-align: center;
   padding: 10px;
-  font-size: 13px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  color: #ff3b44;
+  font-size: 12.5px;
   font-weight: 700;
-  color: var(--netflix-red);
-  border-top: 1px solid #282828;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 0 0 8px 8px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.popup-see-all:hover {
+  background: rgba(229, 9, 20, 0.1);
+  color: #ff525a;
 }
 
 .netflix-icon-btn {
@@ -2984,44 +3046,21 @@ body.lights-off-active .player-section-wrapper {
     display: none;
   }
 
-  /* Expanding Search on Mobile */
-  .netflix-search-box {
-    position: static;
-  }
-
-  .netflix-search-box.open {
-    position: absolute;
-    top: 6px;
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-    z-index: 500;
-    background: #181818;
-    border-radius: 6px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
-  }
-
-  .netflix-search-box.open .search-form-slide {
-    width: 100%;
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .netflix-search-box.open .netflix-search-input {
-    width: 100%;
-    height: 44px;
-    font-size: 15px;
-    padding-right: 36px;
+  /* Search on Mobile */
+  .search-pill-form {
+    width: clamp(140px, 44vw, 220px);
+    height: 32px;
   }
 
   .netflix-search-results-popup {
     position: fixed;
-    top: 56px;
-    left: 10px;
-    right: 10px;
+    top: 64px;
+    left: 12px;
+    right: 12px;
     width: auto;
-    max-height: calc(80vh - 56px);
-    border-radius: 8px;
+    max-width: none;
+    max-height: calc(80vh - 64px);
+    border-radius: 12px;
   }
 
   /* Hero Billboard on Mobile */
