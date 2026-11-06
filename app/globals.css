@@ -9742,3 +9742,495 @@ body.lights-off-active .player-section-wrapper {
   letter-spacing: 0.02em;
   pointer-events: none;
 }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLASSMORPHISM UI OVERHAUL — Override layer (appended, highest specificity)
+   Dark #141414 base theme preserved. All cards/panels float as frosted glass.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Header / Nav ──────────────────────────────────────────────────────────── */
+.netflix-header {
+  background: rgba(10, 10, 14, 0.55) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.netflix-header.scrolled {
+  background: rgba(10, 10, 14, 0.82) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* ── Detail Info Card ───────────────────────────────────────────────────────── */
+.detail-info-card {
+  background: rgba(18, 18, 24, 0.72) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(229, 9, 20, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+}
+
+/* ── Player Wrapper ─────────────────────────────────────────────────────────── */
+.player-wrapper {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* ── Player Topbar ──────────────────────────────────────────────────────────── */
+.player-topbar {
+  background: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── NP Pill Buttons ────────────────────────────────────────────────────────── */
+.np-pill-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 9999px !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+
+.np-pill-btn:hover,
+.np-pill-btn.open {
+  background: rgba(255, 255, 255, 0.14) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+/* ── NP Dropdown Menu ───────────────────────────────────────────────────────── */
+.np-dropdown-menu {
+  background: rgba(12, 12, 18, 0.88) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* ── Cinema Mode Link Button ────────────────────────────────────────────────── */
+a.cinema-mode-link {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 9999px !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+
+a.cinema-mode-link:hover {
+  background: rgba(229, 9, 20, 0.18) !important;
+  border-color: rgba(229, 9, 20, 0.5) !important;
+  color: #fff !important;
+}
+
+/* ── Site Footer ────────────────────────────────────────────────────────────── */
+.site-footer {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ── Genre Tags ─────────────────────────────────────────────────────────────── */
+.genre-tag {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 9999px !important;
+  transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+
+.genre-tag:hover {
+  background: rgba(229, 9, 20, 0.15) !important;
+  border-color: rgba(229, 9, 20, 0.5) !important;
+}
+
+/* ── Meta Pills ─────────────────────────────────────────────────────────────── */
+.meta-pill {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  border-radius: 9999px !important;
+}
+
+/* ── Netflix Row Container ──────────────────────────────────────────────────── */
+.netflix-row-container:hover {
+  background: rgba(255, 255, 255, 0.025) !important;
+  border-radius: 12px !important;
+}
+
+/* ── Card Hover Overlay ─────────────────────────────────────────────────────── */
+.netflix-card-hover-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.42) 55%,
+    rgba(0, 0, 0, 0.08) 100%
+  ) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+}
+
+/* ── Ambient Backdrop ───────────────────────────────────────────────────────── */
+.detail-ambient-backdrop {
+  opacity: 0.30 !important;
+  filter: blur(24px) !important;
+}
+
+/* ── Episode Cards ──────────────────────────────────────────────────────────── */
+.ep-card-wrap {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.ep-card-wrap:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ── Auth Modal ─────────────────────────────────────────────────────────────── */
+.auth-modal-card {
+  background: rgba(14, 14, 20, 0.90) !important;
+  backdrop-filter: blur(32px) !important;
+  -webkit-backdrop-filter: blur(32px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* ── Title Preview Modal ────────────────────────────────────────────────────── */
+.title-preview-modal,
+.mini-preview-card {
+  background: rgba(14, 14, 20, 0.88) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* ── Search Pill / Form ─────────────────────────────────────────────────────── */
+.search-pill,
+.search-form,
+.header-search-form {
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 9999px !important;
+}
+
+/* ── Billboard / Hero Info Badge ────────────────────────────────────────────── */
+.billboard-info-badge,
+.billboard-glass-badge {
+  background: rgba(10, 10, 15, 0.55) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 14px !important;
+}
+
+/* ── Player Ambient Glow ────────────────────────────────────────────────────── */
+.player-ambient-glow {
+  opacity: 0.30 !important;
+  filter: blur(60px) saturate(1.4) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CINEMA PLAY PAGE — /play route standalone fullscreen cinema player styles
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Root fullscreen black canvas */
+.cinema-play-root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Ambient blurred background (from poster/backdrop image) */
+.cinema-ambient-bg {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  filter: blur(40px) saturate(1.2);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Iframe fills entire viewport */
+.cinema-iframe-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.cinema-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+}
+
+/* No-src fallback */
+.cinema-no-src {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+}
+
+/* Top control bar — glassmorphism, slim, sits over iframe */
+.cinema-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 10;
+
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  /* Auto-hide: starts invisible, fades in on mouse move */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.cinema-topbar.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Back button */
+.cinema-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px 6px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  white-space: nowrap;
+}
+
+.cinema-back-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Center section */
+.cinema-topbar-left,
+.cinema-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.cinema-topbar-right {
+  justify-content: flex-end;
+}
+
+.cinema-topbar-center {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cinema-title-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+/* Cinema pill buttons */
+.cinema-pill-container {
+  position: relative;
+}
+
+.cinema-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+  white-space: nowrap;
+}
+
+.cinema-pill-btn:hover,
+.cinema-pill-btn.open {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Cinema dropdown menu */
+.cinema-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: rgba(10, 10, 16, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  padding: 8px 6px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+  z-index: 20;
+}
+
+.cinema-dropdown-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+  padding: 4px 10px 6px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.cinema-dropdown-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  gap: 10px;
+}
+
+.cinema-dropdown-option:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cinema-dropdown-option.selected {
+  color: #fff;
+}
+
+/* Radio indicator */
+.cinema-radio-outer {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.15s ease;
+}
+
+.cinema-radio-outer.checked {
+  border-color: #e50914;
+}
+
+.cinema-radio-inner {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e50914;
+}
+
+/* Bolt badge */
+.cinema-bolt-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: rgba(229, 9, 20, 0.18);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* Servers list dropdown max-height + scroll */
+.cinema-dropdown-menu.servers-list {
+  max-height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.cinema-dropdown-menu.servers-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cinema-dropdown-menu.servers-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}

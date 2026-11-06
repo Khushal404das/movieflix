@@ -14,6 +14,7 @@ export default function AppShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
   const isVerifyRoute = pathname?.startsWith("/verify");
+  const isCinemaRoute = pathname === "/play";
   const isPlayerRoute = Boolean(
     pathname &&
       (pathname.startsWith("/movie/") ||
@@ -27,6 +28,7 @@ export default function AppShell({ children }) {
     pathname === "/" ||
     pathname === "/app" ||
     pathname === "/download" ||
+    pathname === "/play" ||
     isPlayerRoute ||
     isVerifyRoute;
 
@@ -133,6 +135,10 @@ export default function AppShell({ children }) {
         {children}
       </div>
     );
+  }
+
+  if (isCinemaRoute) {
+    return <>{children}</>;
   }
 
   return (

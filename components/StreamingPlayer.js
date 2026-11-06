@@ -853,6 +853,22 @@ export default function StreamingPlayer({
             </button>
 
             {/* Ads toggle hidden */}
+
+            {/* Cinema / Fullscreen Play Page Button */}
+            <a
+              href={`/play?id=${id}&type=${type}${type === "tv" ? `&season=${currentSeason}&episode=${currentEpisode}` : ""}${title ? `&title=${encodeURIComponent(title)}` : ""}${poster ? `&poster=${encodeURIComponent(poster)}` : ""}${backdrop ? `&backdrop=${encodeURIComponent(backdrop)}` : ""}`}
+              className="tool-btn cinema-mode-link"
+              title="Open Cinema Mode (Fullscreen Player)"
+              rel="noopener"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+                <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+                <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+                <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+              </svg>
+              <span className="hide-xs">Cinema</span>
+            </a>
           </div>
         </div>
 
