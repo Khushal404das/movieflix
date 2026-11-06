@@ -10,21 +10,21 @@ const AD_CONFIGS = {
     responsive: true,
     style: { display: "block" },
   },
-  // In-article banner (ideal below player / between text content)
+  // In-article banner (ideal below player)
   inArticle: {
     slot: "9391079242",
     format: "fluid",
     layout: "in-article",
     style: { display: "block", textAlign: "center" },
   },
-  // Fluid in-feed card (matches media card dimensions)
+  // Fluid in-feed card
   inFeed: {
     slot: "1511543046",
     format: "fluid",
     layoutKey: "-ef+6k-30-ac+ty",
     style: { display: "block" },
   },
-  // Multiplex recommended content grid (bottom of page / recommendations)
+  // Multiplex recommended content grid (bottom of page)
   multiplex: {
     slot: "6572298038",
     format: "autorelaxed",
@@ -34,7 +34,7 @@ const AD_CONFIGS = {
 
 /**
  * Reusable Google AdSense Banner Component
- * Formatted cleanly to blend with the dark MovieFlix UI.
+ * Cleanly collapses when ads are pending approval or unfilled.
  */
 export default function AdBanner({
   variant = "display",
@@ -45,9 +45,7 @@ export default function AdBanner({
   responsive,
   className = "",
   style = {},
-  showLabel = true,
 }) {
-  const adRef = useRef(null);
   const pushedRef = useRef(false);
 
   const config = AD_CONFIGS[variant] || AD_CONFIGS.display;
@@ -71,33 +69,26 @@ export default function AdBanner({
 
   return (
     <div
-      className={`ad-banner-wrapper mx-auto w-full max-w-6xl px-3 my-4 md:my-6 ${className}`}
-      style={style}
+      className={`ad-banner-slot ${className}`}
+      style={{
+        width: "100%",
+        maxWidth: "1140px",
+        margin: "20px auto",
+        textAlign: "center",
+        overflow: "hidden",
+        ...style,
+      }}
     >
-      <div className="relative rounded-xl border border-white/[0.06] bg-black/40 p-2 sm:p-3 backdrop-blur-sm transition-all overflow-hidden flex flex-col items-center">
-        {showLabel && (
-          <div className="w-full flex items-center justify-between pb-1.5 px-1 border-b border-white/[0.04] mb-2 select-none">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
-              Sponsored
-            </span>
-            <span className="text-[9px] text-neutral-500 uppercase tracking-wider">
-              Ad
-            </span>
-          </div>
-        )}
-        <div ref={adRef} className="w-full flex justify-center items-center overflow-hidden min-h-[90px]">
-          <ins
-            className="adsbygoogle"
-            style={{ width: "100%", ...config.style }}
-            data-ad-client="ca-pub-2554738343060277"
-            data-ad-slot={slot}
-            {...(format ? { "data-ad-format": format } : {})}
-            {...(layout ? { "data-ad-layout": layout } : {})}
-            {...(layoutKey ? { "data-ad-layout-key": layoutKey } : {})}
-            {...(isResponsive !== undefined ? { "data-full-width-responsive": isResponsive ? "true" : "false" } : {})}
-          />
-        </div>
-      </div>
+      <ins
+        className="adsbygoogle"
+        style={{ width: "100%", ...config.style }}
+        data-ad-client="ca-pub-2554738343060277"
+        data-ad-slot={slot}
+        {...(format ? { "data-ad-format": format } : {})}
+        {...(layout ? { "data-ad-layout": layout } : {})}
+        {...(layoutKey ? { "data-ad-layout-key": layoutKey } : {})}
+        {...(isResponsive !== undefined ? { "data-full-width-responsive": isResponsive ? "true" : "false" } : {})}
+      />
     </div>
   );
 }
