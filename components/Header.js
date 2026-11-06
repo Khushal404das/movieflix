@@ -383,60 +383,66 @@ export default function Header() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="netflix-mobile-nav">
-          {user ? (
-            <div className="mobile-user-card">
-              <div className="mobile-user-avatar">
-                {user.photoURL ? <img src={user.photoURL} alt={user.displayName} /> : <span>ツ</span>}
+        <>
+          <div
+            className="mobile-nav-backdrop"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="netflix-mobile-nav">
+            {user ? (
+              <div className="mobile-user-card">
+                <div className="mobile-user-avatar">
+                  {user.photoURL ? <img src={user.photoURL} alt={user.displayName} /> : <span>ツ</span>}
+                </div>
+                <div className="mobile-user-details">
+                  <span className="mobile-user-name">{user.displayName}</span>
+                  <span className="mobile-user-email">{user.email}</span>
+                </div>
               </div>
-              <div className="mobile-user-details">
-                <span className="mobile-user-name">{user.displayName}</span>
-                <span className="mobile-user-email">{user.email}</span>
-              </div>
-            </div>
-          ) : (
-            <div className="mobile-auth-prompt">
-              <button
-                type="button"
-                className="mobile-signin-btn"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openAuthModal("signin");
-                }}
-              >
-                Sign In / Join Free
-              </button>
-            </div>
-          )}
-
-          <div className="mobile-nav-links">
-            <Link href="/" className="mobile-link">Home</Link>
-            <Link href="/app" className="mobile-link highlight-download-link" onClick={() => setMobileMenuOpen(false)} style={{ color: "#22c55e", fontWeight: "600" }}>
-              📲 Download App (APK / iOS)
-            </Link>
-            <Link href="/browse/tv" className="mobile-link">TV Shows</Link>
-            <Link href="/browse/movie" className="mobile-link">Movies</Link>
-            <Link href="/browse/tv?genre=16" className="mobile-link">⚡ Anime Series</Link>
-            <Link href="/browse/movie?genre=28" className="mobile-link">Action & Adventure</Link>
-            <Link href="/browse/movie?genre=878" className="mobile-link">Sci-Fi & Fantasy</Link>
-            <Link href="/list" className="mobile-link">My List</Link>
-            {user && (
-              <>
-                <Link href="/profile" className="mobile-link">My Profile & Settings</Link>
+            ) : (
+              <div className="mobile-auth-prompt">
                 <button
                   type="button"
-                  className="mobile-link signout-link"
+                  className="mobile-signin-btn"
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    logOut();
+                    openAuthModal("signin");
                   }}
                 >
-                  Sign Out
+                  Sign In / Join Free
                 </button>
-              </>
+              </div>
             )}
+
+            <div className="mobile-nav-links">
+              <Link href="/home" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+              <Link href="/app" className="mobile-link highlight-download-link" onClick={() => setMobileMenuOpen(false)}>
+                📲 Download App (APK / iOS)
+              </Link>
+              <Link href="/browse/tv" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>TV Shows</Link>
+              <Link href="/browse/movie" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Movies</Link>
+              <Link href="/browse/tv?genre=16" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>⚡ Anime Series</Link>
+              <Link href="/browse/movie?genre=28" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Action & Adventure</Link>
+              <Link href="/browse/movie?genre=878" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Sci-Fi & Fantasy</Link>
+              <Link href="/list" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My List</Link>
+              {user && (
+                <>
+                  <Link href="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My Profile & Settings</Link>
+                  <button
+                    type="button"
+                    className="mobile-link signout-link"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      logOut();
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
