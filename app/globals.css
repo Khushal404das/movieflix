@@ -1,21 +1,3 @@
-/* ============================================================
-   Google AdSense — hide unfilled slots, force transparent bg
-   ============================================================ */
-ins.adsbygoogle {
-  background: transparent !important;
-}
-ins.adsbygoogle[data-ad-status="unfilled"] {
-  display: none !important;
-  height: 0 !important;
-  min-height: 0 !important;
-}
-.ad-banner-slot:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
-  display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
 :root {
   --bg-netflix: #141414;
   --bg-darker: #0b0b0b;
@@ -10971,4 +10953,123 @@ a.cinema-mode-link:hover {
 .cinema-dropdown-menu.servers-list::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADS ON/OFF SWITCH (header nav-shell) — components/AdsToggle.js
+   ═══════════════════════════════════════════════════════════════════════════ */
+.ads-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.ads-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ads-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.ads-toggle-label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.ads-toggle-track {
+  position: relative;
+  width: 44px;
+  height: 22px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #52525b; /* off */
+  transition: background-color 0.2s ease;
+}
+
+.ads-toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  transition: left 0.2s ease, background-color 0.2s ease;
+}
+
+.ads-toggle.is-on .ads-toggle-track {
+  background: #f3f0e8; /* on */
+}
+
+.ads-toggle.is-on .ads-toggle-knob {
+  left: 25px;
+  background: #2c2c2c;
+}
+
+@media (min-width: 768px) {
+  .ads-toggle {
+    height: 36px;
+  }
+}
+
+/* The header is already tight below 1280px: drop the visible "Ads" text there
+   (screen readers still get "Ads on/off" from aria-label). */
+@media (max-width: 1279px) {
+  .ads-toggle {
+    padding: 0 6px;
+  }
+  .ads-toggle-label {
+    display: none;
+  }
+}
+
+/* Phones/tablets (hamburger menu shown): move the switch into the drawer */
+.ads-toggle--drawer {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .ads-toggle--header,
+  .ads-toggle-divider {
+    display: none !important;
+  }
+
+  .ads-toggle.ads-toggle--drawer {
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+
+  .ads-toggle--drawer .ads-toggle-label {
+    display: inline;
+    font-size: 14.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ads-toggle-track,
+  .ads-toggle-knob {
+    transition: none;
+  }
+}
+
+/* Ads switched off: hide every ad slot even before React has loaded */
+html.ads-off .ad-banner-slot {
+  display: none !important;
 }

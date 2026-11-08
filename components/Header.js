@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
+import AdsToggle from "@/components/AdsToggle";
 
 export default function Header() {
   const router = useRouter();
@@ -231,6 +232,14 @@ export default function Header() {
               </svg>
             </button>
 
+            {/* Ads on/off switch (turns off banners, native, popunder and social bar ads) */}
+            {!searchOpen && (
+              <>
+                <span className="nav-shell-divider ads-toggle-divider" aria-hidden="true" />
+                <AdsToggle className="ads-toggle--header" />
+              </>
+            )}
+
             {/* Instant Search Dropdown Popup */}
             {searchOpen && query.trim().length > 0 && (
               <div className="netflix-search-results-popup">
@@ -425,6 +434,7 @@ export default function Header() {
               <Link href="/browse/movie?genre=28" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Action & Adventure</Link>
               <Link href="/browse/movie?genre=878" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Sci-Fi & Fantasy</Link>
               <Link href="/list" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My List</Link>
+              <AdsToggle className="mobile-link ads-toggle--drawer" />
               {user && (
                 <>
                   <Link href="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My Profile & Settings</Link>

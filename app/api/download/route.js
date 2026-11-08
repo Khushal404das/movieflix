@@ -27,13 +27,14 @@ export async function GET(request) {
       }
     }
 
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN || "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";
+    // Set GITHUB_TOKEN in the hosting env (never in code). Public releases work without it.
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     let assetUrl = null;
 
     try {
       const relRes = await fetch("https://api.github.com/repos/Khushal404das/movieflix/releases/tags/v1.0.1", {
         headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
+          ...(GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}),
           Accept: "application/vnd.github.v3+json",
           "User-Agent": "MovieFlix-App/1.0",
         },
@@ -59,7 +60,7 @@ export async function GET(request) {
 
     const assetRes = await fetch(assetUrl, {
       headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
+        ...(GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}),
         Accept: "application/octet-stream",
         "User-Agent": "MovieFlix-App/1.0",
       },
