@@ -241,22 +241,11 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
               <path d="m12 19-7-7 7-7" />
               <path d="M19 12H5" />
             </svg>
-            <span>Back</span>
           </button>
         </div>
 
-        {/* Center: Title */}
+        {/* Center: playback mode + server (the player shows its own title) */}
         <div className="cinema-topbar-center">
-          {title && (
-            <span className="cinema-title-text">
-              {decodeURIComponent(title)}
-              {type === "tv" && ` · S${currentSeason}E${currentEpisode}`}
-            </span>
-          )}
-        </div>
-
-        {/* Right: Server selector */}
-        <div className="cinema-topbar-right">
           {/* Playback Mode pill */}
           <div className="cinema-pill-container" ref={modeMenuRef}>
             <button

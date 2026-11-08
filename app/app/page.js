@@ -64,7 +64,7 @@ export default function AppPage() {
         {/* Top Feature Pill */}
         <div className="landing-top-badge-wrap">
           <span className="landing-top-badge">
-            <span className="badge-sparkle">⚡</span> FREE ENTERTAINMENT PLATFORM · 0 ADS
+            <span className="badge-sparkle">⚡</span> FREE ENTERTAINMENT PLATFORM
           </span>
         </div>
 
@@ -155,7 +155,7 @@ export default function AppPage() {
                     Instant Web Streaming (No Installation Required)
                   </h3>
                   <p className="detail-instruction-sub">
-                    Open MovieFlix instantly on any desktop, laptop, tablet, or phone browser with 4K HDR playback and zero ads.
+                    Open MovieFlix instantly on any desktop, laptop, tablet, or phone browser with 4K HDR playback.
                   </p>
                   
                   <div className="download-action-group">
