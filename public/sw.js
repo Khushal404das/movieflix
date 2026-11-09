@@ -1,5 +1,5 @@
 // MovieFlix PWA Service Worker
-const CACHE_NAME = "movieflix-v3";
+const CACHE_NAME = "movieflix-v4";
 const STATIC_ASSETS = [
   "/",
   "/home",
@@ -41,6 +41,8 @@ self.addEventListener("fetch", (event) => {
   if (
     parsedUrl.origin !== self.location.origin ||
     parsedUrl.pathname.startsWith("/api/") ||
+    // Full-screen player: always straight from the network, never cached or intercepted.
+    parsedUrl.pathname === "/play" ||
     parsedUrl.pathname.includes("apiplayer") ||
     parsedUrl.pathname.includes("embed")
   ) {
