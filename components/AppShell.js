@@ -17,7 +17,8 @@ export default function AppShell({ children }) {
   const isCinemaRoute = pathname === "/play";
   const isPlayerRoute = Boolean(
     pathname &&
-      (pathname.startsWith("/movie/") ||
+      (pathname === "/play" ||
+        pathname.startsWith("/movie/") ||
         pathname.startsWith("/tv/") ||
         pathname.startsWith("/classics/"))
   );
@@ -117,6 +118,7 @@ export default function AppShell({ children }) {
         try {
           const url = new URL(link.href, window.location.origin);
           if (
+            url.pathname === "/play" ||
             url.pathname.startsWith("/movie/") ||
             url.pathname.startsWith("/tv/") ||
             url.pathname.startsWith("/classics/")

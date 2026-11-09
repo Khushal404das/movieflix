@@ -1,14 +1,10 @@
-import TitleDetail, { titleMeta } from "@/components/TitleDetail";
+import { redirect } from "next/navigation";
 
-export const generateMetadata = ({ params }) => titleMeta("tv", params.id);
-
+// The detail page is gone: opening a show goes straight to the full-screen player.
 export default function TvPage({ params, searchParams }) {
-  return (
-    <TitleDetail
-      type="tv"
-      id={params.id}
-      season={searchParams.season}
-      episode={searchParams.episode}
-    />
+  const season = Number.parseInt(searchParams?.season, 10) || 1;
+  const episode = Number.parseInt(searchParams?.episode, 10) || 1;
+  redirect(
+    `/play?id=${encodeURIComponent(params.id)}&type=tv&season=${season}&episode=${episode}`
   );
 }

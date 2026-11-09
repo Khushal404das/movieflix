@@ -1,5 +1,6 @@
-import TitleDetail, { titleMeta } from "@/components/TitleDetail";
-export const generateMetadata = ({ params }) => titleMeta("movie", params.id);
-export default function Page({ params, searchParams }) {
-  return <TitleDetail type="movie" id={params.id} season={searchParams.season} />;
+import { redirect } from "next/navigation";
+
+// The detail page is gone: opening a movie goes straight to the full-screen player.
+export default function Page({ params }) {
+  redirect(`/play?id=${encodeURIComponent(params.id)}&type=movie`);
 }
