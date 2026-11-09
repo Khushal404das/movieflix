@@ -126,12 +126,16 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const currentSeason = Number(season) || 1;
   const currentEpisode = Number(episode) || 1;
 
-  // Playback mode: direct | embed
+  // Playback mode: direct (Vidbolt) | embed (server list).
+  // Default is embed: Vidbolt shows its own human-verification and ad pages.
+  // A mode the visitor picked earlier is kept.
   const [playbackMode, setPlaybackMode] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("rh-playback-mode") || "direct";
+      try {
+        return localStorage.getItem("rh-playback-mode") || "embed";
+      } catch {}
     }
-    return "direct";
+    return "embed";
   });
 
   // Selected embed server
