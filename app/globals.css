@@ -10958,6 +10958,84 @@ a.cinema-mode-link:hover {
   letter-spacing: 0.03em;
 }
 
+/* Reload player button (next to Direct/Bolt) */
+.cinema-reload-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.cinema-reload-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.cinema-reload-btn:focus-visible,
+.cinema-redirect-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Notice shown when the player frame was sent to another site */
+.cinema-redirect-notice {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 11;
+  transform: translate(-50%, -50%);
+  width: min(360px, calc(100% - 32px));
+  padding: 22px 20px 20px;
+  border-radius: 16px;
+  background: rgba(15, 15, 18, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #fff;
+}
+
+.cinema-redirect-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cinema-redirect-text {
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cinema-redirect-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 9999px;
+  background: #e50914;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.cinema-redirect-btn:hover {
+  background: #f6121d;
+}
+
 /* Servers list dropdown max-height + scroll */
 .cinema-dropdown-menu.servers-list {
   max-height: 320px;

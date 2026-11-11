@@ -219,6 +219,35 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
       ? "Bolt"
       : EMBED_SERVERS.find((s) => s.id === selectedServer)?.name || "Orion";
 
+  // ── Player redirected away ────────────────────────────────────────────────
+  // Bolt (Vidbolt) loads its page once and then plays, changes episode and
+  // switches servers without reloading. A second "load" of the iframe means
+  // something inside it sent the frame to another site (e.g. an ad link), so
+  // we offer a one-click way back to the movie. We never block or reverse it
+  // ourselves: the viewer decides when to reload.
+  const [reloadNonce, setReloadNonce] = useState(0);
+  const [redirected, setRedirected] = useState(false);
+  const loadCountRef = useRef(0);
+  const iframeKey = `cinema-${playbackMode}-${selectedServer}-${type}-${id}-${currentSeason}-${currentEpisode}-${reloadNonce}`;
+
+  useEffect(() => {
+    loadCountRef.current = 0;
+    setRedirected(false);
+  }, [iframeKey]);
+
+  const handleIframeLoad = () => {
+    loadCountRef.current += 1;
+    if (playbackMode === "direct" && loadCountRef.current > 1) {
+      setRedirected(true);
+      setTopbarVisible(true);
+    }
+  };
+
+  const reloadPlayer = () => {
+    setRedirected(false);
+    setReloadNonce((n) => n + 1);
+  };
+
   return (
     <div className="cinema-play-root" onMouseMove={resetHideTimer} onTouchStart={resetHideTimer}>
       {/* Ambient backdrop blur background */}
@@ -342,16 +371,42 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
           {playbackMode === "direct" && (
             <span className="cinema-bolt-badge">Bolt</span>
           )}
+
+          {/* Reload the player (e.g. after it was sent to another site) */}
+          <button
+            type="button"
+            className="cinema-reload-btn"
+            onClick={reloadPlayer}
+            aria-label="Reload player"
+            title="Reload player"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 12a9 9 0 1 1-2.64-6.36" />
+              <path d="M21 3v6h-6" />
+            </svg>
+          </button>
         </div>
       </div>
+
+      {/* Shown when the player frame was sent to another site */}
+      {redirected && (
+        <div className="cinema-redirect-notice" role="alert">
+          <p className="cinema-redirect-title">The player was sent to another site</p>
+          <p className="cinema-redirect-text">Reload it to get back to your movie.</p>
+          <button type="button" className="cinema-redirect-btn" onClick={reloadPlayer}>
+            Reload player
+          </button>
+        </div>
+      )}
 
       {/* Full-viewport iframe */}
       <div className="cinema-iframe-wrap">
         {currentEmbedUrl ? (
           <iframe
             ref={iframeRef}
-            key={`cinema-${playbackMode}-${selectedServer}-${type}-${id}-${currentSeason}-${currentEpisode}`}
+            key={iframeKey}
             src={currentEmbedUrl}
+            onLoad={handleIframeLoad}
             className="cinema-iframe"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share"
             allowFullScreen
