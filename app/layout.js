@@ -214,7 +214,8 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://image.tmdb.org" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://vidbolt.pro" crossOrigin="anonymous" />
+        {/* No crossOrigin: the player iframe loads with a normal (credentialed) request, so only a plain preconnect is reused. */}
+        <link rel="preconnect" href="https://vidbolt.pro" />
         
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
         <link rel="dns-prefetch" href="https://vidbolt.pro" />
