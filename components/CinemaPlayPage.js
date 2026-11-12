@@ -4,26 +4,37 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 // ─── Server Definitions (mirrors StreamingPlayer.js) ───────────────────────
+// VidBolt player link. VidBolt runs the same player on two addresses:
+// vidbolt.pro (main) and vidbolt.xyz (backup, "Bolt 2").
+// No mobileSheets: that option makes the player hand its Settings / Subtitles
+// menus to the host page, and this page doesn't draw them, so on phones those
+// buttons did nothing. Without it the player shows its own menus.
+function boltUrl(domain, type, id, s, e, audio = "hindi") {
+  const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
+  const q = `?theme=E50914&autoPlay=true${audioParam}`;
+  if (type === "anime-mal") return `${domain}/anime/mal/${id}/${e}${q}`;
+  if (type === "anime" || type === "anilist") return `${domain}/anime/${id}/${e}${q}`;
+  if (type === "tv") return `${domain}/tv/${id}/${s}/${e}${q}`;
+  return `${domain}/movie/${id}${q}`;
+}
+
 const DIRECT_SERVER = {
   id: "vidbolt",
   name: "Bolt",
   domain: "https://vidbolt.pro",
-  getUrl: (type, id, s, e, audio = "hindi") => {
-    const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
-    if (type === "anime-mal") {
-      return `https://vidbolt.pro/anime/mal/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    if (type === "anime" || type === "anilist") {
-      return `https://vidbolt.pro/anime/${id}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    if (type === "tv") {
-      return `https://vidbolt.pro/tv/${id}/${s}/${e}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-    }
-    return `https://vidbolt.pro/movie/${id}?theme=E50914&autoPlay=true&mobileSheets=true${audioParam}`;
-  },
+  getUrl: (type, id, s, e, audio) => boltUrl("https://vidbolt.pro", type, id, s, e, audio),
 };
 
+// Sites whose player messages we read (both VidBolt addresses)
+const BOLT_ORIGINS = ["https://vidbolt.pro", "https://vidbolt.xyz"];
+const BOLT_BACKUP_ID = "bolt2";
+
 const EMBED_SERVERS = [
+  {
+    id: BOLT_BACKUP_ID,
+    name: "Bolt 2",
+    getUrl: (type, id, s, e, audio) => boltUrl("https://vidbolt.xyz", type, id, s, e, audio),
+  },
   {
     id: "vidcore",
     name: "Orion",
@@ -163,7 +174,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
       return DIRECT_SERVER.getUrl(type, id, currentSeason, currentEpisode, preferredAudio);
     }
     const srv = EMBED_SERVERS.find((s) => s.id === selectedServer) || EMBED_SERVERS[0];
-    return srv.getUrl(type, id, currentSeason, currentEpisode);
+    return srv.getUrl(type, id, currentSeason, currentEpisode, preferredAudio);
   }, [playbackMode, selectedServer, type, id, currentSeason, currentEpisode, preferredAudio]);
 
   const activeServerName =
@@ -180,6 +191,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const [reloadNonce, setReloadNonce] = useState(0);
   const [redirected, setRedirected] = useState(false);
   const loadCountRef = useRef(0);
+  const isBoltPlayer = playbackMode === "direct" || selectedServer === BOLT_BACKUP_ID;
   const iframeKey = `cinema-${playbackMode}-${selectedServer}-${type}-${id}-${currentSeason}-${currentEpisode}-${reloadNonce}`;
 
   useEffect(() => {
@@ -190,7 +202,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const handleIframeLoad = () => {
     loadedRef.current = true;
     loadCountRef.current += 1;
-    if (playbackMode === "direct" && loadCountRef.current > 1) {
+    if (isBoltPlayer && loadCountRef.current > 1) {
       setRedirected(true);
       setTopbarVisible(true);
     }
@@ -204,13 +216,12 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   // ── Auto switch ───────────────────────────────────────────────────────────
   // The player frame belongs to another site, so we can't look inside it.
   // We treat a server as working when:
-  //   - Bolt: it reports a video (durationchange / timeupdate / play), or the
-  //     viewer clicks into the player. If it only says "ready", it gets extra time;
+  //   - Bolt / Bolt 2: the player says "ready" (VidBolt sends this once the
+  //     video stream is ready) or reports playback, or the viewer clicks into it;
   //   - other servers: the frame finishes loading.
   // If that doesn't happen in time, we move to the next server in the list.
   // A server the viewer picked themself is never switched away from.
   const healthyRef = useRef(false);
-  const boltReadyRef = useRef(false);
   const loadedRef = useRef(false);
 
   // New title or episode: start again from Bolt.
@@ -224,7 +235,8 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const switchToNextServer = useCallback(() => {
     const current = playbackMode === "direct" ? "vidbolt" : selectedServer;
     failedRef.current.add(current);
-    const order = [selectedServer, ...EMBED_SERVERS.map((s) => s.id)];
+    // Bolt 2 (the other VidBolt address) first, then the server used last, then the rest.
+    const order = [BOLT_BACKUP_ID, selectedServer, ...EMBED_SERVERS.map((s) => s.id)];
     const next = order.find((sid) => !failedRef.current.has(sid));
     if (!next) {
       setAutoSwitchNote("No server could load this title. Try another server or reload.");
@@ -239,17 +251,14 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     setTopbarVisible(true);
   }, [playbackMode, selectedServer]);
 
-  // Bolt counts as working once it reports a video.
+  // Bolt / Bolt 2 count as working once the player reports a ready video.
   useEffect(() => {
-    if (playbackMode !== "direct") return;
-    const boltOrigin = new URL(DIRECT_SERVER.domain).origin;
+    if (!isBoltPlayer) return;
     const onMessage = (e) => {
-      if (e.origin !== boltOrigin) return;
+      if (!BOLT_ORIGINS.includes(e.origin)) return;
       const t = e.data && typeof e.data === "object" ? e.data.type : null;
-      if (t === "durationchange" || t === "timeupdate" || t === "play" || t === "playing") {
+      if (t === "ready" || t === "durationchange" || t === "timeupdate" || t === "play") {
         healthyRef.current = true;
-      } else if (t === "ready") {
-        boltReadyRef.current = true;
       }
     };
     // Clicking into the player moves focus to the frame: the viewer is using it.
@@ -262,28 +271,18 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
       window.removeEventListener("message", onMessage);
       window.removeEventListener("blur", onBlur);
     };
-  }, [playbackMode, iframeKey]);
+  }, [isBoltPlayer, iframeKey]);
 
   // Time limits for each try.
   useEffect(() => {
     if (!currentEmbedUrl || userPickedRef.current) return;
     healthyRef.current = false;
-    boltReadyRef.current = false;
     loadedRef.current = false;
-    const isBolt = playbackMode === "direct";
-    let timer;
-    const check = (extended) => {
+    const timer = setTimeout(() => {
       if (userPickedRef.current) return;
-      const ok = isBolt ? healthyRef.current : loadedRef.current;
-      if (ok) return;
-      // Bolt's player is up but no video yet: give it a little longer once.
-      if (isBolt && boltReadyRef.current && !extended) {
-        timer = setTimeout(() => check(true), 15000);
-        return;
-      }
-      switchToNextServer();
-    };
-    timer = setTimeout(() => check(false), isBolt ? 20000 : 15000);
+      const ok = isBoltPlayer ? healthyRef.current : loadedRef.current;
+      if (!ok) switchToNextServer();
+    }, isBoltPlayer ? 20000 : 15000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iframeKey]);

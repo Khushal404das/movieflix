@@ -219,6 +219,7 @@ export default function RootLayout({ children }) {
         
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
         <link rel="dns-prefetch" href="https://vidbolt.pro" />
+        <link rel="dns-prefetch" href="https://vidbolt.xyz" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
         <link rel="dns-prefetch" href="https://bancadeltempoidea.org" />
         <link rel="dns-prefetch" href="https://aarems.org" />
