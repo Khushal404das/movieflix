@@ -114,7 +114,7 @@ export default function AppShell({ children }) {
       }
 
       // Allow opening the settings (gear) menu; its Watchlist / Profile links are still guarded
-      if (e.target.closest(".settings-menu-trigger") || e.target.closest(".theme-toggle")) {
+      if (e.target.closest(".settings-menu-trigger")) {
         return;
       }
 

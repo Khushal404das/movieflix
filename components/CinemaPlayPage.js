@@ -77,15 +77,9 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const currentEpisode = Number(episode) || 1;
 
   // Playback mode: direct (Vidbolt) | embed (server list).
-  // Default is direct (Vidbolt); a mode the visitor picked earlier is kept.
-  const [playbackMode, setPlaybackMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      try {
-        return localStorage.getItem("rh-playback-mode") || "direct";
-      } catch {}
-    }
-    return "direct";
-  });
+  // Every title starts on Bolt (Vidbolt). If Bolt doesn't load, the page moves
+  // to the embed servers on its own (see "Auto switch" below).
+  const [playbackMode, setPlaybackMode] = useState("direct");
 
   // Selected embed server
   const [selectedServer, setSelectedServer] = useState(() => {
@@ -143,13 +137,21 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     };
   }, []);
 
+  // Servers the auto switch already gave up on for this title
+  const failedRef = useRef(new Set());
+  const [autoSwitchNote, setAutoSwitchNote] = useState("");
+  const userPickedRef = useRef(false);
+
   const handleSelectMode = (mode) => {
+    userPickedRef.current = true;
+    setAutoSwitchNote("");
     setPlaybackMode(mode);
     setModeMenuOpen(false);
-    if (typeof window !== "undefined") localStorage.setItem("rh-playback-mode", mode);
   };
 
   const handleSelectServer = (srvId) => {
+    userPickedRef.current = true;
+    setAutoSwitchNote("");
     setSelectedServer(srvId);
     setServerMenuOpen(false);
     if (typeof window !== "undefined") localStorage.setItem("rh-selected-server", srvId);
@@ -186,6 +188,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   }, [iframeKey]);
 
   const handleIframeLoad = () => {
+    loadedRef.current = true;
     loadCountRef.current += 1;
     if (playbackMode === "direct" && loadCountRef.current > 1) {
       setRedirected(true);
@@ -197,6 +200,100 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     setRedirected(false);
     setReloadNonce((n) => n + 1);
   };
+
+  // ── Auto switch ───────────────────────────────────────────────────────────
+  // The player frame belongs to another site, so we can't look inside it.
+  // We treat a server as working when:
+  //   - Bolt: it reports a video (durationchange / timeupdate / play), or the
+  //     viewer clicks into the player. If it only says "ready", it gets extra time;
+  //   - other servers: the frame finishes loading.
+  // If that doesn't happen in time, we move to the next server in the list.
+  // A server the viewer picked themself is never switched away from.
+  const healthyRef = useRef(false);
+  const boltReadyRef = useRef(false);
+  const loadedRef = useRef(false);
+
+  // New title or episode: start again from Bolt.
+  useEffect(() => {
+    failedRef.current = new Set();
+    userPickedRef.current = false;
+    setAutoSwitchNote("");
+    setPlaybackMode("direct");
+  }, [type, id, currentSeason, currentEpisode]);
+
+  const switchToNextServer = useCallback(() => {
+    const current = playbackMode === "direct" ? "vidbolt" : selectedServer;
+    failedRef.current.add(current);
+    const order = [selectedServer, ...EMBED_SERVERS.map((s) => s.id)];
+    const next = order.find((sid) => !failedRef.current.has(sid));
+    if (!next) {
+      setAutoSwitchNote("No server could load this title. Try another server or reload.");
+      setTopbarVisible(true);
+      return;
+    }
+    const failedName = playbackMode === "direct" ? "Bolt" : EMBED_SERVERS.find((s) => s.id === current)?.name;
+    const nextName = EMBED_SERVERS.find((s) => s.id === next)?.name;
+    setAutoSwitchNote(`${failedName} didn't load, switched to ${nextName}.`);
+    setPlaybackMode("embed");
+    setSelectedServer(next);
+    setTopbarVisible(true);
+  }, [playbackMode, selectedServer]);
+
+  // Bolt counts as working once it reports a video.
+  useEffect(() => {
+    if (playbackMode !== "direct") return;
+    const boltOrigin = new URL(DIRECT_SERVER.domain).origin;
+    const onMessage = (e) => {
+      if (e.origin !== boltOrigin) return;
+      const t = e.data && typeof e.data === "object" ? e.data.type : null;
+      if (t === "durationchange" || t === "timeupdate" || t === "play" || t === "playing") {
+        healthyRef.current = true;
+      } else if (t === "ready") {
+        boltReadyRef.current = true;
+      }
+    };
+    // Clicking into the player moves focus to the frame: the viewer is using it.
+    const onBlur = () => {
+      if (document.activeElement === iframeRef.current) healthyRef.current = true;
+    };
+    window.addEventListener("message", onMessage);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [playbackMode, iframeKey]);
+
+  // Time limits for each try.
+  useEffect(() => {
+    if (!currentEmbedUrl || userPickedRef.current) return;
+    healthyRef.current = false;
+    boltReadyRef.current = false;
+    loadedRef.current = false;
+    const isBolt = playbackMode === "direct";
+    let timer;
+    const check = (extended) => {
+      if (userPickedRef.current) return;
+      const ok = isBolt ? healthyRef.current : loadedRef.current;
+      if (ok) return;
+      // Bolt's player is up but no video yet: give it a little longer once.
+      if (isBolt && boltReadyRef.current && !extended) {
+        timer = setTimeout(() => check(true), 15000);
+        return;
+      }
+      switchToNextServer();
+    };
+    timer = setTimeout(() => check(false), isBolt ? 20000 : 15000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [iframeKey]);
+
+  // The note goes away on its own after a while.
+  useEffect(() => {
+    if (!autoSwitchNote) return;
+    const t = setTimeout(() => setAutoSwitchNote(""), 6000);
+    return () => clearTimeout(t);
+  }, [autoSwitchNote]);
 
   return (
     <div className="cinema-play-root" onMouseMove={resetHideTimer} onTouchStart={resetHideTimer}>
@@ -346,6 +443,13 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
           <button type="button" className="cinema-redirect-btn" onClick={reloadPlayer}>
             Reload player
           </button>
+        </div>
+      )}
+
+      {/* Auto switch note */}
+      {autoSwitchNote && (
+        <div className="cinema-autoswitch-note" role="status">
+          {autoSwitchNote}
         </div>
       )}
 
