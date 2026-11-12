@@ -33,37 +33,12 @@ const EMBED_SERVERS = [
         : `https://vidcore.net/movie/${id}?theme=E50914`,
   },
   {
-    id: "vidrift",
-    name: "VidRift",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://embed.vidrift.in/tv/${id}/${s}/${e}`
-        : `https://embed.vidrift.in/movie/${id}`,
-  },
-  {
-    id: "screenscape",
-    name: "Hindi",
-    getUrl: (type, id, s, e) => {
-      const q = new URLSearchParams({ tmdb: String(id), type: type === "tv" ? "tv" : "movie", lan: "hindi" });
-      if (type === "tv") { q.set("s", s); q.set("e", e); }
-      return `https://nxsha.screenscape.me/embed?${q.toString()}`;
-    },
-  },
-  {
     id: "cinezo",
     name: "Cinezo",
     getUrl: (type, id, s, e) => {
       const q = new URLSearchParams({ autoplay: "true", poster: "true", primarycolor: "E50914", secondarycolor: "0a0a12", iconcolor: "ffffff" }).toString();
       return type === "tv" ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?${q}` : `https://player.cinezo.live/embed/movie/${id}?${q}`;
     },
-  },
-  {
-    id: "hindi-new",
-    name: "Hindi New",
-    getUrl: (type, id, s, e) =>
-      type === "tv"
-        ? `https://embed.reelsdownload.online/player/${id}/${s}/${e}?key=k_885c7f4e1997d1d9c4e42aff`
-        : `https://embed.reelsdownload.online/player/${id}?key=k_885c7f4e1997d1d9c4e42aff`,
   },
   {
     id: "flix",
@@ -82,37 +57,12 @@ const EMBED_SERVERS = [
         : `https://embed.filmu.in/movie/${id}?color=e50914`,
   },
   {
-    id: "nflix",
-    name: "Nflix",
-    getUrl: (type, id, s, e) => {
-      const q = new URLSearchParams({ color: "e50914", brand: "MovieFlix" }).toString();
-      return type === "tv" ? `https://nflixmovies.app/embed/tv/${id}/${s}/${e}?${q}` : `https://nflixmovies.app/embed/movie/${id}?${q}`;
-    },
-  },
-  {
     id: "vidup",
     name: "Premium",
     getUrl: (type, id, s, e) =>
       type === "tv"
         ? `https://vidup.to/tv/${id}/${s}/${e}?theme=E50914`
         : `https://vidup.to/movie/${id}?theme=E50914`,
-  },
-  {
-    id: "videasy",
-    name: "Mega",
-    getUrl: (type, id, s, e) => {
-      const q = new URLSearchParams({ color: "E50914" });
-      if (type === "tv") { q.set("nextEpisode", "true"); q.set("autoplayNextEpisode", "true"); }
-      return type === "tv" ? `https://player.videasy.to/tv/${id}/${s}/${e}?${q.toString()}` : `https://player.videasy.to/movie/${id}?${q.toString()}`;
-    },
-  },
-  {
-    id: "vidfast",
-    name: "Alpha",
-    getUrl: (type, id, s, e) => {
-      const q = "autoNext=true&nextButton=false&title=true&poster=true&autoPlay=true";
-      return type === "tv" ? `https://vidfast.vc/tv/${id}/${s}/${e}?${q}` : `https://vidfast.vc/movie/${id}?${q}`;
-    },
   },
 ];
 
