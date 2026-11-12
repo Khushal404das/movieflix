@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import BoltControls from "@/components/BoltControls";
 
 // ─── Server Definitions (mirrors StreamingPlayer.js) ───────────────────────
 // VidBolt player link. VidBolt runs the same player on two addresses:
@@ -11,7 +12,9 @@ import { useRouter } from "next/navigation";
 // buttons did nothing. Without it the player shows its own menus.
 function boltUrl(domain, type, id, s, e, audio = "hindi") {
   const audioParam = audio && audio !== "auto" ? `&audio=${encodeURIComponent(audio)}` : "";
-  const q = `?theme=E50914&autoPlay=true${audioParam}`;
+  // fullscreenButton=false: the player's own button would fullscreen only its
+  // frame and leave MovieFlix's controls (components/BoltControls.js) behind.
+  const q = `?theme=E50914&autoPlay=true&fullscreenButton=false${audioParam}`;
   if (type === "anime-mal") return `${domain}/anime/mal/${id}/${e}${q}`;
   if (type === "anime" || type === "anilist") return `${domain}/anime/${id}/${e}${q}`;
   if (type === "tv") return `${domain}/tv/${id}/${s}/${e}${q}`;
@@ -498,6 +501,16 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
           </div>
         )}
       </div>
+
+      {/* MovieFlix's own controls for the VidBolt player (Bolt / Bolt 2) */}
+      {currentEmbedUrl && isBoltPlayer && !redirected && (
+        <BoltControls
+          key={iframeKey}
+          iframeRef={iframeRef}
+          origin={playbackMode === "direct" ? BOLT_ORIGINS[0] : BOLT_ORIGINS[1]}
+          visible={topbarVisible}
+        />
+      )}
     </div>
   );
 }
