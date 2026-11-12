@@ -8,6 +8,7 @@ import AuthModal from "@/components/AuthModal";
 import SessionGuard from "@/components/SessionGuard";
 import TitlePreviewModal from "@/components/TitlePreviewModal";
 import MiniPreviewModal from "@/components/MiniPreviewModal";
+import DiscordLink from "@/components/DiscordLink";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function AppShell({ children }) {
@@ -107,6 +108,11 @@ export default function AppShell({ children }) {
         return;
       }
 
+      // Allow the Join Discord links (open Discord in a new tab, no account needed)
+      if (e.target.closest(".discord-link")) {
+        return;
+      }
+
       // Allow direct APK download links
       if (e.target.closest("a[download]") || e.target.closest('a[href*="/api/download"]')) {
         return;
@@ -189,6 +195,10 @@ export default function AppShell({ children }) {
               <a href="/app">Android Native (.APK)</a>
               <a href="/home">Web Browser Player</a>
               <a href="/download">All Platforms</a>
+            </div>
+            <div className="footer-col">
+              <h4>Community</h4>
+              <DiscordLink className="discord-link--footer" />
             </div>
           </div>
         </div>

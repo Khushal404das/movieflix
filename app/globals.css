@@ -11171,3 +11171,30 @@ a.cinema-mode-link:hover {
 html.ads-off .ad-banner-slot {
   display: none !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   JOIN DISCORD LINK (header nav, phone menu, footer) — components/DiscordLink.js
+   ═══════════════════════════════════════════════════════════════════════════ */
+.discord-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.discord-link svg {
+  flex-shrink: 0;
+}
+
+.discord-link--nav:hover,
+.discord-link--drawer:hover,
+.discord-link--footer:hover {
+  color: #5865f2 !important;
+}
+
+.footer-col a.discord-link--footer {
+  display: inline-flex !important;
+}
+
+.discord-link--drawer {
+  gap: 10px !important;
+}

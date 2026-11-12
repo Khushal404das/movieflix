@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import AdsToggle from "@/components/AdsToggle";
+import DiscordLink from "@/components/DiscordLink";
 
 export default function Header() {
   const router = useRouter();
@@ -156,6 +157,7 @@ export default function Header() {
             <Link href="/app" className={`netflix-nav-item ${pathname === "/app" || pathname === "/" ? "active" : ""}`}>
               Get App <span className="nav-app-pill">iOS / APK</span>
             </Link>
+            <DiscordLink className="netflix-nav-item discord-link--nav" label="Discord" iconSize={15} />
           </nav>
         </div>
 
@@ -434,6 +436,7 @@ export default function Header() {
               <Link href="/browse/movie?genre=28" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Action & Adventure</Link>
               <Link href="/browse/movie?genre=878" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Sci-Fi & Fantasy</Link>
               <Link href="/list" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My List</Link>
+              <DiscordLink className="mobile-link discord-link--drawer" onClick={() => setMobileMenuOpen(false)} />
               <AdsToggle className="mobile-link ads-toggle--drawer" />
               {user && (
                 <>
