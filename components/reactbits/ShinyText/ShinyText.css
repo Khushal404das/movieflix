@@ -1,0 +1,25 @@
+/* From React Bits (https://reactbits.dev) by David Haz.
+   Copyright (c) 2026 David Haz. MIT + Commons Clause License:
+   used here as part of the MovieFlix website; the component itself may
+   not be sold or redistributed on its own. */
+.shiny-text {
+  position: relative;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shiny-text__glow {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: blur(0.14em);
+  pointer-events: none;
+  user-select: none;
+}

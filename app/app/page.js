@@ -3,6 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import AdBanner from "@/components/AdBanner";
+// Animated effects from React Bits (https://reactbits.dev)
+import ShinyText from "@/components/reactbits/ShinyText/ShinyText";
+import GradientText from "@/components/reactbits/GradientText/GradientText";
+import StarBorder from "@/components/reactbits/StarBorder/StarBorder";
+import ClickSpark from "@/components/reactbits/ClickSpark/ClickSpark";
 
 export default function AppPage() {
   const [selectedDevice, setSelectedDevice] = useState("web");
@@ -57,6 +62,7 @@ export default function AppPage() {
 
   return (
     <main className="app-landing-page">
+      <ClickSpark sparkColor="#ff3b3b" sparkSize={12} sparkRadius={22} sparkCount={8} duration={450}>
       {/* Ambient background glow */}
       <div className="landing-ambient-radial" />
 
@@ -64,14 +70,18 @@ export default function AppPage() {
         {/* Top Feature Pill */}
         <div className="landing-top-badge-wrap">
           <span className="landing-top-badge">
-            <span className="badge-sparkle">⚡</span> FREE ENTERTAINMENT PLATFORM
+            <span className="badge-sparkle">⚡</span>{" "}
+            <ShinyText text="FREE ENTERTAINMENT PLATFORM" color="#ff4d4d" shineColor="#ffffff" speed={3} />
           </span>
         </div>
 
         {/* Hero Title Header */}
         <section className="landing-hero-section">
           <h1 className="landing-main-title">
-            Watch Movies & Series Free – Everything You <span className="highlight-love">Love</span>
+            Watch Movies & Series Free – Everything You{" "}
+            <GradientText colors={["#e50914", "#ff6a3d", "#ff2d55"]} animationSpeed={6} className="landing-love-gradient">
+              Love
+            </GradientText>
           </h1>
           <p className="landing-subtitle">
             Unlimited Movies & TV Series on your Web browser, Android phone, or iOS device. Completely free forever.
@@ -89,12 +99,23 @@ export default function AppPage() {
           {/* Main CTA Button */}
           <div className="landing-cta-box">
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", marginBottom: "10px" }}>
-              <Link href="/home" className="btn-landing-home">
+              <StarBorder
+                as={Link}
+                href="/home"
+                className="btn-landing-home"
+                color="#ffffff"
+                backgroundColor="#e50914"
+                textColor="#ffffff"
+                borderColor="rgba(255, 255, 255, 0.25)"
+                radius={8}
+                thickness={1.5}
+                duration={3.5}
+              >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
                 </svg>
                 <span>LAUNCH WEB APP</span>
-              </Link>
+              </StarBorder>
               <a
                 href="/api/download"
                 download="MovieFlix.apk"
@@ -346,6 +367,7 @@ export default function AppPage() {
           <span className="heart-icon">❤️</span> Made for people who love movies and web series.
         </div>
       </div>
+      </ClickSpark>
     </main>
   );
 }

@@ -11361,3 +11361,18 @@ html.ads-off .ad-banner-slot {
 .top10-row .row-slider-wrapper .row-nav-arrow {
   top: calc(50% - 7.5px - 22px) !important;
 }
+
+/* ═══ Landing page — React Bits effects (components/reactbits) ═══ */
+/* "Love" uses GradientText; keep the hero's weight and spacing. */
+.landing-love-gradient {
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+/* Star Border sits on the red "LAUNCH WEB APP" button: keep the button's size and font. */
+.star-border.btn-landing-home {
+  padding: 14px 36px;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
