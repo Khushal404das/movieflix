@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import AdsToggle from "@/components/AdsToggle";
-import DiscordLink from "@/components/DiscordLink";
+import DiscordLink, { DISCORD_INVITE_URL, TELEGRAM_URL, DiscordIcon, TelegramIcon } from "@/components/DiscordLink";
 
 export default function Header() {
   const router = useRouter();
@@ -19,10 +19,12 @@ export default function Header() {
   const [isLoading, setIsLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const settingsRef = useRef(null);
 
   // Background opacity change on window scroll like Netflix
   useEffect(() => {
@@ -69,6 +71,9 @@ export default function Header() {
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(e.target)) {
         setProfileDropdownOpen(false);
       }
+      if (settingsRef.current && !settingsRef.current.contains(e.target)) {
+        setSettingsOpen(false);
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -79,6 +84,7 @@ export default function Header() {
     setMobileMenuOpen(false);
     setSearchOpen(false);
     setProfileDropdownOpen(false);
+    setSettingsOpen(false);
     setQuery("");
   }, [pathname]);
 
@@ -220,19 +226,96 @@ export default function Header() {
               </button>
             )}
 
-            {/* Settings Trigger */}
-            <button
-              type="button"
-              className="nav-shell-btn"
-              aria-label="Settings"
-              title="Settings"
-              onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-            >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
+            {/* Settings menu (gear) */}
+            <div className="settings-menu-wrapper" ref={settingsRef}>
+              <button
+                type="button"
+                className="nav-shell-btn settings-menu-trigger"
+                aria-label="Settings"
+                title="Settings"
+                aria-haspopup="menu"
+                aria-expanded={settingsOpen}
+                onClick={() => { setSettingsOpen((o) => !o); setProfileDropdownOpen(false); }}
+              >
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+
+              {settingsOpen && (
+                <div className="profile-dropdown-menu settings-menu" role="menu">
+                  {!user && (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="profile-menu-item"
+                      onClick={() => { setSettingsOpen(false); openAuthModal("signin"); }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                      </svg>
+                      <span>Sign In</span>
+                    </button>
+                  )}
+
+                  <Link
+                    href="/list"
+                    role="menuitem"
+                    className="profile-menu-item"
+                    onClick={() => setSettingsOpen(false)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>My Watchlist</span>
+                  </Link>
+
+                  <Link
+                    href="/profile"
+                    role="menuitem"
+                    className="profile-menu-item"
+                    onClick={() => setSettingsOpen(false)}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                    <span>Edit Profile</span>
+                  </Link>
+
+                  <div className="profile-menu-divider" />
+
+                  {TELEGRAM_URL && (
+                    <a
+                      href={TELEGRAM_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      role="menuitem"
+                      className="profile-menu-item community-link community-link--telegram"
+                      onClick={() => setSettingsOpen(false)}
+                    >
+                      <TelegramIcon size={16} />
+                      <span>Join Telegram</span>
+                    </a>
+                  )}
+
+                  <a
+                    href={DISCORD_INVITE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    role="menuitem"
+                    className="profile-menu-item community-link community-link--discord"
+                    onClick={() => setSettingsOpen(false)}
+                  >
+                    <DiscordIcon size={16} />
+                    <span>Join Discord</span>
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* Ads on/off switch (turns off banners, native, popunder and social bar ads) */}
             {!searchOpen && (

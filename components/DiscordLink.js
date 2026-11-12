@@ -1,6 +1,18 @@
-// "Join Discord" link used in the header, the phone menu and the footer.
+// "Join Discord" link used in the header, the phone menu and the footer,
+// plus the community links shown in the header settings menu.
 
 export const DISCORD_INVITE_URL = "https://discord.gg/yMpRwYkknz";
+
+// Telegram channel invite (https://t.me/...). Leave empty to hide "Join Telegram".
+export const TELEGRAM_URL = "https://t.me/movieflixmovieflix";
+
+export function TelegramIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M21.6 3.2 2.9 10.4c-1.3.5-1.3 1.2-.2 1.6l4.8 1.5 1.8 5.6c.2.6.4.8.8.8.4 0 .6-.2.9-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8L23 4.6c.3-1.3-.5-1.9-1.4-1.4ZM9.3 13.2l9-5.7c.4-.3.8-.1.5.2l-7.4 6.7-.3 3.2-1.8-4.4Z" />
+    </svg>
+  );
+}
 
 export function DiscordIcon({ size = 16 }) {
   return (

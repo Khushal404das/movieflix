@@ -108,8 +108,13 @@ export default function AppShell({ children }) {
         return;
       }
 
-      // Allow the Join Discord links (open Discord in a new tab, no account needed)
-      if (e.target.closest(".discord-link")) {
+      // Allow the Join Discord / Telegram links (open in a new tab, no account needed)
+      if (e.target.closest(".discord-link") || e.target.closest(".community-link")) {
+        return;
+      }
+
+      // Allow opening the settings (gear) menu; its Watchlist / Profile links are still guarded
+      if (e.target.closest(".settings-menu-trigger")) {
         return;
       }
 

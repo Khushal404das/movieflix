@@ -11198,3 +11198,33 @@ html.ads-off .ad-banner-slot {
 .discord-link--drawer {
   gap: 10px !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER SETTINGS (GEAR) MENU — components/Header.js
+   Reuses .profile-dropdown-menu / .profile-menu-item for the look.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.settings-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.settings-menu.profile-dropdown-menu {
+  top: calc(100% + 14px) !important;
+  right: -8px !important;
+  min-width: 220px !important;
+}
+
+.settings-menu .profile-menu-item svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.settings-menu .community-link--telegram svg {
+  color: #29a9eb;
+  opacity: 1;
+}
+
+.settings-menu .community-link--discord svg {
+  color: #5865f2;
+  opacity: 1;
+}
