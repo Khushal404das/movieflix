@@ -163,7 +163,6 @@ export default function Header() {
             <Link href="/app" className={`netflix-nav-item ${pathname === "/app" || pathname === "/" ? "active" : ""}`}>
               Get App <span className="nav-app-pill">iOS / APK</span>
             </Link>
-            <DiscordLink className="netflix-nav-item discord-link--nav" label="Discord" iconSize={15} />
           </nav>
         </div>
 
