@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import useSideScroll from "@/lib/useSideScroll";
 
 const PLATFORMS = [
   {
@@ -119,6 +120,7 @@ export default function StudiosPlatformsRow() {
   const rowRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  useSideScroll(rowRef);
 
   const scroll = (dir) => {
     if (!rowRef.current) return;

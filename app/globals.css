@@ -11340,3 +11340,24 @@ html.ads-off .ad-banner-slot {
   -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
 }
+
+/* ═══ ROW ARROWS — centred on the cards and above hover popups ═══
+   .row-slider-wrapper is as tall as the scroll strip, which pads the
+   cards 80px above and 100px below (Top 10: 100px / 115px). So the
+   cards' middle is 10px (Top 10: 7.5px) above the wrapper's middle;
+   22px is half the 44px button.
+   Cards lift to z-index 1000 on hover; the arrows stay above them. */
+.row-slider-wrapper .row-nav-arrow {
+  top: calc(50% - 10px - 22px) !important;
+  bottom: auto !important;
+  z-index: 1100 !important;
+}
+.row-slider-wrapper .row-nav-arrow.left {
+  left: 8px !important;
+}
+.row-slider-wrapper .row-nav-arrow.right {
+  right: 8px !important;
+}
+.top10-row .row-slider-wrapper .row-nav-arrow {
+  top: calc(50% - 7.5px - 22px) !important;
+}

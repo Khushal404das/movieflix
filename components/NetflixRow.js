@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Card from "./Card";
+import useSideScroll from "@/lib/useSideScroll";
 
 export default function NetflixRow({
   title,
@@ -14,6 +15,7 @@ export default function NetflixRow({
   const rowRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  useSideScroll(rowRef, items?.length || 0);
 
   if (!items || items.length === 0) return null;
 

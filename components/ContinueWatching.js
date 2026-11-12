@@ -2,11 +2,13 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import useSideScroll from "@/lib/useSideScroll";
 
 export default function ContinueWatching() {
   const [history, setHistory] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const rowRef = useRef(null);
+  useSideScroll(rowRef, history.length);
 
   useEffect(() => {
     try {
