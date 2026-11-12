@@ -25,9 +25,19 @@ const DIRECT_SERVER = {
   getUrl: (type, id, s, e, audio) => boltUrl("https://vidbolt.pro", type, id, s, e, audio),
 };
 
+// Sandbox for players that accept it: scripts and video work, but the frame
+// can't open new tabs/pop-ups or send this page to another site.
+const PLAYER_SANDBOX = "allow-scripts allow-same-origin allow-forms allow-presentation";
+
 // Sites whose player messages we read (both VidBolt addresses)
 const BOLT_ORIGINS = ["https://vidbolt.pro", "https://vidbolt.xyz"];
 const BOLT_BACKUP_ID = "bolt2";
+
+// The player every title starts on. Cinezo runs sandboxed (see PLAYER_SANDBOX),
+// so it can't open pop-ups or redirect the page.
+const DEFAULT_SERVER_ID = "cinezo";
+// Players that tell the page when they are working, and the site they speak from
+const CINEZO_ORIGIN = "https://player.cinezo.live";
 
 const EMBED_SERVERS = [
   {
@@ -46,6 +56,9 @@ const EMBED_SERVERS = [
   {
     id: "cinezo",
     name: "Cinezo",
+    // Cinezo still plays inside a sandboxed frame (tested); the other players
+    // show "remove the sandbox" and refuse, so only this one is sandboxed.
+    sandbox: true,
     getUrl: (type, id, s, e) => {
       const q = new URLSearchParams({ autoplay: "true", poster: "true", primarycolor: "E50914", secondarycolor: "0a0a12", iconcolor: "ffffff" }).toString();
       return type === "tv" ? `https://player.cinezo.live/embed/tv/${id}/${s}/${e}?${q}` : `https://player.cinezo.live/embed/movie/${id}?${q}`;
@@ -88,17 +101,13 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const currentEpisode = Number(episode) || 1;
 
   // Playback mode: direct (Vidbolt) | embed (server list).
-  // Every title starts on Bolt (Vidbolt). If Bolt doesn't load, the page moves
-  // to the embed servers on its own (see "Auto switch" below).
-  const [playbackMode, setPlaybackMode] = useState("direct");
+  // Every title starts on the sandboxed Cinezo player (embed mode). If it
+  // doesn't load, the page moves to Bolt and then the other servers on its
+  // own (see "Auto switch" below).
+  const [playbackMode, setPlaybackMode] = useState("embed");
 
   // Selected embed server
-  const [selectedServer, setSelectedServer] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("rh-selected-server") || "vidcore";
-    }
-    return "vidcore";
-  });
+  const [selectedServer, setSelectedServer] = useState(DEFAULT_SERVER_ID);
 
   // Preferred audio (direct mode)
   const [preferredAudio] = useState(() => {
@@ -191,6 +200,8 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const [reloadNonce, setReloadNonce] = useState(0);
   const [redirected, setRedirected] = useState(false);
   const loadCountRef = useRef(0);
+  const sandboxed =
+    playbackMode === "embed" && Boolean(EMBED_SERVERS.find((s) => s.id === selectedServer)?.sandbox);
   const isBoltPlayer = playbackMode === "direct" || selectedServer === BOLT_BACKUP_ID;
   const iframeKey = `cinema-${playbackMode}-${selectedServer}-${type}-${id}-${currentSeason}-${currentEpisode}-${reloadNonce}`;
 
@@ -218,25 +229,27 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   // We treat a server as working when:
   //   - Bolt / Bolt 2: the player says "ready" (VidBolt sends this once the
   //     video stream is ready) or reports playback, or the viewer clicks into it;
+  //   - Cinezo: the player sends the page any message (it reports its status);
   //   - other servers: the frame finishes loading.
   // If that doesn't happen in time, we move to the next server in the list.
   // A server the viewer picked themself is never switched away from.
   const healthyRef = useRef(false);
   const loadedRef = useRef(false);
 
-  // New title or episode: start again from Bolt.
+  // New title or episode: start again from the default player.
   useEffect(() => {
     failedRef.current = new Set();
     userPickedRef.current = false;
     setAutoSwitchNote("");
-    setPlaybackMode("direct");
+    setPlaybackMode("embed");
+    setSelectedServer(DEFAULT_SERVER_ID);
   }, [type, id, currentSeason, currentEpisode]);
 
   const switchToNextServer = useCallback(() => {
     const current = playbackMode === "direct" ? "vidbolt" : selectedServer;
     failedRef.current.add(current);
-    // Bolt 2 (the other VidBolt address) first, then the server used last, then the rest.
-    const order = [BOLT_BACKUP_ID, selectedServer, ...EMBED_SERVERS.map((s) => s.id)];
+    // Bolt first, then Bolt 2 (the other VidBolt address), then the rest.
+    const order = ["vidbolt", BOLT_BACKUP_ID, ...EMBED_SERVERS.map((s) => s.id)];
     const next = order.find((sid) => !failedRef.current.has(sid));
     if (!next) {
       setAutoSwitchNote("No server could load this title. Try another server or reload.");
@@ -244,17 +257,29 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
       return;
     }
     const failedName = playbackMode === "direct" ? "Bolt" : EMBED_SERVERS.find((s) => s.id === current)?.name;
-    const nextName = EMBED_SERVERS.find((s) => s.id === next)?.name;
+    const nextName = next === "vidbolt" ? "Bolt" : EMBED_SERVERS.find((s) => s.id === next)?.name;
     setAutoSwitchNote(`${failedName} didn't load, switched to ${nextName}.`);
-    setPlaybackMode("embed");
-    setSelectedServer(next);
+    if (next === "vidbolt") {
+      setPlaybackMode("direct");
+    } else {
+      setPlaybackMode("embed");
+      setSelectedServer(next);
+    }
     setTopbarVisible(true);
   }, [playbackMode, selectedServer]);
 
-  // Bolt / Bolt 2 count as working once the player reports a ready video.
+  const isCinezo = playbackMode === "embed" && selectedServer === "cinezo";
+  const reportsHealth = isBoltPlayer || isCinezo;
+
+  // Bolt / Bolt 2 count as working once the player reports a ready video;
+  // Cinezo once it sends any message.
   useEffect(() => {
-    if (!isBoltPlayer) return;
+    if (!reportsHealth) return;
     const onMessage = (e) => {
+      if (isCinezo) {
+        if (e.origin === CINEZO_ORIGIN) healthyRef.current = true;
+        return;
+      }
       if (!BOLT_ORIGINS.includes(e.origin)) return;
       const t = e.data && typeof e.data === "object" ? e.data.type : null;
       if (t === "ready" || t === "durationchange" || t === "timeupdate" || t === "play") {
@@ -271,7 +296,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
       window.removeEventListener("message", onMessage);
       window.removeEventListener("blur", onBlur);
     };
-  }, [isBoltPlayer, iframeKey]);
+  }, [reportsHealth, isCinezo, iframeKey]);
 
   // Time limits for each try.
   useEffect(() => {
@@ -280,9 +305,9 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     loadedRef.current = false;
     const timer = setTimeout(() => {
       if (userPickedRef.current) return;
-      const ok = isBoltPlayer ? healthyRef.current : loadedRef.current;
+      const ok = reportsHealth ? healthyRef.current : loadedRef.current;
       if (!ok) switchToNextServer();
-    }, isBoltPlayer ? 20000 : 15000);
+    }, reportsHealth ? 20000 : 15000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iframeKey]);
@@ -460,6 +485,7 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
             key={iframeKey}
             src={currentEmbedUrl}
             onLoad={handleIframeLoad}
+            {...(sandboxed ? { sandbox: PLAYER_SANDBOX } : {})}
             className="cinema-iframe"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share"
             allowFullScreen
