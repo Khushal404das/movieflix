@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import AppShell from "@/components/AppShell";
 import { ADS_BOOTSTRAP_SCRIPT } from "@/lib/adsConfig";
+import { THEME_BOOTSTRAP_SCRIPT } from "@/lib/theme";
 import AdsBootstrap from "@/components/AdsBootstrap";
 
 export const viewport = {
@@ -175,6 +176,8 @@ export default function RootLayout({ children }) {
       <head>
         {/* Applies the visitor's Ads on/off choice before paint (ad tags: lib/adsConfig.js) */}
         <script dangerouslySetInnerHTML={{ __html: ADS_BOOTSTRAP_SCRIPT }} />
+        {/* Applies the visitor's dark/light choice before paint (lib/theme.js) */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
         {/* Fallback explicit tags for WhatsApp, Telegram, Facebook scrapers */}
         <link rel="canonical" href={SITE_URL} />
         <meta property="og:type" content="website" />

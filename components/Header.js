@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
 import AdsToggle from "@/components/AdsToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import DiscordLink, { DISCORD_INVITE_URL, TELEGRAM_URL, DiscordIcon, TelegramIcon } from "@/components/DiscordLink";
 
 export default function Header() {
@@ -315,6 +316,9 @@ export default function Header() {
                 </div>
               )}
             </div>
+
+            {/* Dark / light theme */}
+            <ThemeToggle />
 
             {/* Ads on/off switch (turns off banners, native, popunder and social bar ads) */}
             {!searchOpen && (
