@@ -1,5 +1,5 @@
 // MovieFlix PWA Service Worker
-const CACHE_NAME = "movieflix-v4";
+const CACHE_NAME = "movieflix-v5";
 const STATIC_ASSETS = [
   "/",
   "/home",
