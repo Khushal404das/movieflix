@@ -28,15 +28,35 @@ function AdUnit({ unit, className, style }) {
   const cfg = ADSENSE_UNITS[unit] || ADSENSE_UNITS.display;
 
   useEffect(() => {
-    // Guard against a second push for the same element (React StrictMode
-    // re-runs effects in development): AdSense logs an error for it.
-    if (pushedRef.current || insRef.current?.getAttribute("data-adsbygoogle-status")) return;
-    pushedRef.current = true;
-    try {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (err) {
-      console.warn("AdSense push failed:", err);
+    const ins = insRef.current;
+    if (!ins) return;
+
+    const push = () => {
+      // Guard against a second push for the same element (React StrictMode
+      // re-runs effects in development): AdSense logs an error for it.
+      if (pushedRef.current || ins.getAttribute("data-adsbygoogle-status")) return;
+      pushedRef.current = true;
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (err) {
+        console.warn("AdSense push failed:", err);
+      }
+    };
+
+    // A responsive unit needs a measurable width ("No slot size for
+    // availableWidth=0" otherwise): wait until the slot has laid out.
+    if (ins.offsetWidth > 0) {
+      push();
+      return;
     }
+    const ro = new ResizeObserver(() => {
+      if (ins.offsetWidth > 0) {
+        ro.disconnect();
+        push();
+      }
+    });
+    ro.observe(ins);
+    return () => ro.disconnect();
   }, []);
 
   const isInArticle = cfg.layout === "in-article";

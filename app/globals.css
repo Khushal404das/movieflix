@@ -11172,6 +11172,15 @@ html.ads-off .ad-banner-slot {
   display: none !important;
 }
 
+/* AdSense had no ad for the unit (site not approved yet, no matching ad, blocked):
+   collapse it instead of leaving a blank box with the slot's reserved height. */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+}
+.ad-banner-slot:has(> ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none !important;
+}
+
 /* ═══════════════════════════════════════════════════════════════════════════
    JOIN DISCORD LINK (header nav, phone menu, footer) — components/DiscordLink.js
    ═══════════════════════════════════════════════════════════════════════════ */
