@@ -18,6 +18,14 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "sharp": "^0.35.5"
+    "@playwright/test": "^1.54.2",
+    "ffmpeg-static": "^5.2.0",
+    "jsdom": "^26.1.0",
+    "sharp": "^0.35.5",
+    "vitest": "^3.2.4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "ffmpeg-static@5.2.0": true
   }
 }
