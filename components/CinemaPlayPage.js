@@ -36,8 +36,9 @@ const PLAYER_SANDBOX = "allow-scripts allow-same-origin allow-forms allow-presen
 const BOLT_ORIGINS = ["https://vidbolt.pro", "https://vidbolt.xyz"];
 const BOLT_BACKUP_ID = "bolt2";
 
-// The player every title starts on. Cinezo runs sandboxed (see PLAYER_SANDBOX),
-// so it can't open pop-ups or redirect the page.
+// Every title starts on Bolt (Direct mode). This is the embed server picked
+// first when the viewer switches to Embed mode: Cinezo, which runs sandboxed
+// (see PLAYER_SANDBOX), so it can't open pop-ups or redirect the page.
 const DEFAULT_SERVER_ID = "cinezo";
 // Players that tell the page when they are working, and the site they speak from
 const CINEZO_ORIGIN = "https://player.cinezo.live";
@@ -104,10 +105,10 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
   const currentEpisode = Number(episode) || 1;
 
   // Playback mode: direct (Vidbolt) | embed (server list).
-  // Every title starts on the sandboxed Cinezo player (embed mode). If it
-  // doesn't load, the page moves to Bolt and then the other servers on its
-  // own (see "Auto switch" below).
-  const [playbackMode, setPlaybackMode] = useState("embed");
+  // Every title starts on Bolt (VidBolt), under MovieFlix's own controls
+  // (components/BoltControls.js). If Bolt doesn't load, the page moves to
+  // Bolt 2 and then the other servers on its own (see "Auto switch" below).
+  const [playbackMode, setPlaybackMode] = useState("direct");
 
   // Selected embed server
   const [selectedServer, setSelectedServer] = useState(DEFAULT_SERVER_ID);
@@ -244,15 +245,15 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     failedRef.current = new Set();
     userPickedRef.current = false;
     setAutoSwitchNote("");
-    setPlaybackMode("embed");
+    setPlaybackMode("direct");
     setSelectedServer(DEFAULT_SERVER_ID);
   }, [type, id, currentSeason, currentEpisode]);
 
   const switchToNextServer = useCallback(() => {
     const current = playbackMode === "direct" ? "vidbolt" : selectedServer;
     failedRef.current.add(current);
-    // Bolt first, then Bolt 2 (the other VidBolt address), then the rest.
-    const order = ["vidbolt", BOLT_BACKUP_ID, ...EMBED_SERVERS.map((s) => s.id)];
+    // Bolt, then Bolt 2 (the other VidBolt address), then sandboxed Cinezo, then the rest.
+    const order = ["vidbolt", BOLT_BACKUP_ID, DEFAULT_SERVER_ID, ...EMBED_SERVERS.map((s) => s.id)];
     const next = order.find((sid) => !failedRef.current.has(sid));
     if (!next) {
       setAutoSwitchNote("No server could load this title. Try another server or reload.");
