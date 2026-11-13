@@ -3,25 +3,50 @@
 import { useEffect, useRef, useState } from "react";
 import { useAdsEnabled, getAdsEnabled } from "@/lib/adsPreference";
 import {
+  AD_PROVIDER,
+  ADSENSE_UNITS,
   BANNERS,
   bannerScriptSrc,
   NATIVE_SRC,
   NATIVE_CONTAINER_ID,
 } from "@/lib/adsConfig";
+import AdSenseAd from "./AdSenseAd";
 
 /**
  * Site ad slot. Renders nothing when the visitor has turned ads off.
+ * Filled by Google AdSense or Adsterra, per AD_PROVIDER in lib/adsConfig.js.
  *
  * variant:
- *  - "display"   responsive leaderboard: 728x90 → 468x60 → 320x50 by available width
- *  - "inArticle" 300x250 rectangle
- *  - "inFeed" / "multiplex"  native banner (only one per page; extra ones fall back to 300x250)
- *  - or any size key from BANNERS, e.g. "160x600"
+ *  - "display"   responsive leaderboard (Adsterra: 728x90 → 468x60 → 320x50 by width)
+ *  - "inArticle" in-article unit (Adsterra: 300x250 rectangle)
+ *  - "inFeed"    in-feed unit (Adsterra: native banner)
+ *  - "multiplex" multiplex grid (Adsterra: native banner — one per page, extras fall back to 300x250)
+ *  - or any size key from BANNERS, e.g. "160x600" (AdSense: responsive display unit)
  */
 export default function AdBanner(props) {
   const adsEnabled = useAdsEnabled();
   if (!adsEnabled) return null;
+  if (AD_PROVIDER === "adsense") return <AdSenseSlot {...props} />;
   return <AdSlot {...props} />;
+}
+
+function AdSenseSlot({ variant = "display", className = "", style = {} }) {
+  const unit = ADSENSE_UNITS[variant] ? variant : "displayAlt";
+  return (
+    <div
+      className={`ad-banner-slot ad-banner-slot--adsense ${className}`}
+      style={{
+        width: "100%",
+        maxWidth: "1140px",
+        margin: "20px auto",
+        overflow: "hidden",
+        background: "transparent",
+        ...style,
+      }}
+    >
+      <AdSenseAd unit={unit} />
+    </div>
+  );
 }
 
 const LEADERBOARD_STEPS = ["728x90", "468x60", "320x50"];
