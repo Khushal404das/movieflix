@@ -1,40 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useAdsEnabled, getAdsEnabled } from "@/lib/adsPreference";
-import {
-  AD_PROVIDER,
-  ADSENSE_UNITS,
-  BANNERS,
-  bannerScriptSrc,
-  NATIVE_SRC,
-  NATIVE_CONTAINER_ID,
-} from "@/lib/adsConfig";
+import { useAdsEnabled } from "@/lib/adsPreference";
+import { ADSENSE_UNITS } from "@/lib/adsConfig";
 import AdSenseAd from "./AdSenseAd";
 
 /**
- * Site ad slot. Renders nothing when the visitor has turned ads off.
- * Filled by Google AdSense or Adsterra, per AD_PROVIDER in lib/adsConfig.js.
+ * Site ad slot, filled by Google AdSense. Renders nothing when the visitor
+ * has turned ads off.
  *
- * variant:
- *  - "display"   responsive leaderboard (Adsterra: 728x90 → 468x60 → 320x50 by width)
- *  - "inArticle" in-article unit (Adsterra: 300x250 rectangle)
- *  - "inFeed"    in-feed unit (Adsterra: native banner)
- *  - "multiplex" multiplex grid (Adsterra: native banner — one per page, extras fall back to 300x250)
- *  - or any size key from BANNERS, e.g. "160x600" (AdSense: responsive display unit)
+ * variant (a key of ADSENSE_UNITS in lib/adsConfig.js):
+ *  - "display"   responsive display unit
+ *  - "inArticle" fluid in-article unit
+ *  - "inFeed"    fluid in-feed unit
+ *  - "multiplex" multiplex grid (related content), good at the bottom of a page
+ *  Any other value falls back to the responsive "displayAlt" unit.
  */
-export default function AdBanner(props) {
+export default function AdBanner({ variant = "display", className = "", style = {} }) {
   const adsEnabled = useAdsEnabled();
   if (!adsEnabled) return null;
-  if (AD_PROVIDER === "adsense") return <AdSenseSlot {...props} />;
-  return <AdSlot {...props} />;
-}
 
-function AdSenseSlot({ variant = "display", className = "", style = {} }) {
   const unit = ADSENSE_UNITS[variant] ? variant : "displayAlt";
   return (
     <div
-      className={`ad-banner-slot ad-banner-slot--adsense ${className}`}
+      className={`ad-banner-slot ${className}`}
       style={{
         width: "100%",
         maxWidth: "1140px",
@@ -47,110 +35,4 @@ function AdSenseSlot({ variant = "display", className = "", style = {} }) {
       <AdSenseAd unit={unit} />
     </div>
   );
-}
-
-const LEADERBOARD_STEPS = ["728x90", "468x60", "320x50"];
-let nativeMounted = false;
-
-function pickLeaderboard(width) {
-  return LEADERBOARD_STEPS.find((k) => BANNERS[k].width <= width) || "320x50";
-}
-
-function AdSlot({ variant = "display", className = "", style = {} }) {
-  const wrapperRef = useRef(null);
-  const [size, setSize] = useState(null);
-  const [useNative, setUseNative] = useState(false);
-
-  // Decide the format on the client (needs width / native availability).
-  useEffect(() => {
-    if (variant === "inFeed" || variant === "multiplex") {
-      if (!nativeMounted) {
-        nativeMounted = true;
-        setUseNative(true);
-        return () => {
-          nativeMounted = false;
-        };
-      }
-      setSize("300x250");
-      return;
-    }
-    if (variant === "inArticle") return setSize("300x250");
-    if (BANNERS[variant]) return setSize(variant);
-
-    // Responsive leaderboard
-    const el = wrapperRef.current;
-    // The slot can be stretched by its own banner, so also cap by the screen width.
-    const update = () =>
-      setSize(pickLeaderboard(Math.min(el?.clientWidth || Infinity, window.innerWidth - 16)));
-    update();
-    const ro = new ResizeObserver(update);
-    if (el) ro.observe(el);
-    window.addEventListener("resize", update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", update);
-    };
-  }, [variant]);
-
-  return (
-    <div
-      ref={wrapperRef}
-      className={`ad-banner-slot ${className}`}
-      style={{
-        width: "100%",
-        maxWidth: "1140px",
-        margin: "20px auto",
-        display: "flex",
-        justifyContent: "center",
-        overflow: "hidden",
-        background: "transparent",
-        ...style,
-      }}
-    >
-      {useNative ? <NativeAd /> : size ? <IframeBanner key={size} size={size} /> : null}
-    </div>
-  );
-}
-
-// Each IFRAME SYNC tag runs inside its own sandboxed frame: the tag relies on a
-// global `atOptions`, so several on one page would clash, and the sandbox
-// (no allow-same-origin) keeps the ad code away from the site's page and storage.
-function IframeBanner({ size }) {
-  const { key, width, height } = BANNERS[size];
-  const srcDoc =
-    `<!doctype html><html><head><meta charset="utf-8">` +
-    `<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}</style></head><body>` +
-    `<script>atOptions={'key':'${key}','format':'iframe','height':${height},'width':${width},'params':{}};</script>` +
-    `<script src="${bannerScriptSrc(key)}"></script>` +
-    `</body></html>`;
-
-  return (
-    <iframe
-      title="Advertisement"
-      srcDoc={srcDoc}
-      width={width}
-      height={height}
-      scrolling="no"
-      loading="lazy"
-      sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
-      style={{ border: 0, display: "block", maxWidth: "100%", background: "transparent" }}
-    />
-  );
-}
-
-// NATIVE ASYNC renders into a fixed container id on the page itself.
-function NativeAd() {
-  useEffect(() => {
-    if (!getAdsEnabled()) return;
-    const s = document.createElement("script");
-    s.async = true;
-    s.setAttribute("data-cfasync", "false");
-    s.src = NATIVE_SRC;
-    document.body.appendChild(s);
-    return () => {
-      s.remove();
-    };
-  }, []);
-
-  return <div id={NATIVE_CONTAINER_ID} className="native-ad-container" style={{ width: "100%" }} />;
 }

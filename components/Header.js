@@ -316,7 +316,7 @@ export default function Header() {
               )}
             </div>
 
-            {/* Ads on/off switch (turns off banners, native, popunder and social bar ads) */}
+            {/* Ads on/off switch (pauses AdSense and hides every ad slot) */}
             {!searchOpen && (
               <>
                 <span className="nav-shell-divider ads-toggle-divider" aria-hidden="true" />

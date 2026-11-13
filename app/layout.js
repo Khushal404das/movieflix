@@ -2,7 +2,6 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/AuthContext";
 import AppShell from "@/components/AppShell";
 import { ADS_BOOTSTRAP_SCRIPT, ADSENSE_SRC } from "@/lib/adsConfig";
-import AdsBootstrap from "@/components/AdsBootstrap";
 
 export const viewport = {
   width: "device-width",
@@ -173,7 +172,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Applies the visitor's Ads on/off choice before paint (ad tags: lib/adsConfig.js) */}
+        {/* Applies the visitor's Ads on/off choice before paint (AdSense units: lib/adsConfig.js) */}
         <script dangerouslySetInnerHTML={{ __html: ADS_BOOTSTRAP_SCRIPT }} />
         {/* Google AdSense — on every page (site verification + ad units in components/AdSenseAd.js) */}
         <script async src={ADSENSE_SRC} crossOrigin="anonymous" />
@@ -223,8 +222,6 @@ export default function RootLayout({ children }) {
         <link rel="dns-prefetch" href="https://vidbolt.pro" />
         <link rel="dns-prefetch" href="https://vidbolt.xyz" />
         <link rel="dns-prefetch" href="https://image.tmdb.org" />
-        <link rel="dns-prefetch" href="https://bancadeltempoidea.org" />
-        <link rel="dns-prefetch" href="https://aarems.org" />
 
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap"
@@ -232,7 +229,6 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <AdsBootstrap />
         <AuthProvider>
           <AppShell>
             {children}
