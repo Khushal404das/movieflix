@@ -165,6 +165,10 @@ export default function BoltControls({ iframeRef, origin, visible }) {
         className="bolt-ctl-layer"
         onClick={togglePlay}
         onDoubleClick={toggleFullscreen}
+        // A second quick press would start a text selection (blue wash over the player)
+        onMouseDown={(e) => {
+          if (e.detail > 1) e.preventDefault();
+        }}
         aria-hidden="true"
       >
         {!playing && (

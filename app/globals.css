@@ -11553,3 +11553,13 @@ html.ads-off .ad-banner-slot {
     font-size: 12px;
   }
 }
+
+/* ═══ /play — no text selection ═══
+   Double-clicking the click layer (fullscreen) used to select the page, and
+   the browser painted the selection blue over the whole player. */
+.cinema-play-root,
+.cinema-play-root * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
