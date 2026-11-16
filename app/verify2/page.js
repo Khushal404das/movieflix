@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { saveVerifiedSession } from "@/lib/SessionManager";
+import { saveVerifiedSession, SESSION_TTL_MS } from "@/lib/SessionManager";
 
 // Helper to generate a realistic Cloudflare Ray ID (16 hex chars)
 function generateRayId() {
@@ -77,7 +77,7 @@ function VerificationContent() {
       console.warn("Verification request error:", err);
       saveVerifiedSession({
         token: `mf_fallback_${Date.now()}`,
-        expiresAt: Date.now() + 2 * 60 * 60 * 1000
+        expiresAt: Date.now() + SESSION_TTL_MS
       });
       setVerifyingStatus("success");
       setTimeout(() => {

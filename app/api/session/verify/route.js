@@ -42,7 +42,7 @@ export async function POST(req) {
 
     const randomSuffix = Math.random().toString(36).substring(2, 15);
     const sessionToken = `mf_ses_${Date.now()}_${randomSuffix}`;
-    const expiresAt = Date.now() + 2 * 60 * 60 * 1000; // 2 hours validity
+    const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours (matches SESSION_TTL_MS in lib/SessionManager.js)
 
     const response = NextResponse.json({
       success: true,
@@ -53,7 +53,7 @@ export async function POST(req) {
 
     response.cookies.set("mf_session_verified", sessionToken, {
       path: "/",
-      maxAge: 7200,
+      maxAge: 86400,
       sameSite: "lax",
       httpOnly: false
     });
