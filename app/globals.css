@@ -11572,3 +11572,215 @@ ins.adsbygoogle[data-ad-status="unfilled"] {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ═══ Home — announcement banner (components/HomeAnnouncement.js) ═══ */
+.home-announcement {
+  position: relative;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 0 clamp(20px, 4vw, 56px) 26px;
+  padding: 14px 52px 14px 18px;
+  border-radius: 14px;
+  background: rgba(22, 22, 30, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #fff;
+}
+
+.home-announcement-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 280px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.home-announcement-text strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.home-announcement-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.home-announcement-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.home-announcement-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.home-announcement-btn--telegram {
+  background: rgba(42, 171, 238, 0.18);
+  border-color: rgba(42, 171, 238, 0.5);
+}
+
+.home-announcement-btn--discord {
+  background: rgba(88, 101, 242, 0.2);
+  border-color: rgba(88, 101, 242, 0.55);
+}
+
+.home-announcement-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.home-announcement-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.home-announcement-btn:focus-visible,
+.home-announcement-close:focus-visible,
+.member-features-cta:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 900px) {
+  .home-announcement {
+    margin: 0 14px 18px;
+  }
+}
+
+/* ═══ Landing — member features panel (components/MemberFeatures.js) ═══ */
+.member-features {
+  max-width: 1040px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.member-features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 24px 0 26px;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.member-feature {
+  display: flex;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.member-feature-check {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(229, 9, 20, 0.16);
+  color: #ff4d4d;
+}
+
+.member-feature-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #a0a0a0;
+}
+
+.member-feature-body strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.member-features-cta {
+  padding: 13px 34px;
+  border: 0;
+  border-radius: 8px;
+  background: #e50914;
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.member-features-cta:hover {
+  background: #f40612;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .member-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .member-features-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══ App page — four device cards (Computer, Android, iOS, Android TV) ═══ */
+.devices-grid.four-cards {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1120px;
+  margin: 0 auto 28px;
+}
+
+@media (max-width: 900px) {
+  .devices-grid.four-cards {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 640px;
+  }
+}
+
+@media (max-width: 420px) {
+  .devices-grid.four-cards {
+    grid-template-columns: 1fr;
+  }
+}

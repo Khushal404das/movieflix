@@ -4,7 +4,10 @@ import {
   getByGenre,
   getTopRated,
   getAnimeDubbed,
-  getKDramas
+  getKDramas,
+  getByLanguage,
+  getSouthIndianDubbed,
+  getNowPlaying
 } from "@/lib/tmdb";
 
 import NetflixBillboard from "@/components/NetflixBillboard";
@@ -12,6 +15,7 @@ import NetflixRow from "@/components/NetflixRow";
 import ContinueWatching from "@/components/ContinueWatching";
 import StudiosPlatformsRow from "@/components/StudiosPlatformsRow";
 import AdBanner from "@/components/AdBanner";
+import HomeAnnouncement from "@/components/HomeAnnouncement";
 
 export const revalidate = 1800; // 30 minutes dynamic caching
 
@@ -40,6 +44,14 @@ export default async function StreamingHome() {
     sciFiMovies,
     animeTitles,
     kDramaTitles,
+    newReleases,
+    hindiMovies,
+    hindiSeries,
+    southIndianMovies,
+    comedyMovies,
+    romanceMovies,
+    documentaryMovies,
+    realityShows,
   ] = await Promise.all([
     getTrending("all", "day"),
     getTrending("movie", "week"),
@@ -50,6 +62,14 @@ export default async function StreamingHome() {
     getByGenre("movie", 878),
     getAnimeDubbed(1),
     getKDramas(1),
+    getNowPlaying(),
+    getByLanguage("movie", "hi"),
+    getByLanguage("tv", "hi"),
+    getSouthIndianDubbed(1),
+    getByGenre("movie", 35),
+    getByGenre("movie", 10749),
+    getByGenre("movie", 99),
+    getByGenre("tv", 10764),
   ]);
 
   // High-res backdrop candidate list for auto-rotating Billboard spotlight (NetMirror style)
@@ -74,6 +94,9 @@ export default async function StreamingHome() {
 
       {/* 2. Main Streaming Slider Rows */}
       <div className="netflix-rows-stack">
+        {/* Telegram / Discord / app notice (the viewer can close it) */}
+        <HomeAnnouncement />
+
         {/* Continue Watching (Local storage client state) */}
         <ContinueWatching />
 
@@ -88,6 +111,16 @@ export default async function StreamingHome() {
           seeAllHref="/browse/movie"
         />
 
+        {/* Top 10 Series Today */}
+        {trendingSeries?.length > 0 && (
+          <NetflixRow
+            title="Top 10 Series Today"
+            items={trendingSeries.slice(0, 10)}
+            isTop10={true}
+            seeAllHref="/browse/tv"
+          />
+        )}
+
         {/* Trending Now */}
         <NetflixRow
           title="Trending Now"
@@ -101,6 +134,42 @@ export default async function StreamingHome() {
           items={trendingSeries.slice(0, 15)}
           seeAllHref="/browse/tv"
         />
+
+        {/* New Releases */}
+        {newReleases?.length > 0 && (
+          <NetflixRow
+            title="New Releases"
+            items={newReleases.slice(0, 15)}
+            seeAllHref="/browse/movie"
+          />
+        )}
+
+        {/* Hindi Movies */}
+        {hindiMovies?.length > 0 && (
+          <NetflixRow
+            title="Hindi Movies"
+            items={hindiMovies.slice(0, 15)}
+            seeAllHref="/browse/movie"
+          />
+        )}
+
+        {/* Hindi TV & Web Series */}
+        {hindiSeries?.length > 0 && (
+          <NetflixRow
+            title="Hindi TV & Web Series"
+            items={hindiSeries.slice(0, 15)}
+            seeAllHref="/browse/tv"
+          />
+        )}
+
+        {/* South Indian Hits */}
+        {southIndianMovies?.length > 0 && (
+          <NetflixRow
+            title="South Indian Hits"
+            items={southIndianMovies.slice(0, 15)}
+            seeAllHref="/browse/movie"
+          />
+        )}
 
         {/* Sponsored Mid-Page Banner */}
         <AdBanner variant="display" className="my-6" />
@@ -143,6 +212,42 @@ export default async function StreamingHome() {
           items={sciFiMovies.slice(0, 15)}
           seeAllHref="/browse/movie?genre=878"
         />
+
+        {/* Feel-Good Comedies */}
+        {comedyMovies?.length > 0 && (
+          <NetflixRow
+            title="Feel-Good Comedies"
+            items={comedyMovies.slice(0, 15)}
+            seeAllHref="/browse/movie?genre=35"
+          />
+        )}
+
+        {/* Romantic Movies */}
+        {romanceMovies?.length > 0 && (
+          <NetflixRow
+            title="Romantic Movies"
+            items={romanceMovies.slice(0, 15)}
+            seeAllHref="/browse/movie?genre=10749"
+          />
+        )}
+
+        {/* Reality TV */}
+        {realityShows?.length > 0 && (
+          <NetflixRow
+            title="Reality TV"
+            items={realityShows.slice(0, 15)}
+            seeAllHref="/browse/tv?genre=10764"
+          />
+        )}
+
+        {/* Documentaries */}
+        {documentaryMovies?.length > 0 && (
+          <NetflixRow
+            title="Documentaries"
+            items={documentaryMovies.slice(0, 15)}
+            seeAllHref="/browse/movie?genre=99"
+          />
+        )}
 
         {/* Top Rated Masterpieces */}
         <NetflixRow

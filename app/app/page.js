@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import AdBanner from "@/components/AdBanner";
+import MemberFeatures from "@/components/MemberFeatures";
 // Animated effects from React Bits (https://reactbits.dev)
 import ShinyText from "@/components/reactbits/ShinyText/ShinyText";
 import GradientText from "@/components/reactbits/GradientText/GradientText";
@@ -15,7 +16,7 @@ export default function AppPage() {
   const devices = [
     {
       id: "web",
-      title: "WEB APP",
+      title: "COMPUTER",
       subtitle: "Chrome, Safari, Edge, Firefox",
       badge: "STREAM INSTANTLY",
       tag: "MOST POPULAR",
@@ -29,8 +30,8 @@ export default function AppPage() {
     },
     {
       id: "android",
-      title: "ANDROID APP",
-      subtitle: "Phone, Tablet & Android TV",
+      title: "ANDROID",
+      subtitle: "Phone & Tablet",
       badge: "DOWNLOAD NATIVE APK",
       tag: "RECOMMENDED",
       icon: (
@@ -41,13 +42,26 @@ export default function AppPage() {
     },
     {
       id: "ios",
-      title: "APPLE IOS",
-      subtitle: "iPhone, iPad & Mac",
+      title: "IOS",
+      subtitle: "iPhone & iPad",
       badge: "INSTALL ON IOS",
       tag: "NEW RELEASE",
       icon: (
         <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
           <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.61-.75 1.04-1.8 0.92-2.87-.93.04-2.02.63-2.66 1.39-.56.65-.96 1.71-.83 2.74 1.05.08 2.05-.53 2.57-1.26z"/>
+        </svg>
+      )
+    },
+    {
+      id: "tv",
+      title: "ANDROID TV",
+      subtitle: "Smart TV, Fire TV & TV boxes",
+      badge: "INSTALL ON TV",
+      tag: "BIG SCREEN",
+      icon: (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="2" y="4" width="20" height="13" rx="2"/>
+          <path d="M8 21h8M12 17v4"/>
         </svg>
       )
     }
@@ -137,16 +151,19 @@ export default function AppPage() {
           </div>
         </section>
 
+        {/* What a free account gives you (only shown when signed out) */}
+        <MemberFeatures />
+
         {/* Pick Your Platform Section */}
         <section id="pick-device" className="pick-device-section">
           <div className="section-label-tag">CHOOSE PLATFORM</div>
-          <h2 className="section-title">Stream on Web, Android, or iOS</h2>
+          <h2 className="section-title">Stream on Computer, Android, iOS or TV</h2>
           <p className="section-desc">
-            Enjoy instant browser streaming or download the standalone native app for Android and Apple iOS.
+            Pick your device and follow the steps. Watch in your browser, or install the app on Android, iPhone or Android TV.
           </p>
 
-          {/* 3 Platform Selection Cards */}
-          <div className="devices-grid three-cards">
+          {/* 4 Platform Selection Cards */}
+          <div className="devices-grid four-cards">
             {devices.map((d) => (
               <button
                 key={d.id}
@@ -191,9 +208,68 @@ export default function AppPage() {
                     </Link>
                   </div>
 
+                  <div className="step-list">
+                    <div className="step-item">
+                      <span className="step-num">1</span>
+                      <span>Open <strong>movieflix.stream</strong> in your computer&apos;s browser and wait for the page to load.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">2</span>
+                      <span>Click <strong>Open MovieFlix Web</strong> above to go to the home page.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">3</span>
+                      <span>Sign in with Google or email, pick a title and press <strong>Play</strong>.</span>
+                    </div>
+                  </div>
+
                   <div className="detail-notice-box info">
                     <span className="notice-icon">ℹ️</span>
                     <span>Supports Google Chrome, Firefox, Safari, Edge, and Brave with GPU hardware acceleration.</span>
+                  </div>
+                </>
+              )}
+
+              {selectedDevice === "tv" && (
+                <>
+                  <h3 className="detail-instruction-title">
+                    Install MovieFlix on Android TV
+                  </h3>
+                  <p className="detail-instruction-sub">
+                    Android TV, Google TV, Fire TV and Android TV boxes use the same app file as Android phones.
+                  </p>
+
+                  <div className="download-action-group">
+                    <a
+                      href="/api/download"
+                      download="MovieFlix.apk"
+                      className="btn-device-action primary-download"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <div className="btn-text-col">
+                        <span>DOWNLOAD TV APP (.APK)</span>
+                        <small>MovieFlix.apk · Same file as the Android app</small>
+                      </div>
+                    </a>
+                  </div>
+
+                  <div className="step-list">
+                    <div className="step-item">
+                      <span className="step-num">1</span>
+                      <span>On your TV, open a browser or the <strong>Downloader</strong> app and go to <strong>movieflix.stream/app</strong>. You can also copy the APK to a USB drive from your computer.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">2</span>
+                      <span>Download <strong>MovieFlix.apk</strong> and choose <strong>Install</strong>. If asked, allow installs from that app in <strong>Settings &rarr; Security</strong>.</span>
+                    </div>
+                    <div className="step-item">
+                      <span className="step-num">3</span>
+                      <span>Open MovieFlix from your TV&apos;s apps list and start watching.</span>
+                    </div>
                   </div>
                 </>
               )}
@@ -228,7 +304,7 @@ export default function AppPage() {
                   <div className="step-list">
                     <div className="step-item">
                       <span className="step-num">1</span>
-                      <span>Download <strong>MovieFlix.apk</strong> and tap <strong>Install</strong> on your Android phone or TV.</span>
+                      <span>Download <strong>MovieFlix.apk</strong> and tap <strong>Install</strong> on your Android phone or tablet.</span>
                     </div>
                     <div className="step-item">
                       <span className="step-num">2</span>
