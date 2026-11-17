@@ -2,90 +2,29 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-let cachedApkUrl = null;
-let cachedIpaUrl = null;
-let cacheExpiresAt = 0;
+// The app files are assets on the GitHub release below. This route sends the
+// visitor straight to GitHub's public download link for them.
+//
+// It used to look the file up through the GitHub API first. That API allows
+// only 60 calls an hour per address, and Cloudflare's servers share addresses,
+// so the limit ran out and downloads failed with a 502. It also cached
+// GitHub's signed file link for 15 minutes, longer than that link stays
+// valid, so slow or resumed phone downloads failed part-way.
+// github.com/.../releases/download/... needs no API call: GitHub makes a
+// fresh signed link on every request, and it supports resuming.
+const RELEASE_TAG = "v1.0.1";
+const RELEASE_BASE = `https://github.com/Khushal404das/movieflix/releases/download/${RELEASE_TAG}`;
 
 export async function GET(request) {
+  let platform = "android";
   try {
-    let platform = "android";
-    try {
-      const url = new URL(request.url, "http://localhost:3099");
-      platform = (url.searchParams.get("platform") || "android").toLowerCase();
-    } catch (e) {
-      console.warn("URL parse fallback:", e);
-    }
-    const isIos = platform === "ios" || platform === "ipa" || platform === "apple";
-    const targetAssetName = isIos ? "MovieFlix.ipa" : "MovieFlix.apk";
-    const now = Date.now();
+    platform = (new URL(request.url).searchParams.get("platform") || "android").toLowerCase();
+  } catch {}
 
-    // Return cached direct download URL if valid (cache for 15 minutes)
-    if (now < cacheExpiresAt) {
-      const cached = isIos ? cachedIpaUrl : cachedApkUrl;
-      if (cached) {
-        return NextResponse.redirect(cached, 302);
-      }
-    }
+  const isIos = platform === "ios" || platform === "ipa" || platform === "apple";
+  const file = isIos ? "MovieFlix.ipa" : "MovieFlix.apk";
 
-    // Set GITHUB_TOKEN in the hosting env (never in code). Public releases work without it.
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-    let assetUrl = null;
-
-    try {
-      const relRes = await fetch("https://api.github.com/repos/Khushal404das/movieflix/releases/tags/v1.0.1", {
-        headers: {
-          ...(GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}),
-          Accept: "application/vnd.github.v3+json",
-          "User-Agent": "MovieFlix-App/1.0",
-        },
-        cache: "no-store",
-      });
-      if (relRes.ok) {
-        const releaseData = await relRes.json();
-        const asset = releaseData.assets?.find((a) => a.name === targetAssetName);
-        if (asset?.url) {
-          assetUrl = asset.url;
-        }
-      }
-    } catch (e) {
-      console.warn("Dynamic asset resolution fallback:", e.message);
-    }
-
-    // Direct asset URL fallback for v1.0.1
-    if (!assetUrl) {
-      assetUrl = isIos
-        ? "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/682794186"
-        : "https://api.github.com/repos/Khushal404das/movieflix/releases/assets/684746398";
-    }
-
-    const assetRes = await fetch(assetUrl, {
-      headers: {
-        ...(GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}),
-        Accept: "application/octet-stream",
-        "User-Agent": "MovieFlix-App/1.0",
-      },
-      redirect: "manual",
-      cache: "no-store",
-    });
-
-    const downloadLocation = assetRes.headers.get("location");
-    if (downloadLocation) {
-      if (isIos) {
-        cachedIpaUrl = downloadLocation;
-      } else {
-        cachedApkUrl = downloadLocation;
-      }
-      cacheExpiresAt = now + 15 * 60 * 1000;
-
-      return NextResponse.redirect(downloadLocation, 302);
-    }
-
-    return new Response(
-      `Asset download link temporarily unavailable (${assetRes.status}). Please try again shortly.`,
-      { status: 502, headers: { "Content-Type": "text/plain" } }
-    );
-  } catch (err) {
-    console.error("Download route exception:", err);
-    return new Response("Download error: " + err.message, { status: 500 });
-  }
+  const res = NextResponse.redirect(`${RELEASE_BASE}/${file}`, 302);
+  res.headers.set("Cache-Control", "no-store");
+  return res;
 }
