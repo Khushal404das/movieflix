@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import BoltControls from "@/components/BoltControls";
+import { saveProgress, parsePlayerProgress, isFinished } from "@/lib/watchHistory";
 
 // ─── Server Definitions (mirrors StreamingPlayer.js) ───────────────────────
 // VidBolt player link. VidBolt runs the same player on two addresses:
@@ -315,6 +316,56 @@ export default function CinemaPlayPage({ id, type, season, episode, title, poste
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iframeKey]);
+
+  // ── Continue Watching ─────────────────────────────────────────────────────
+  // Save how far the viewer got, from the player's own progress messages
+  // (only messages from the frame on this page). Saved every 15 seconds, and
+  // at once when the title ends. A finished movie leaves Continue Watching;
+  // a finished episode moves the show on to the next episode.
+  const progressRef = useRef({ time: 0, duration: 0, savedAt: 0, done: false });
+
+  useEffect(() => {
+    progressRef.current = { time: 0, duration: 0, savedAt: 0, done: false };
+  }, [type, id, currentSeason, currentEpisode]);
+
+  useEffect(() => {
+    if (!id) return;
+    const save = () => {
+      const p = progressRef.current;
+      if (p.done || !(p.time > 0)) return;
+      saveProgress({
+        id,
+        type,
+        title: title ? decodeURIComponent(title) : "",
+        poster: poster ? decodeURIComponent(poster) : "",
+        season: currentSeason,
+        episode: currentEpisode,
+        time: p.time,
+        duration: p.duration,
+      });
+      p.savedAt = Date.now();
+      if (isFinished(p.time, p.duration)) p.done = true;
+    };
+
+    const onMessage = (e) => {
+      if (!iframeRef.current || e.source !== iframeRef.current.contentWindow) return;
+      const info = parsePlayerProgress(e.data);
+      if (!info) return;
+      const p = progressRef.current;
+      if (info.duration > 0) p.duration = info.duration;
+      if (info.time >= 0) p.time = info.time;
+      if (info.ended && p.duration > 0) p.time = p.duration;
+      if (info.ended || isFinished(p.time, p.duration) || Date.now() - p.savedAt > 15000) save();
+    };
+
+    window.addEventListener("message", onMessage);
+    window.addEventListener("pagehide", save);
+    return () => {
+      window.removeEventListener("message", onMessage);
+      window.removeEventListener("pagehide", save);
+      save();
+    };
+  }, [id, type, title, poster, currentSeason, currentEpisode]);
 
   // The note goes away on its own after a while.
   useEffect(() => {

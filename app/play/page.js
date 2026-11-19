@@ -1,19 +1,31 @@
 import { redirect } from "next/navigation";
 import CinemaPlayPage from "@/components/CinemaPlayPage";
+import { tmdb, img } from "@/lib/tmdb";
 
 export const dynamic = "force-dynamic";
 
-export default function PlayPage({ searchParams }) {
+export default async function PlayPage({ searchParams }) {
   const id = searchParams?.id;
   const type = searchParams?.type || "movie";
   const season = searchParams?.season;
   const episode = searchParams?.episode;
-  const title = searchParams?.title || "";
-  const poster = searchParams?.poster || "";
-  const backdrop = searchParams?.backdrop || "";
+  let title = searchParams?.title || "";
+  let poster = searchParams?.poster || "";
+  let backdrop = searchParams?.backdrop || "";
 
   if (!id) {
     redirect("/");
+  }
+
+  // Most links only pass the id. Look up the name and poster so the title
+  // can be saved to Continue Watching (cached for 30 minutes by tmdb()).
+  if (!title || !poster) {
+    const info = await tmdb(`/${type === "tv" ? "tv" : "movie"}/${encodeURIComponent(id)}`);
+    if (info) {
+      title = title || info.title || info.name || "";
+      poster = poster || img(info.poster_path, "w500") || "";
+      backdrop = backdrop || img(info.backdrop_path, "w1280") || "";
+    }
   }
 
   return (

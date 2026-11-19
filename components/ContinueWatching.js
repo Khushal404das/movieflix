@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { readHistory, removeFromHistory } from "@/lib/watchHistory";
 import useSideScroll from "@/lib/useSideScroll";
 
 export default function ContinueWatching() {
@@ -11,24 +12,16 @@ export default function ContinueWatching() {
   useSideScroll(rowRef, history.length);
 
   useEffect(() => {
-    try {
-      const items = JSON.parse(localStorage.getItem("rh-history") || "[]");
-      setHistory(items);
-    } catch (e) {
-      setHistory([]);
-    } finally {
-      setLoaded(true);
-    }
+    // Finished movies are left out (see lib/watchHistory.js).
+    setHistory(readHistory());
+    setLoaded(true);
   }, []);
 
   const removeHistoryItem = (e, id) => {
     e.preventDefault();
     e.stopPropagation();
-    const updated = history.filter((x) => String(x.id) !== String(id));
-    setHistory(updated);
-    try {
-      localStorage.setItem("rh-history", JSON.stringify(updated));
-    } catch (err) {}
+    removeFromHistory(id);
+    setHistory((list) => list.filter((x) => String(x.id) !== String(id)));
   };
 
   if (!loaded || history.length === 0) return null;
@@ -63,7 +56,16 @@ export default function ContinueWatching() {
         <div className="row-items-scroll" ref={rowRef}>
           {history.map((item) => (
             <div key={item.id} className="continue-card-item">
-              <Link href={item.href || `/${item.type || "movie"}/${item.id}`} className="continue-card-link">
+              <Link
+                href={
+                  item.href?.startsWith("/play")
+                    ? item.href
+                    : `/play?id=${item.id}&type=${item.type || "movie"}${
+                        item.type === "tv" ? `&season=${item.season || 1}&episode=${item.episode || 1}` : ""
+                      }`
+                }
+                className="continue-card-link"
+              >
                 <div className="continue-media-box">
                   {item.poster ? (
                     <img src={item.poster} alt={item.title} className="continue-poster-img" />
@@ -75,7 +77,14 @@ export default function ContinueWatching() {
 
                   {/* Red Netflix-style Progress Bar */}
                   <div className="continue-progress-bar">
-                    <div className="continue-progress-fill" style={{ width: "65%" }} />
+                    <div
+                      className="continue-progress-fill"
+                      style={{
+                        width: `${
+                          item.duration > 0 ? Math.max(3, Math.min(100, Math.round((item.time / item.duration) * 100))) : 3
+                        }%`,
+                      }}
+                    />
                   </div>
 
                   {/* Play Overlay */}
