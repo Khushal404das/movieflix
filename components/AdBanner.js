@@ -18,9 +18,9 @@ import AdSenseAd from "./AdSenseAd";
  *
  * variant:
  *  - "display"   responsive leaderboard (Adsterra: 728x90 → 468x60 → 320x50 by width)
- *  - "inArticle" in-article unit (Adsterra: 300x250 rectangle)
+ *  - "inArticle" in-article unit (Adsterra: responsive leaderboard)
  *  - "inFeed"    in-feed unit (Adsterra: native banner)
- *  - "multiplex" multiplex grid (Adsterra: native banner — one per page, extras fall back to 300x250)
+ *  - "multiplex" multiplex grid (Adsterra: native banner — one per page, extras fall back to the leaderboard)
  *  - or any size key from BANNERS, e.g. "160x600" (AdSense: responsive display unit)
  */
 export default function AdBanner(props) {
@@ -71,11 +71,10 @@ function AdSlot({ variant = "display", className = "", style = {} }) {
           nativeMounted = false;
         };
       }
-      setSize("300x250");
-      return;
+      // Second native slot on a page: use the responsive leaderboard below.
+    } else if (variant !== "inArticle" && BANNERS[variant]) {
+      return setSize(variant);
     }
-    if (variant === "inArticle") return setSize("300x250");
-    if (BANNERS[variant]) return setSize(variant);
 
     // Responsive leaderboard
     const el = wrapperRef.current;
