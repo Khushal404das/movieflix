@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAdsEnabled, getAdsEnabled } from "@/lib/adsPreference";
 import {
   AD_PROVIDER,
+  ADSTERRA_SLOTS_HIDDEN,
   ADSENSE_UNITS,
   BANNERS,
   bannerScriptSrc,
@@ -27,6 +28,7 @@ export default function AdBanner(props) {
   const adsEnabled = useAdsEnabled();
   if (!adsEnabled) return null;
   if (AD_PROVIDER === "adsense") return <AdSenseSlot {...props} />;
+  if (ADSTERRA_SLOTS_HIDDEN) return null; // see lib/adsConfig.js
   return <AdSlot {...props} />;
 }
 
