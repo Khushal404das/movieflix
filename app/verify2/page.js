@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveVerifiedSession, SESSION_TTL_MS } from "@/lib/SessionManager";
 
-// Helper to generate a realistic Cloudflare Ray ID (16 hex chars)
+// Random request id sent to /api/session/verify (not shown on the page).
 function generateRayId() {
   const chars = "0123456789abcdef";
   let result = "";
@@ -32,7 +32,7 @@ function VerificationContent() {
 
   useEffect(() => {
     // Set dynamic tab title
-    document.title = "Just a moment...";
+    document.title = "Checking your connection – MovieFlix";
     setRayId(generateRayId());
   }, []);
 
@@ -200,14 +200,14 @@ function VerificationContent() {
           </span>
         </div>
 
-        {/* Challenge Heading */}
+        {/* Heading */}
         <h1 className="cf-verify-heading">
-          Performing security verification
+          Checking your connection
         </h1>
 
-        {/* Security Subtext */}
+        {/* What is happening */}
         <p className="cf-verify-description">
-          MovieFlix uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.
+          MovieFlix is making sure you&apos;re a real visitor and not an automated bot. You&apos;ll be taken back to where you were in a moment.
         </p>
 
         {/* Security Challenge & Spinner Area */}
@@ -225,32 +225,12 @@ function VerificationContent() {
         </div>
       </div>
 
-      {/* Cloudflare Style Footer */}
+      {/* Footer: MovieFlix's own name only */}
       <footer className="cf-verify-footer">
         <div className="cf-footer-divider" />
         <div className="cf-footer-meta">
-          <div className="cf-ray-id">
-            Ray ID: <span className="cf-ray-code">{rayId || "a4cf7e15baaa8359"}</span>
-          </div>
           <div className="cf-credits">
-            <span>Performance and Security by </span>
-            <a
-              href="https://www.cloudflare.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cf-link"
-            >
-              Cloudflare
-            </a>
-            <span className="cf-dot-separator"> | </span>
-            <a
-              href="https://www.cloudflare.com/privacypolicy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cf-link privacy"
-            >
-              Privacy
-            </a>
+            <span>&copy; {new Date().getFullYear()} MovieFlix</span>
           </div>
         </div>
       </footer>
@@ -269,7 +249,7 @@ export default function VerificationPage() {
               <span className="logo-flix-mark">FLIX</span>
             </span>
           </div>
-          <h1 className="cf-verify-heading">Performing security verification</h1>
+          <h1 className="cf-verify-heading">Checking your connection</h1>
           <div className="cf-spinner-container">
             <div className="cf-security-spinner" />
           </div>
