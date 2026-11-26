@@ -98,11 +98,6 @@ export default function AppShell({ children }) {
         return;
       }
 
-      // Allow the Ads on/off switch (a per-visitor preference, no account needed)
-      if (e.target.closest(".ads-toggle")) {
-        return;
-      }
-
       // Allow opening/closing the mobile menu (its links are still guarded)
       if (e.target.closest(".mobile-hamburger") || e.target.closest(".mobile-nav-backdrop")) {
         return;

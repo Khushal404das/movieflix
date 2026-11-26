@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/lib/AuthContext";
-import AdsToggle from "@/components/AdsToggle";
 import DiscordLink, { DISCORD_INVITE_URL, TELEGRAM_URL, DiscordIcon, TelegramIcon } from "@/components/DiscordLink";
 
 export default function Header() {
@@ -316,14 +315,6 @@ export default function Header() {
               )}
             </div>
 
-            {/* Ads on/off switch (turns off banners, native, popunder and social bar ads) */}
-            {!searchOpen && (
-              <>
-                <span className="nav-shell-divider ads-toggle-divider" aria-hidden="true" />
-                <AdsToggle className="ads-toggle--header" />
-              </>
-            )}
-
             {/* Instant Search Dropdown Popup */}
             {searchOpen && query.trim().length > 0 && (
               <div className="netflix-search-results-popup">
@@ -519,7 +510,6 @@ export default function Header() {
               <Link href="/browse/movie?genre=878" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>Sci-Fi & Fantasy</Link>
               <Link href="/list" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My List</Link>
               <DiscordLink className="mobile-link discord-link--drawer" onClick={() => setMobileMenuOpen(false)} />
-              <AdsToggle className="mobile-link ads-toggle--drawer" />
               {user && (
                 <>
                   <Link href="/profile" className="mobile-link" onClick={() => setMobileMenuOpen(false)}>My Profile & Settings</Link>

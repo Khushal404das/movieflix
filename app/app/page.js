@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import AdBanner from "@/components/AdBanner";
 import MemberFeatures from "@/components/MemberFeatures";
 // Animated effects from React Bits (https://reactbits.dev)
 import ShinyText from "@/components/reactbits/ShinyText/ShinyText";
@@ -414,8 +413,6 @@ export default function AppPage() {
           </div>
         </section>
 
-        {/* Sponsored Banner */}
-        <AdBanner variant="display" className="my-8" />
 
         {/* Watch Any Genre Cloud Card */}
         <section className="genre-cloud-section">

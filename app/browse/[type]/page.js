@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDiscover, getGenreList } from "@/lib/tmdb";
 import InfinitePlatformGrid from "@/components/InfinitePlatformGrid";
-import AdBanner from "@/components/AdBanner";
 
 export async function generateMetadata({ params }) {
   const isTv = params.type === "tv";
@@ -69,8 +68,6 @@ export default async function Browse({ params, searchParams }) {
         </div>
       </div>
 
-      {/* Sponsored Category Banner */}
-      <AdBanner variant="display" className="my-4" />
 
       {/* Infinite Scroll Media Grid */}
       <InfinitePlatformGrid
