@@ -23,6 +23,16 @@ export default function AppShell({ children }) {
         pathname.startsWith("/tv/") ||
         pathname.startsWith("/classics/"))
   );
+  // Pages anyone can browse without signing in (also what search engines crawl).
+  const isBrowseRoute = Boolean(
+    pathname &&
+      (pathname === "/home" ||
+        pathname === "/search" ||
+        pathname === "/classics" ||
+        pathname.startsWith("/browse/") ||
+        pathname.startsWith("/platform/"))
+  );
+  const isLandingRoute = pathname === "/" || pathname === "/app" || pathname === "/download";
   const { user, loading, openAuthModal } = useAuth();
   const hasPromptedInitialRef = useRef(false);
 
@@ -32,6 +42,7 @@ export default function AppShell({ children }) {
     pathname === "/download" ||
     pathname === "/play" ||
     isPlayerRoute ||
+    isBrowseRoute ||
     isVerifyRoute;
 
   // 1. Route Protection: Disallow unauthenticated visitors on /home and other content pages
@@ -50,9 +61,10 @@ export default function AppShell({ children }) {
     }
   }, [user, loading, pathname, isPublicRoute, router, openAuthModal]);
 
-  // 2. First-time visit auto-prompt on landing page (never on player pages)
+  // 2. First-time visit auto-prompt, on the landing page only (a pop-up over
+  // browsing pages would block visitors and search engines from the content)
   useEffect(() => {
-    if (loading || isVerifyRoute || isPlayerRoute) return;
+    if (loading || !isLandingRoute) return;
 
     if (!user) {
       try {
@@ -66,11 +78,11 @@ export default function AppShell({ children }) {
         }
       } catch (_) {}
     }
-  }, [user, loading, isVerifyRoute, isPlayerRoute, openAuthModal]);
+  }, [user, loading, isLandingRoute, openAuthModal]);
 
   // 3. Global Click Interception: Never intercept or ask users to login on the player page where movie is playing
   useEffect(() => {
-    if (loading || user || isPlayerRoute) return;
+    if (loading || user || isPlayerRoute || isBrowseRoute) return;
 
     // Check if session is already saved in localStorage
     try {
@@ -125,6 +137,11 @@ export default function AppShell({ children }) {
           const url = new URL(link.href, window.location.origin);
           if (
             url.pathname === "/play" ||
+            url.pathname === "/home" ||
+            url.pathname === "/search" ||
+            url.pathname === "/classics" ||
+            url.pathname.startsWith("/browse/") ||
+            url.pathname.startsWith("/platform/") ||
             url.pathname.startsWith("/movie/") ||
             url.pathname.startsWith("/tv/") ||
             url.pathname.startsWith("/classics/")
@@ -145,7 +162,7 @@ export default function AppShell({ children }) {
     return () => {
       document.removeEventListener("click", handleGlobalClick, true);
     };
-  }, [user, loading, isPlayerRoute, openAuthModal]);
+  }, [user, loading, isPlayerRoute, isBrowseRoute, openAuthModal]);
 
   if (isVerifyRoute) {
     return (

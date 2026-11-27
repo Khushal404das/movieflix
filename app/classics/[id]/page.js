@@ -7,8 +7,9 @@ import CinemaPlayer from "@/components/CinemaPlayer";
 export async function generateMetadata({ params }) {
   const f = await film(params.id);
   return {
-    title: f ? `${f.title} – Stream Classic – MovieFlix` : "Classic Movie – MovieFlix",
-    description: f?.description?.slice(0, 160) || "Watch free classic public domain films in full length."
+    title: f ? `${f.title} – Classic Film` : "Classic Movie",
+    description: f?.description?.slice(0, 160) || "Watch free classic public domain films in full length.",
+    alternates: { canonical: `/classics/${params.id}` }
   };
 }
 

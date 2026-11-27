@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import MemberFeatures from "@/components/MemberFeatures";
+import LandingFaq from "@/components/LandingFaq";
 // Animated effects from React Bits (https://reactbits.dev)
 import ShinyText from "@/components/reactbits/ShinyText/ShinyText";
 import GradientText from "@/components/reactbits/GradientText/GradientText";
@@ -434,6 +435,9 @@ export default function AppPage() {
             </div>
           </div>
         </section>
+
+        {/* Frequently asked questions (FAQPage data is in app/page.js) */}
+        <LandingFaq />
 
         {/* Bottom Banner */}
         <div className="landing-bottom-note">

@@ -5,8 +5,10 @@ import { TmdbCard } from "@/components/Card";
 export async function generateMetadata({ searchParams }) {
   const q = searchParams.q?.trim() || "";
   return {
-    title: q ? `Search results for "${q}" – MovieFlix` : "Search Movies & Series – MovieFlix",
-    description: `Search across our entire library of movies, anime, and web series.`
+    title: q ? `Search results for "${q}"` : "Search Movies & Series",
+    description: `Search across our entire library of movies, anime, and web series.`,
+    // Search result pages are not indexed; crawlers may follow their links.
+    robots: { index: false, follow: true }
   };
 }
 

@@ -3,11 +3,21 @@ import { notFound } from "next/navigation";
 import { getDiscover, getGenreList } from "@/lib/tmdb";
 import InfinitePlatformGrid from "@/components/InfinitePlatformGrid";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const isTv = params.type === "tv";
+  const genre = searchParams?.genre || "";
+  const page = Number(searchParams?.page) || 1;
+  const genreName = genre
+    ? (await getGenreList(isTv ? "tv" : "movie")).find((g) => String(g.id) === String(genre))?.name
+    : "";
+  const kind = isTv ? "TV & Web Series" : "Movies";
+  const qs = new URLSearchParams({ ...(genre ? { genre } : {}), ...(page > 1 ? { page: String(page) } : {}) }).toString();
   return {
-    title: `Browse ${isTv ? "TV & Web Series" : "Movies"} – MovieFlix`,
-    description: `Browse the best ${isTv ? "TV shows and web series" : "movies"} on MovieFlix.`
+    title: genreName ? `${genreName} ${kind}` : `Browse ${kind}`,
+    description: genreName
+      ? `Browse popular ${genreName.toLowerCase()} ${isTv ? "TV shows and web series" : "movies"} on MovieFlix, sorted by popularity.`
+      : `Browse the most popular ${isTv ? "TV shows and web series" : "movies"} on MovieFlix, filterable by genre.`,
+    alternates: { canonical: `/browse/${params.type}${qs ? `?${qs}` : ""}` },
   };
 }
 

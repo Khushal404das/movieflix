@@ -41,14 +41,10 @@ export const metadata = {
     address: false,
     telephone: false,
   },
-  alternates: {
-    canonical: SITE_URL,
-  },
   openGraph: {
     title: "MovieFlix – Watch Free HD Movies & Web Series Online",
     description:
       "Stream thousands of trending movies and TV series in 4K & 1080p for free. High-speed servers, no subscription needed.",
-    url: SITE_URL,
     siteName: "MovieFlix",
     locale: "en_US",
     type: "website",
@@ -119,7 +115,9 @@ const jsonLdWebsite = {
       "@id": "https://movieflix.stream/#website",
       "url": "https://movieflix.stream",
       "name": "MovieFlix",
-      "alternateName": ["MovieFlix Stream", "MovieFlix Movies"],
+      // Names people search for (Search Console: "movieflix", "movie flix",
+      // "movieflix online", "movieflix website" ...) so Google ties them to this site.
+      "alternateName": ["Movie Flix", "MovieFlix Stream", "movieflix.stream", "MovieFlix Online", "MovieFlix Movies"],
       "description": "Stream latest HD movies, TV shows, and trending web series online for free.",
       "publisher": {
         "@id": "https://movieflix.stream/#organization"
@@ -150,7 +148,12 @@ const jsonLdWebsite = {
       },
       "image": {
         "@id": "https://movieflix.stream/#logo"
-      }
+      },
+      // MovieFlix's official channels: confirms to Google which "MovieFlix" this is.
+      "sameAs": [
+        "https://t.me/movieflixmovieflix",
+        "https://discord.gg/yMpRwYkknz"
+      ]
     },
     {
       "@type": "SiteNavigationElement",
@@ -171,25 +174,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Fallback explicit tags for WhatsApp, Telegram, Facebook scrapers */}
-        <link rel="canonical" href={SITE_URL} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={SITE_URL} />
-        <meta property="og:site_name" content="MovieFlix" />
-        <meta property="og:title" content="MovieFlix – Watch Free HD Movies & Web Series Online" />
-        <meta property="og:description" content="Stream thousands of trending movies and TV series in 4K & 1080p for free. High-speed servers, no subscription needed on Web, Android & iOS." />
-        <meta property="og:image" content={`${SITE_URL}/og-image.jpg`} />
-        <meta property="og:image:secure_url" content={`${SITE_URL}/og-image.jpg`} />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="MovieFlix - Free HD Movies and Series" />
-        
-        {/* Twitter Card fallback */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="MovieFlix – Watch Free HD Movies & Web Series Online" />
-        <meta name="twitter:description" content="Stream thousands of trending movies and TV series in 4K & 1080p for free." />
-        <meta name="twitter:image" content={`${SITE_URL}/og-image.jpg`} />
+        {/* Canonical, Open Graph and Twitter tags come from each page's metadata
+            (Next.js). Hard-coded copies here used to mark every page as a
+            duplicate of the homepage. */}
 
         {/* Schema Markup (JSON-LD) for Google Search Engine */}
         <script

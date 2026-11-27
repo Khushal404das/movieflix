@@ -1,0 +1,23 @@
+# MovieFlix
+
+> MovieFlix (movieflix.stream) is a free website and Android app for browsing and watching movies, TV series, web series, anime and K-dramas in the browser. No subscription is required; a free account adds a watchlist and saved progress.
+
+## Main pages
+
+- [Home](https://movieflix.stream/home): trending movies and series, Top 10 lists, new releases, Hindi, South Indian, anime, K-drama, comedy, romance, reality and documentary rows.
+- [Movies](https://movieflix.stream/browse/movie): browse all movies, filterable by genre.
+- [TV & web series](https://movieflix.stream/browse/tv): browse all series, filterable by genre.
+- [Classics](https://movieflix.stream/classics): public-domain classic films from the Internet Archive.
+- [Get the app](https://movieflix.stream/app): install steps for computer, Android, iPhone and Android TV.
+
+## Title pages
+
+Every movie has a page at `https://movieflix.stream/movie/{tmdb_id}` and every series at `https://movieflix.stream/tv/{tmdb_id}`, using The Movie Database (TMDB) ids. Each page lists the overview, release date, runtime or seasons, genres, cast, director or creators, TMDB rating, trailer and similar titles.
+
+## Facts
+
+- Price: free, no subscription.
+- Devices: any modern browser (Chrome, Edge, Firefox, Safari, Brave), Android phones and tablets, Android TV; iPhone via Add to Home Screen in Safari.
+- Languages: many titles offer several audio tracks, including Hindi and English, plus subtitles.
+- Community: Telegram channel https://t.me/movieflixmovieflix and Discord server https://discord.gg/yMpRwYkknz for requests and support.
+- Title information comes from The Movie Database (TMDB).

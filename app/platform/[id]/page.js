@@ -29,11 +29,12 @@ const ID_TO_KEY = Object.fromEntries(
 export async function generateMetadata({ params, searchParams }) {
   const key = ID_TO_KEY[params.id] || params.id;
   const platform = PLATFORM_MAP[key];
-  if (!platform) return { title: "Platform – MovieFlix" };
+  if (!platform) return { title: "Platform" };
   const mediaType = searchParams?.media === "tv" ? "TV Shows" : "Movies";
   return {
-    title: `${platform.name} — ${mediaType} | MovieFlix`,
+    title: `${platform.name} — ${mediaType}`,
     description: `Browse ${mediaType} available on ${platform.name} on MovieFlix.`,
+    alternates: { canonical: `/platform/${params.id}${searchParams?.media === "tv" ? "?media=tv" : ""}` },
   };
 }
 

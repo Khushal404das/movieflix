@@ -4,6 +4,13 @@ import { tmdb, img } from "@/lib/tmdb";
 
 export const dynamic = "force-dynamic";
 
+// The full-screen player is not a page for search results: the title pages
+// (/movie/[id], /tv/[id]) are. Crawlers may follow its links.
+export const metadata = {
+  title: "Now Playing",
+  robots: { index: false, follow: true },
+};
+
 export default async function PlayPage({ searchParams }) {
   const id = searchParams?.id;
   const type = searchParams?.type || "movie";

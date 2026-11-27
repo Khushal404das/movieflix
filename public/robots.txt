@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /verify
-Disallow: /verify2
-Disallow: /profile
-
-Sitemap: https://movieflix.stream/sitemap.xml
